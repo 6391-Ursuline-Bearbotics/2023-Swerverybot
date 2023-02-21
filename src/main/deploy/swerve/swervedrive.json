@@ -2,8 +2,8 @@
   "maxSpeed": 13.5,
   "optimalVoltage": 12,
   "imu": {
-    "type": "pigeon2",
-    "id": 20,
+    "type": "pigeonTalon",
+    "id": 5,
     "canbus": null
   },
   "invertedIMU": false,

@@ -10,6 +10,7 @@ import swervelib.imu.AnalogGyroSwerve;
 import swervelib.imu.NavXSwerve;
 import swervelib.imu.Pigeon2Swerve;
 import swervelib.imu.PigeonSwerve;
+import swervelib.imu.PigeonTalonSwerve;
 import swervelib.imu.SwerveIMU;
 import swervelib.motors.SparkMaxSwerve;
 import swervelib.motors.SwerveMotor;
@@ -76,6 +77,8 @@ public class DeviceJson
         return new NavXSwerve();
       case "pigeon":
         return new PigeonSwerve(id);
+      case "pigeonTalon":
+        return new PigeonTalonSwerve(id);
       case "pigeon2":
         return new Pigeon2Swerve(id, canbus != null ? canbus : "");
       default:
