@@ -38,7 +38,7 @@ public final class Constants {
   public static final double STOP_SECONDS = 5.0;
 
   public static final class OIConstants {
-    public static final int driverID = 4, intakeID = 5;
+    public static final int driverID = 0, buttonsID = 1, operatorID = 2;
 
     public static final class InputLimits {
       public static double vxDeadband = 0.02, vyDeadband = 0.02, radDeadband = 0.10, reduced = 0.3;

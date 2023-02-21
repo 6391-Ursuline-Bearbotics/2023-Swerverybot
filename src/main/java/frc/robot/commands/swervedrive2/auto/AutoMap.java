@@ -2,10 +2,9 @@ package frc.robot.commands.swervedrive2.auto;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.manipulator.Gripper;
-import frc.robot.subsystems.manipulator.Gripper.INTAKE;
-import frc.robot.subsystems.manipulator.VirtualFourBar;
-import frc.robot.subsystems.manipulator.VirtualFourBar.HEIGHT;
+import frc.robot.subsystems.Arm.Arm;
+import frc.robot.subsystems.Intake.Intake;
+
 import java.util.HashMap;
 import java.util.function.Supplier;
 
@@ -13,54 +12,41 @@ public class AutoMap {
   private HashMap<String, Command> eventMap = new HashMap<>();
   private HashMap<String, Supplier<Command>> eventMapGetter = new HashMap<>();
 
-  public AutoMap(Gripper gripper, VirtualFourBar arm) {
+  public AutoMap(Intake intake, Arm arm) {
 
     eventMapGetter.put(
-        "ArmGround",
-        () -> Commands.run(() -> arm.setArm(HEIGHT.GROUND), arm).until(() -> arm.isAtSetpoint()));
+        "ArmLow",
+        () -> Commands.run(() -> arm.extendArmLow(), arm).until(() -> arm.isAtSetpoint()));
     eventMapGetter.put(
-        "ArmLoadingStation",
-        () -> Commands.run(() -> arm.setArm(HEIGHT.STATION), arm).until(() -> arm.isAtSetpoint()));
+        "ArmHigh",
+        () -> Commands.run(() -> arm.extendArmHigh(), arm).until(() -> arm.isAtSetpoint()));
     eventMapGetter.put(
-        "ArmStoreObject",
-        () -> Commands.run(() -> arm.setArm(HEIGHT.STORAGE), arm).until(() -> arm.isAtSetpoint()));
+        "ArmStow",
+        () -> Commands.run(() -> arm.stowArm(), arm).until(() -> arm.isAtSetpoint()));
     eventMapGetter.put(
-        "ArmMidScore",
-        () -> Commands.run(() -> arm.setArm(HEIGHT.MID), arm).until(() -> arm.isAtSetpoint()));
-    eventMapGetter.put(
-        "ArmStraightUp",
-        () ->
-            Commands.run(() -> arm.setArm(HEIGHT.STRAIGHT_UP), arm)
-                .until(() -> arm.isAtSetpoint()));
+        "ArmMid",
+        () -> Commands.run(() -> arm.extendArmMid(), arm).until(() -> arm.isAtSetpoint()));
 
     eventMapGetter.put(
         "ConeGrab",
         () ->
             Commands.runOnce(
                 () ->
-                    gripper.setDefaultCommand(
-                        Commands.run(() -> gripper.setGripper(INTAKE.CONE)))));
-    eventMapGetter.put(
-        "NeutralGrab",
-        () ->
-            Commands.runOnce(
-                () ->
-                    gripper.setDefaultCommand(
-                        Commands.run(() -> gripper.setGripper(INTAKE.STORE)))));
+                    intake.intakeCone()));
+                        
     eventMapGetter.put(
         "CubeGrab",
         () ->
-            Commands.runOnce(
+            Commands.run(
                 () ->
-                    gripper.setDefaultCommand(
-                        Commands.run(() -> gripper.setGripper(INTAKE.CUBE)))));
+                    intake.intakeCube()).withTimeout(5));
+
     eventMapGetter.put(
-        "OpenGrab",
+        "ConeGrab",
         () ->
-            Commands.runOnce(
+            Commands.run(
                 () ->
-                    gripper.setDefaultCommand(
-                        Commands.run(() -> gripper.setGripper(INTAKE.OPEN)))));
+                    intake.intakeCone()).withTimeout(5));
 
     eventMapGetter.forEach(
         (key, val) -> {

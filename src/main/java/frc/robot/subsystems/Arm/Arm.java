@@ -55,6 +55,11 @@ public class Arm extends SubsystemBase {
    */
   static final double kP = 2.0;
 
+    /**
+   * Threshold to determine how close we need to be to our position target in encoder ticks
+   */
+  static final double ERROR_THRESHOLD = 1000;
+
   /** Creates a new Arm. */
   public Arm() {
     armMotor = new WPI_TalonFX(0);
@@ -87,6 +92,10 @@ public class Arm extends SubsystemBase {
 
   public void extendArmLow() {
     setArmPosition(LOW);
+  }
+
+  public boolean isAtSetpoint() {
+    return armMotor.getClosedLoopError() < ERROR_THRESHOLD;
   }
 
   public void setArmPower(double percent) {

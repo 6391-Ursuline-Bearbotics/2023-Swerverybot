@@ -6,8 +6,6 @@ package frc.robot;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -17,10 +15,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.Auton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.swervedrive2.auto.AutoMap;
@@ -28,10 +25,9 @@ import frc.robot.commands.swervedrive2.auto.GoToScoring;
 import frc.robot.commands.swervedrive2.auto.GoToScoring.POSITION;
 import frc.robot.commands.swervedrive2.auto.PathBuilder;
 import frc.robot.commands.swervedrive2.drivebase.TeleopDrive;
-import frc.robot.subsystems.PDH;
-import frc.robot.subsystems.manipulator.Gripper;
-import frc.robot.subsystems.manipulator.Gripper.INTAKE;
-import frc.robot.subsystems.manipulator.VirtualFourBar;
+import frc.robot.subsystems.Arm.Arm;
+import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Vision.Limelight;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
@@ -47,34 +43,38 @@ public class RobotContainer {
   // The robot's subsystems
   private final SwerveSubsystem drivebase =
       new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
-  private final VirtualFourBar arm = new VirtualFourBar();
-  private final Gripper gripper = new Gripper();
-  // private final LED m_led = new LED();
-  private final PDH pdh = new PDH();
+  private final Arm arm = new Arm();
+  private final Intake intake = new Intake();
+  //private final Limelight vision = new Limelight(drivebase);
 
-  private final AutoMap autoMap = new AutoMap(gripper, arm);
+  private final AutoMap autoMap = new AutoMap(intake, arm);
   private final PathBuilder builder = new PathBuilder(drivebase, autoMap.getMap());
 
-  private final CommandJoystick driverController = new CommandJoystick(OIConstants.driverID);
-  private final CommandJoystick scoreController = new CommandJoystick(OIConstants.intakeID);
+  private final CommandXboxController drv = new CommandXboxController(OIConstants.driverID);
+  private final CommandXboxController op = new CommandXboxController(OIConstants.driverID);
+  private final CommandGenericHID btn = new CommandGenericHID(OIConstants.buttonsID);
+
+  // Grid Selection Variables
+  private int column = 0;
+  private String level = "";
 
   // the default commands
   private final TeleopDrive closedFieldRel =
       new TeleopDrive(
           drivebase,
           () ->
-              (Math.abs(driverController.getY()) > OIConstants.InputLimits.vyDeadband)
-                  ? driverController.getY()
+              (Math.abs(drv.getLeftY()) > OIConstants.InputLimits.vyDeadband)
+                  ? drv.getLeftY()
                   : 0,
           () ->
-              (Math.abs(driverController.getX()) > OIConstants.InputLimits.vxDeadband)
-                  ? driverController.getX()
+              (Math.abs(drv.getLeftX()) > OIConstants.InputLimits.vxDeadband)
+                  ? drv.getLeftX()
                   : 0,
           () ->
-              (Math.abs(driverController.getZ()) > OIConstants.InputLimits.radDeadband)
-                  ? driverController.getZ()
+              (Math.abs(drv.getRightX()) > OIConstants.InputLimits.radDeadband)
+                  ? drv.getRightX()
                   : 0,
-          () -> true, // driverController.button(3).negate(),
+          () -> true,
           false);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -121,89 +121,75 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureBindings() {
-
+    // Set up the normal drive control
     drivebase.setDefaultCommand(closedFieldRel);
+
+    // This is the backup manual control of the Arm
     arm.setDefaultCommand(
         new RunCommand(
             () ->
-                arm.setArm(
-                    Rotation2d.fromRadians(
-                        MathUtil.clamp(
-                            driverController.getRawAxis(3) / ArmConstants.armInputScale * Math.PI
-                                + ArmConstants.armOffset,
-                            ArmConstants.minRadians,
-                            ArmConstants.maxRadians))),
+                arm.setArmPower(op.getRightX()),
             arm));
-    // m_led.setDefaultCommand(Commands.run(() -> m_led.setColor(), m_led));
-    gripper.setDefaultCommand(Commands.run(() -> gripper.setGripper(INTAKE.OPEN), gripper));
 
-    driverController.button(4).onTrue(new InstantCommand(drivebase::zeroGyro));
-    driverController
-        .button(3)
-        .whileTrue(
+    // Left Bumper slows the drive way down for fine positioning
+
+    // Buttons automatically drive a corridor / charge station
+    drv.x().whileTrue(
+        new ProxyCommand(
+                () ->
+                    new GoToScoring(drivebase, POSITION.LEFT).getCommand(drivebase.getPose()))
+            .alongWith(
+                autoMap
+                    .getCommandInMap(level))
+            .andThen(autoMap.getCommandInMap("OpenGrab")));
+
+    // Zero the Gyro, should only be used during practice
+    drv.start().onTrue(new InstantCommand(drivebase::zeroGyro));
+
+    // Teleop AutoBalance will test if better than manual
+    drv.back().whileTrue(
             Commands.run(
                     () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
                     drivebase)
                 .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0));
 
-    driverController
-        .button(2)
-        .whileTrue(
-            new TeleopDrive(
-                drivebase,
-                () ->
-                    (Math.abs(driverController.getY()) > OIConstants.InputLimits.vyDeadband)
-                        ? driverController.getY() * OIConstants.InputLimits.reduced
-                        : 0,
-                () ->
-                    (Math.abs(driverController.getX()) > OIConstants.InputLimits.vxDeadband)
-                        ? driverController.getX() * OIConstants.InputLimits.reduced
-                        : 0,
-                () ->
-                    (Math.abs(driverController.getZ()) > OIConstants.InputLimits.radDeadband)
-                        ? driverController.getZ() * OIConstants.InputLimits.reduced
-                        : 0,
-                () -> true, // driverController.button(3).negate(),
-                false));
+    // Manual Arm High
+    op.y().onTrue(Commands.run(() -> arm.extendArmHigh(), arm).until(() -> arm.isAtSetpoint()));
 
-    driverController.button(5).onTrue(Commands.run(() -> gripper.setGripper(INTAKE.CONE), gripper));
-    driverController.button(6).onTrue(Commands.run(() -> gripper.setGripper(INTAKE.CUBE), gripper));
-    driverController.trigger().onTrue(Commands.run(() -> gripper.setGripper(INTAKE.OPEN), gripper));
+    // Manual Arm Mid
+    op.x().onTrue(Commands.run(() -> arm.extendArmMid(), arm).until(() -> arm.isAtSetpoint()));
 
-    scoreController
-        .button(1)
-        .whileTrue(
-            new ProxyCommand(
-                    () ->
-                        new GoToScoring(drivebase, POSITION.RIGHT).getCommand(drivebase.getPose()))
-                .alongWith(
-                    autoMap
-                        .getCommandInMap("ArmGround")
-                        .andThen(autoMap.getCommandInMap("OpenGrab"))));
-    scoreController
-        .button(2)
-        .whileTrue(
-            new ProxyCommand(
-                    () ->
-                        new GoToScoring(drivebase, POSITION.MIDDLE).getCommand(drivebase.getPose()))
-                .alongWith(
-                    autoMap
-                        .getCommandInMap("ArmGround")
-                        .andThen(autoMap.getCommandInMap("OpenGrab"))));
-    scoreController
-        .button(3)
-        .whileTrue(
-            new ProxyCommand(
-                    () -> new GoToScoring(drivebase, POSITION.LEFT).getCommand(drivebase.getPose()))
-                .alongWith(
-                    autoMap
-                        .getCommandInMap("ArmGround")
-                        .andThen(autoMap.getCommandInMap("OpenGrab"))));
+    // Manual Arm Low
+    op.a().onTrue(Commands.run(() -> arm.extendArmLow(), arm).until(() -> arm.isAtSetpoint()));
 
-    new Trigger(drivebase::isMoving)
-        .whileTrue(
-            Commands.runOnce(() -> pdh.setSwitchableChannel(true), pdh)
-                .finallyDo((interrupt) -> pdh.setSwitchableChannel(false)));
+    // Stow Arm
+    op.b().onTrue(Commands.run(() -> arm.stowArm(), arm).until(() -> arm.isAtSetpoint()));
+
+    // While left bumper is pressed intake the cone then minimal power to hold it
+    op.leftBumper().whileTrue(Commands.runOnce(() -> intake.intakeCone(), intake));
+    op.leftBumper().onFalse(Commands.runOnce(() -> intake.holdCone(), intake));
+
+    // While right bumper is pressed intake the cube then minimal power to hold it
+    op.rightBumper().whileTrue(Commands.runOnce(() -> intake.intakeCube(), intake));
+    op.rightBumper().onFalse(Commands.runOnce(() -> intake.holdCube(), intake));
+
+    // Button Board setting the level and column to be placed
+    btn.button(1).onTrue(Commands.runOnce(() -> level = "ArmLow"));
+    btn.button(2).onTrue(Commands.runOnce(() -> level = "ArmMid"));
+    btn.button(3).onTrue(Commands.runOnce(() -> level = "ArmHigh"));
+    btn.button(4).onTrue(Commands.runOnce(() -> column = 1));
+    btn.button(5).onTrue(Commands.runOnce(() -> column = 2));
+    btn.button(6).onTrue(Commands.runOnce(() -> column = 3));
+    btn.button(7).onTrue(Commands.runOnce(() -> column = 4));
+    btn.button(8).onTrue(Commands.runOnce(() -> column = 5));
+    btn.button(9).onTrue(Commands.runOnce(() -> column = 6));
+    btn.button(10).onTrue(Commands.runOnce(() -> column = 7));
+    btn.button(11).onTrue(Commands.runOnce(() -> column = 8));
+    btn.button(12).onTrue(Commands.runOnce(() -> column = 9));
+    btn.button(13).whileTrue(Commands.runOnce(() -> intake.intakeCone(), intake));
+    btn.button(13).onFalse(Commands.runOnce(() -> intake.holdCone(), intake));
+    btn.button(14).whileTrue(Commands.runOnce(() -> intake.intakeCube(), intake));
+    btn.button(14).onFalse(Commands.runOnce(() -> intake.holdCube(), intake));
   }
 
   /**
