@@ -4,8 +4,8 @@
 
 package frc.robot.subsystems.Vision;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
@@ -21,11 +21,16 @@ public class Limelight extends SubsystemBase {
   public void periodic() {
     if (alliance == Alliance.Blue) {
       double[] botpose = LimelightHelpers.getBotPose_wpiBlue("limelight");
-      drivebase.addVisionMeasurement(LimelightHelpers.toPose2D(botpose), Timer.getFPGATimestamp() - (botpose[6]/1000.0), true);
-    }
-    else if (alliance == Alliance.Red) {
+      drivebase.addVisionMeasurement(
+          LimelightHelpers.toPose2D(botpose),
+          Timer.getFPGATimestamp() - (botpose[6] / 1000.0),
+          true);
+    } else if (alliance == Alliance.Red) {
       double[] botpose = LimelightHelpers.getBotPose_wpiBlue("limelight");
-      drivebase.addVisionMeasurement(LimelightHelpers.toPose2D(botpose), Timer.getFPGATimestamp() - (botpose[6]/1000.0), true);
+      drivebase.addVisionMeasurement(
+          LimelightHelpers.toPose2D(botpose),
+          Timer.getFPGATimestamp() - (botpose[6] / 1000.0),
+          true);
     }
   }
 

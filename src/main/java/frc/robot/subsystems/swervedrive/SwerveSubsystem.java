@@ -233,9 +233,7 @@ public class SwerveSubsystem extends SubsystemBase {
     return swerveDrive.swerveDriveConfiguration;
   }
 
-  /**
-   * Forwards a vision measurement to the Swerve Library
-   */
+  /** Forwards a vision measurement to the Swerve Library */
   public void addVisionMeasurement(Pose2d robotPose, double timestamp, boolean soft) {
     swerveDrive.addVisionMeasurement(robotPose, timestamp, soft);
   }

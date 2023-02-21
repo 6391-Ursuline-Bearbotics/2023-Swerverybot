@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Arm.Arm;
 import frc.robot.subsystems.Intake.Intake;
-
 import java.util.HashMap;
 import java.util.function.Supplier;
 
@@ -21,32 +20,16 @@ public class AutoMap {
         "ArmHigh",
         () -> Commands.run(() -> arm.extendArmHigh(), arm).until(() -> arm.isAtSetpoint()));
     eventMapGetter.put(
-        "ArmStow",
-        () -> Commands.run(() -> arm.stowArm(), arm).until(() -> arm.isAtSetpoint()));
+        "ArmStow", () -> Commands.run(() -> arm.stowArm(), arm).until(() -> arm.isAtSetpoint()));
     eventMapGetter.put(
         "ArmMid",
         () -> Commands.run(() -> arm.extendArmMid(), arm).until(() -> arm.isAtSetpoint()));
 
-    eventMapGetter.put(
-        "ConeGrab",
-        () ->
-            Commands.runOnce(
-                () ->
-                    intake.intakeCone()));
-                        
-    eventMapGetter.put(
-        "CubeGrab",
-        () ->
-            Commands.run(
-                () ->
-                    intake.intakeCube()).withTimeout(5));
+    eventMapGetter.put("ConeGrab", () -> Commands.runOnce(() -> intake.intakeCone()));
 
-    eventMapGetter.put(
-        "ConeGrab",
-        () ->
-            Commands.run(
-                () ->
-                    intake.intakeCone()).withTimeout(5));
+    eventMapGetter.put("CubeGrab", () -> Commands.run(() -> intake.intakeCube()).withTimeout(5));
+
+    eventMapGetter.put("ConeGrab", () -> Commands.run(() -> intake.intakeCone()).withTimeout(5));
 
     eventMapGetter.forEach(
         (key, val) -> {

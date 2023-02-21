@@ -9,55 +9,36 @@ import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
   WPI_TalonFX armMotor;
   TalonFXConfiguration config = new TalonFXConfiguration();
-  /**
-   * How many amps the arm motor can use.
-   */
+  /** How many amps the arm motor can use. */
   static final int ARM_CURRENT_LIMIT_A = 20;
 
-  /**
-   * Percent output to run the arm up/down at
-   */
+  /** Percent output to run the arm up/down at */
   static final double ARM_OUTPUT_POWER = 0.4;
 
-  /**
-   * Time to extend or retract arm in auto
-   */
+  /** Time to extend or retract arm in auto */
   static final double ARM_EXTEND_TIME_S = 2.0;
 
-  /**
-   * Stow position in Falcon units
-   */
+  /** Stow position in Falcon units */
   static final double STOW = 2.0;
 
-  /**
-   * High position in Falcon units
-   */
+  /** High position in Falcon units */
   static final double HIGH = 2.0;
 
-  /**
-   * Middle position in Falcon units
-   */
+  /** Middle position in Falcon units */
   static final double MID = 2.0;
 
-  /**
-   * Low position in Falcon units
-   */
+  /** Low position in Falcon units */
   static final double LOW = 2.0;
 
-  /**
-   * Proportional term of PID for arm position control
-   */
+  /** Proportional term of PID for arm position control */
   static final double kP = 2.0;
 
-    /**
-   * Threshold to determine how close we need to be to our position target in encoder ticks
-   */
+  /** Threshold to determine how close we need to be to our position target in encoder ticks */
   static final double ERROR_THRESHOLD = 1000;
 
   /** Creates a new Arm. */
@@ -68,7 +49,9 @@ public class Arm extends SubsystemBase {
     armMotor.setNeutralMode(NeutralMode.Brake);
     armMotor.configVoltageCompSaturation(12.0);
     armMotor.enableVoltageCompensation(true);
-    config.statorCurrLimit = new StatorCurrentLimitConfiguration(true, ARM_CURRENT_LIMIT_A, ARM_CURRENT_LIMIT_A + 10, .1);
+    config.statorCurrLimit =
+        new StatorCurrentLimitConfiguration(
+            true, ARM_CURRENT_LIMIT_A, ARM_CURRENT_LIMIT_A + 10, .1);
     config.slot0.kP = kP;
     armMotor.configAllSettings(config);
   }

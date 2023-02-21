@@ -27,7 +27,6 @@ import frc.robot.commands.swervedrive2.auto.PathBuilder;
 import frc.robot.commands.swervedrive2.drivebase.TeleopDrive;
 import frc.robot.subsystems.Arm.Arm;
 import frc.robot.subsystems.Intake.Intake;
-import frc.robot.subsystems.Vision.Limelight;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
@@ -45,7 +44,7 @@ public class RobotContainer {
       new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
   private final Arm arm = new Arm();
   private final Intake intake = new Intake();
-  //private final Limelight vision = new Limelight(drivebase);
+  // private final Limelight vision = new Limelight(drivebase);
 
   private final AutoMap autoMap = new AutoMap(intake, arm);
   private final PathBuilder builder = new PathBuilder(drivebase, autoMap.getMap());
@@ -63,13 +62,9 @@ public class RobotContainer {
       new TeleopDrive(
           drivebase,
           () ->
-              (Math.abs(drv.getLeftY()) > OIConstants.InputLimits.vyDeadband)
-                  ? drv.getLeftY()
-                  : 0,
+              (Math.abs(drv.getLeftY()) > OIConstants.InputLimits.vyDeadband) ? drv.getLeftY() : 0,
           () ->
-              (Math.abs(drv.getLeftX()) > OIConstants.InputLimits.vxDeadband)
-                  ? drv.getLeftX()
-                  : 0,
+              (Math.abs(drv.getLeftX()) > OIConstants.InputLimits.vxDeadband) ? drv.getLeftX() : 0,
           () ->
               (Math.abs(drv.getRightX()) > OIConstants.InputLimits.radDeadband)
                   ? drv.getRightX()
@@ -125,29 +120,24 @@ public class RobotContainer {
     drivebase.setDefaultCommand(closedFieldRel);
 
     // This is the backup manual control of the Arm
-    arm.setDefaultCommand(
-        new RunCommand(
-            () ->
-                arm.setArmPower(op.getRightX()),
-            arm));
+    arm.setDefaultCommand(new RunCommand(() -> arm.setArmPower(op.getRightX()), arm));
 
     // Left Bumper slows the drive way down for fine positioning
 
     // Buttons automatically drive a corridor / charge station
-    drv.x().whileTrue(
-        new ProxyCommand(
-                () ->
-                    new GoToScoring(drivebase, POSITION.LEFT).getCommand(drivebase.getPose()))
-            .alongWith(
-                autoMap
-                    .getCommandInMap(level))
-            .andThen(autoMap.getCommandInMap("OpenGrab")));
+    drv.x()
+        .whileTrue(
+            new ProxyCommand(
+                    () -> new GoToScoring(drivebase, POSITION.LEFT).getCommand(drivebase.getPose()))
+                .alongWith(autoMap.getCommandInMap(level))
+                .andThen(autoMap.getCommandInMap("OpenGrab")));
 
     // Zero the Gyro, should only be used during practice
     drv.start().onTrue(new InstantCommand(drivebase::zeroGyro));
 
     // Teleop AutoBalance will test if better than manual
-    drv.back().whileTrue(
+    drv.back()
+        .whileTrue(
             Commands.run(
                     () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
                     drivebase)
