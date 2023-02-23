@@ -40,9 +40,9 @@ public final class Constants {
   public static final class OIConstants {
     public static final int driverID = 0, buttonsID = 1, operatorID = 2;
 
-    public static final class InputLimits {
-      public static double vxDeadband = 0.02, vyDeadband = 0.02, radDeadband = 0.10, reduced = 0.3;
-    }
+    public static double xyDeadband = 0.02;
+    public static double radDeadband = 0.05;
+    public static double radLimiter = 0.35;
   }
 
   public static final class Auton {

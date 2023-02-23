@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -38,6 +39,7 @@ import java.io.File;
  */
 public class RobotContainer {
   private SendableChooser<Command> chooser = new SendableChooser<>();
+  private SendableChooser<Double> spdLimit = new SendableChooser<>();
 
   // The robot's subsystems
   private final SwerveSubsystem drivebase =
@@ -61,19 +63,17 @@ public class RobotContainer {
   private final TeleopDrive closedFieldRel =
       new TeleopDrive(
           drivebase,
-          () ->
-              (Math.abs(drv.getLeftY()) > OIConstants.InputLimits.vyDeadband) ? drv.getLeftY() : 0,
-          () ->
-              (Math.abs(drv.getLeftX()) > OIConstants.InputLimits.vxDeadband) ? drv.getLeftX() : 0,
-          () ->
-              (Math.abs(drv.getRightX()) > OIConstants.InputLimits.radDeadband)
-                  ? drv.getRightX()
-                  : 0,
+          () -> getLimitedSpeed(-drv.getLeftY()),
+          () -> getLimitedSpeed(-drv.getLeftX()),
+          () -> getDeadband(-drv.getRightX(), OIConstants.radDeadband) * OIConstants.radLimiter,
           () -> true,
           false);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Detect if controllers are missing / Stop multiple warnings
+    DriverStation.silenceJoystickConnectionWarning(true);
+
     // Configure the button bindings
     configureBindings();
     initializeChooser();
@@ -107,6 +107,24 @@ public class RobotContainer {
                     .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0)));
 
     SmartDashboard.putData("CHOOSE", chooser);
+
+    spdLimit.addOption("100%", 1.0);
+    spdLimit.setDefaultOption("75%", 0.75);
+    spdLimit.addOption("50%", 0.5);
+    spdLimit.addOption("25%", 0.25);
+    SmartDashboard.putData("Speed Limit", spdLimit);
+  }
+
+  private double getLimitedSpeed(double axis) {
+    return spdLimit.getSelected() * getDeadband(axis, OIConstants.xyDeadband);
+  }
+
+  private double getDeadband(double axis, double deadband) {
+    if (Math.abs(axis) > deadband) {
+      return axis;
+    } else {
+      return 0;
+    }
   }
 
   /**

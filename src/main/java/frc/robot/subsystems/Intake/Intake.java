@@ -30,14 +30,20 @@ public class Intake extends SubsystemBase {
 
   private gamepiece piece = gamepiece.cone;
 
-  /** How many amps the intake can use while picking up */
-  static final int INTAKE_CURRENT_LIMIT_A = 25;
+  /** How many amps the intake can use while picking up cube */
+  static final int CUBE_CURRENT_LIMIT_A = 25;
+
+  /** How many amps the intake can use while picking up cone */
+  static final int CONE_CURRENT_LIMIT_A = 35;
 
   /** How many amps the intake can use while holding */
   static final int INTAKE_HOLD_CURRENT_LIMIT_A = 5;
 
-  /** Percent output for intaking */
-  static final double INTAKE_OUTPUT_POWER = 1.0;
+  /** Percent output for intaking cube */
+  static final double CUBE_OUTPUT_POWER = 1.0;
+
+  /** Percent output for intaking cone */
+  static final double CONE_OUTPUT_POWER = 0.5;
 
   /** Percent output for holding */
   static final double INTAKE_HOLD_POWER = 0.07;
@@ -63,19 +69,19 @@ public class Intake extends SubsystemBase {
   }
 
   public void intakeCube() {
-    setIntakeMotor(INTAKE_OUTPUT_POWER, INTAKE_CURRENT_LIMIT_A);
+    setIntakeMotor(CUBE_OUTPUT_POWER, CUBE_CURRENT_LIMIT_A);
   }
 
   public void intakeCone() {
-    setIntakeMotor(-INTAKE_OUTPUT_POWER, INTAKE_CURRENT_LIMIT_A);
+    setIntakeMotor(-CONE_OUTPUT_POWER, CONE_CURRENT_LIMIT_A);
   }
 
   public void outtakeCube() {
-    setIntakeMotor(-INTAKE_OUTPUT_POWER, INTAKE_CURRENT_LIMIT_A);
+    setIntakeMotor(-CUBE_OUTPUT_POWER, CUBE_CURRENT_LIMIT_A);
   }
 
   public void outtakeCone() {
-    setIntakeMotor(INTAKE_OUTPUT_POWER, INTAKE_CURRENT_LIMIT_A);
+    setIntakeMotor(CONE_OUTPUT_POWER, CONE_CURRENT_LIMIT_A);
   }
 
   public void holdCube() {
@@ -87,15 +93,23 @@ public class Intake extends SubsystemBase {
   }
 
   public void pickup() {
-    setIntakeMotor(INTAKE_OUTPUT_POWER * piece.getNumVal(), INTAKE_CURRENT_LIMIT_A);
+    if (piece.getNumVal() > 0) {
+      setIntakeMotor(CUBE_OUTPUT_POWER, CUBE_CURRENT_LIMIT_A);
+    } else {
+      setIntakeMotor(-CONE_OUTPUT_POWER, CONE_CURRENT_LIMIT_A);
+    }
   }
 
   public void place() {
-    setIntakeMotor(-INTAKE_OUTPUT_POWER * piece.getNumVal(), INTAKE_CURRENT_LIMIT_A);
+    if (piece.getNumVal() > 0) {
+      setIntakeMotor(-CUBE_OUTPUT_POWER, CUBE_CURRENT_LIMIT_A);
+    } else {
+      setIntakeMotor(CONE_OUTPUT_POWER, CONE_CURRENT_LIMIT_A);
+    }
   }
 
   public void stop() {
-    setIntakeMotor(0, INTAKE_CURRENT_LIMIT_A);
+    setIntakeMotor(0, 0);
   }
 
   private void setIntakeMotor(double percent, int amps) {
