@@ -109,6 +109,7 @@ public class Robot extends TimedRobot {
       autonomousCommand.cancel();
     }
     isAutoDone = false;
+    RobotContainer.intake.stop();
   }
 
   /** This function is called periodically during operator control. */

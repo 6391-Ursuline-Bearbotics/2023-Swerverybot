@@ -44,7 +44,7 @@ public class Intake extends SubsystemBase {
 
   /** Creates a new Intake. */
   public Intake() {
-    intakeMotor = new CANSparkMax(1, MotorType.kBrushless);
+    intakeMotor = new CANSparkMax(7, MotorType.kBrushless);
     intakeMotor.setInverted(false);
     intakeMotor.setIdleMode(IdleMode.kBrake);
   }
@@ -92,6 +92,10 @@ public class Intake extends SubsystemBase {
 
   public void place() {
     setIntakeMotor(-INTAKE_OUTPUT_POWER * piece.getNumVal(), INTAKE_CURRENT_LIMIT_A);
+  }
+
+  public void stop() {
+    setIntakeMotor(0, INTAKE_CURRENT_LIMIT_A);
   }
 
   private void setIntakeMotor(double percent, int amps) {

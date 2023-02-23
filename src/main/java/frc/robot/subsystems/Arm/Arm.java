@@ -24,28 +24,28 @@ public class Arm extends SubsystemBase {
   static final double ARM_EXTEND_TIME_S = 2.0;
 
   /** Stow position in Falcon units */
-  static final double STOW = 2.0;
+  static final double STOW = 0.0;
 
   /** High position in Falcon units */
-  static final double HIGH = 2.0;
+  static final double HIGH = 61800.0;
 
   /** Middle position in Falcon units */
-  static final double MID = 2.0;
+  static final double MID = 41000.0;
 
   /** Low position in Falcon units */
-  static final double LOW = 2.0;
+  static final double LOW = 18594.0;
 
   /** Proportional term of PID for arm position control */
-  static final double kP = 2.0;
+  static final double kP = 0.01;
 
   /** Threshold to determine how close we need to be to our position target in encoder ticks */
   static final double ERROR_THRESHOLD = 1000;
 
   /** Creates a new Arm. */
   public Arm() {
-    armMotor = new WPI_TalonFX(0);
+    armMotor = new WPI_TalonFX(8);
     armMotor.configFactoryDefault();
-    armMotor.setInverted(true);
+    armMotor.setInverted(false);
     armMotor.setNeutralMode(NeutralMode.Brake);
     armMotor.configVoltageCompSaturation(12.0);
     armMotor.enableVoltageCompensation(true);

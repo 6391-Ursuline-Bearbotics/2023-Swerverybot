@@ -42,20 +42,20 @@ public class RobotContainer {
   // The robot's subsystems
   private final SwerveSubsystem drivebase =
       new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
-  private final Arm arm = new Arm();
-  private final Intake intake = new Intake();
+  public static final Arm arm = new Arm();
+  public static final Intake intake = new Intake();
   // private final Limelight vision = new Limelight(drivebase);
 
   private final AutoMap autoMap = new AutoMap(intake, arm);
   private final PathBuilder builder = new PathBuilder(drivebase, autoMap.getMap());
 
   private final CommandXboxController drv = new CommandXboxController(OIConstants.driverID);
-  private final CommandXboxController op = new CommandXboxController(OIConstants.driverID);
+  private final CommandXboxController op = new CommandXboxController(OIConstants.operatorID);
   private final CommandGenericHID btn = new CommandGenericHID(OIConstants.buttonsID);
 
   // Grid Selection Variables
   private int column = 0;
-  private String level = "";
+  private String level = "ArmHigh";
 
   // the default commands
   private final TeleopDrive closedFieldRel =
@@ -130,7 +130,7 @@ public class RobotContainer {
             new ProxyCommand(
                     () -> new GoToScoring(drivebase, POSITION.LEFT).getCommand(drivebase.getPose()))
                 .alongWith(autoMap.getCommandInMap(level))
-                .andThen(autoMap.getCommandInMap("OpenGrab")));
+                .andThen(autoMap.getCommandInMap("ConeGrab")));
 
     // Zero the Gyro, should only be used during practice
     drv.start().onTrue(new InstantCommand(drivebase::zeroGyro));

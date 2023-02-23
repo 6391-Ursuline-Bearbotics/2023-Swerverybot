@@ -25,8 +25,6 @@ public class AutoMap {
         "ArmMid",
         () -> Commands.run(() -> arm.extendArmMid(), arm).until(() -> arm.isAtSetpoint()));
 
-    eventMapGetter.put("ConeGrab", () -> Commands.runOnce(() -> intake.intakeCone()));
-
     eventMapGetter.put("CubeGrab", () -> Commands.run(() -> intake.intakeCube()).withTimeout(5));
 
     eventMapGetter.put("ConeGrab", () -> Commands.run(() -> intake.intakeCone()).withTimeout(5));
