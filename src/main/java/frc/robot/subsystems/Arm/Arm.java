@@ -53,6 +53,9 @@ public class Arm extends SubsystemBase {
         new StatorCurrentLimitConfiguration(
             true, ARM_CURRENT_LIMIT_A, ARM_CURRENT_LIMIT_A + 10, .1);
     config.slot0.kP = kP;
+    config.closedloopRamp = 0.25;
+    config.peakOutputForward = 0.5;
+    config.peakOutputReverse = -0.5;
     armMotor.configAllSettings(config);
   }
 

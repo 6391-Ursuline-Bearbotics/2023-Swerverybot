@@ -43,9 +43,9 @@ public class GoToScoring {
     return Optional.of(bestArea);
   }
 
-  public Command getCommand(Pose2d pose) {
+  public Command getCommand() {
     System.out.println("Scoring Position Scheduled");
-    Optional<ScoringArea> scoringArea = getBestScoringArea(pose);
+    Optional<ScoringArea> scoringArea = getBestScoringArea(drive.getPose());
     Command command;
     if (!scoringArea.isEmpty()) {
       GoToPose goToPose;

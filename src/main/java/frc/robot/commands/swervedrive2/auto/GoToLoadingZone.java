@@ -1,7 +1,6 @@
 package frc.robot.commands.swervedrive2.auto;
 
 import com.pathplanner.lib.PathConstraints;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -27,11 +26,11 @@ public class GoToLoadingZone extends CommandBase {
     currentCommand = Commands.none();
   }
 
-  public Command getCommand(LOADING_SIDE loadingPosition, Pose2d pose) {
+  public Command getCommand() {
     Command command;
-    if (loadingArea.isPoseWithinScoringArea(pose)) {
+    if (loadingArea.isPoseWithinScoringArea(drive.getPose())) {
       GoToPose goToPose;
-      switch (loadingPosition) {
+      switch (selectedLoadingSide) {
         case LEFT:
           goToPose =
               new GoToPose(
@@ -59,14 +58,14 @@ public class GoToLoadingZone extends CommandBase {
 
   @Override
   public void initialize() {
-    currentCommand = getCommand(selectedLoadingSide, drive.getPose());
+    currentCommand = getCommand();
     currentCommand.schedule();
   }
 
   @Override
   public void execute() {
     if (currentCommand.isFinished()) {
-      currentCommand = getCommand(selectedLoadingSide, drive.getPose());
+      currentCommand = getCommand();
       currentCommand.schedule();
     }
   }

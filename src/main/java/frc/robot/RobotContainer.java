@@ -22,9 +22,11 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Auton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.swervedrive2.auto.AutoMap;
+import frc.robot.commands.swervedrive2.auto.GoToLoadingZone;
 import frc.robot.commands.swervedrive2.auto.GoToScoring;
 import frc.robot.commands.swervedrive2.auto.GoToScoring.POSITION;
 import frc.robot.commands.swervedrive2.auto.PathBuilder;
+import frc.robot.commands.swervedrive2.auto.GoToLoadingZone.LOADING_SIDE;
 import frc.robot.commands.swervedrive2.drivebase.TeleopDrive;
 import frc.robot.subsystems.Arm.Arm;
 import frc.robot.subsystems.Intake.Intake;
@@ -58,6 +60,7 @@ public class RobotContainer {
   // Grid Selection Variables
   private int column = 0;
   private String level = "ArmHigh";
+  private double limit = 0.75;
 
   // the default commands
   private final TeleopDrive closedFieldRel =
@@ -116,7 +119,7 @@ public class RobotContainer {
   }
 
   private double getLimitedSpeed(double axis) {
-    return spdLimit.getSelected() * getDeadband(axis, OIConstants.xyDeadband);
+    return limit * getDeadband(axis, OIConstants.xyDeadband);
   }
 
   private double getDeadband(double axis, double deadband) {
@@ -141,14 +144,39 @@ public class RobotContainer {
     arm.setDefaultCommand(new RunCommand(() -> arm.setArmPower(op.getRightX()), arm));
 
     // Left Bumper slows the drive way down for fine positioning
+    drv.leftBumper().onTrue(Commands.runOnce(() -> limit = 0.2));
+    drv.leftBumper().onFalse(Commands.runOnce(() -> limit = spdLimit.getSelected()));
 
     // Buttons automatically drive a corridor / charge station
     drv.x()
         .whileTrue(
             new ProxyCommand(
-                    () -> new GoToScoring(drivebase, POSITION.LEFT).getCommand(drivebase.getPose()))
-                .alongWith(autoMap.getCommandInMap(level))
-                .andThen(autoMap.getCommandInMap("ConeGrab")));
+                    () -> new GoToScoring(drivebase, POSITION.LEFT).getCommand())
+                .alongWith(autoMap.getCommandInMap(level)));
+
+    drv.a()
+        .whileTrue(
+            new ProxyCommand(
+                    () -> new GoToScoring(drivebase, POSITION.MIDDLE).getCommand())
+                .alongWith(autoMap.getCommandInMap(level)));
+
+    drv.b()
+        .whileTrue(
+            new ProxyCommand(
+                    () -> new GoToScoring(drivebase, POSITION.RIGHT).getCommand())
+                .alongWith(autoMap.getCommandInMap(level)));
+
+    drv.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
+        .whileTrue(
+            new ProxyCommand(
+                    () -> new GoToLoadingZone(LOADING_SIDE.LEFT, drivebase).getCommand())
+                .alongWith(autoMap.getCommandInMap("ArmHigh")));
+
+    drv.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5)
+        .whileTrue(
+            new ProxyCommand(
+                    () -> new GoToLoadingZone(LOADING_SIDE.RIGHT, drivebase).getCommand())
+                .alongWith(autoMap.getCommandInMap("ArmHigh")));
 
     // Zero the Gyro, should only be used during practice
     drv.start().onTrue(new InstantCommand(drivebase::zeroGyro));
