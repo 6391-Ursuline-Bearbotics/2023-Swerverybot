@@ -23,10 +23,10 @@ import frc.robot.Constants.Auton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.swervedrive2.auto.AutoMap;
 import frc.robot.commands.swervedrive2.auto.GoToLoadingZone;
+import frc.robot.commands.swervedrive2.auto.GoToLoadingZone.LOADING_SIDE;
 import frc.robot.commands.swervedrive2.auto.GoToScoring;
 import frc.robot.commands.swervedrive2.auto.GoToScoring.POSITION;
 import frc.robot.commands.swervedrive2.auto.PathBuilder;
-import frc.robot.commands.swervedrive2.auto.GoToLoadingZone.LOADING_SIDE;
 import frc.robot.commands.swervedrive2.drivebase.TeleopDrive;
 import frc.robot.subsystems.Arm.Arm;
 import frc.robot.subsystems.Intake.Intake;
@@ -141,7 +141,7 @@ public class RobotContainer {
     drivebase.setDefaultCommand(closedFieldRel);
 
     // This is the backup manual control of the Arm
-    arm.setDefaultCommand(new RunCommand(() -> arm.setArmPower(op.getRightX()), arm));
+    arm.setDefaultCommand(new RunCommand(() -> arm.setArmPower(-op.getRightY()), arm));
 
     // Left Bumper slows the drive way down for fine positioning
     drv.leftBumper().onTrue(Commands.runOnce(() -> limit = 0.2));
@@ -150,32 +150,27 @@ public class RobotContainer {
     // Buttons automatically drive a corridor / charge station
     drv.x()
         .whileTrue(
-            new ProxyCommand(
-                    () -> new GoToScoring(drivebase, POSITION.LEFT).getCommand())
+            new ProxyCommand(() -> new GoToScoring(drivebase, POSITION.LEFT).getCommand())
                 .alongWith(autoMap.getCommandInMap(level)));
 
     drv.a()
         .whileTrue(
-            new ProxyCommand(
-                    () -> new GoToScoring(drivebase, POSITION.MIDDLE).getCommand())
+            new ProxyCommand(() -> new GoToScoring(drivebase, POSITION.MIDDLE).getCommand())
                 .alongWith(autoMap.getCommandInMap(level)));
 
     drv.b()
         .whileTrue(
-            new ProxyCommand(
-                    () -> new GoToScoring(drivebase, POSITION.RIGHT).getCommand())
+            new ProxyCommand(() -> new GoToScoring(drivebase, POSITION.RIGHT).getCommand())
                 .alongWith(autoMap.getCommandInMap(level)));
 
     drv.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
         .whileTrue(
-            new ProxyCommand(
-                    () -> new GoToLoadingZone(LOADING_SIDE.LEFT, drivebase).getCommand())
+            new ProxyCommand(() -> new GoToLoadingZone(LOADING_SIDE.LEFT, drivebase).getCommand())
                 .alongWith(autoMap.getCommandInMap("ArmHigh")));
 
     drv.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5)
         .whileTrue(
-            new ProxyCommand(
-                    () -> new GoToLoadingZone(LOADING_SIDE.RIGHT, drivebase).getCommand())
+            new ProxyCommand(() -> new GoToLoadingZone(LOADING_SIDE.RIGHT, drivebase).getCommand())
                 .alongWith(autoMap.getCommandInMap("ArmHigh")));
 
     // Zero the Gyro, should only be used during practice
