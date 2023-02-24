@@ -27,7 +27,7 @@ public class Arm extends SubsystemBase {
   static final double STOW = 0.0;
 
   /** High position in Falcon units */
-  static final double HIGH = 61800.0;
+  static final double HIGH = 68000.0;
 
   /** Middle position in Falcon units */
   static final double MID = 41000.0;
@@ -36,10 +36,10 @@ public class Arm extends SubsystemBase {
   static final double LOW = 18594.0;
 
   /** Proportional term of PID for arm position control */
-  static final double kP = 0.01;
+  static final double kP = 0.1;
 
   /** Threshold to determine how close we need to be to our position target in encoder ticks */
-  static final double ERROR_THRESHOLD = 1000;
+  static final double ERROR_THRESHOLD = 100;
 
   /** Creates a new Arm. */
   public Arm() {
@@ -54,8 +54,9 @@ public class Arm extends SubsystemBase {
             true, ARM_CURRENT_LIMIT_A, ARM_CURRENT_LIMIT_A + 10, .1);
     config.slot0.kP = kP;
     config.closedloopRamp = 0.25;
-    config.peakOutputForward = 0.5;
-    config.peakOutputReverse = -0.5;
+    config.openloopRamp = 0.25;
+    config.peakOutputForward = 0.3;
+    config.peakOutputReverse = -0.3;
     armMotor.configAllSettings(config);
   }
 
@@ -90,5 +91,9 @@ public class Arm extends SubsystemBase {
 
   private void setArmPosition(double position) {
     armMotor.set(TalonFXControlMode.Position, position);
+  }
+
+  public void zeroArm() {
+    armMotor.setSelectedSensorPosition(0);
   }
 }

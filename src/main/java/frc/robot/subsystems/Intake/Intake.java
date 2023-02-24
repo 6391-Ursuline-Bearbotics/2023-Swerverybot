@@ -40,10 +40,10 @@ public class Intake extends SubsystemBase {
   static final int INTAKE_HOLD_CURRENT_LIMIT_A = 5;
 
   /** Percent output for intaking cube */
-  static final double CUBE_OUTPUT_POWER = 1.0;
+  static final double CUBE_OUTPUT_POWER = 0.5;
 
   /** Percent output for intaking cone */
-  static final double CONE_OUTPUT_POWER = 0.5;
+  static final double CONE_OUTPUT_POWER = 0.8;
 
   /** Percent output for holding */
   static final double INTAKE_HOLD_POWER = 0.07;

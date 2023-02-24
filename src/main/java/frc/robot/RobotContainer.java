@@ -66,9 +66,9 @@ public class RobotContainer {
   private final TeleopDrive closedFieldRel =
       new TeleopDrive(
           drivebase,
-          () -> getLimitedSpeed(-drv.getLeftY()),
-          () -> getLimitedSpeed(-drv.getLeftX()),
-          () -> getDeadband(-drv.getRightX(), OIConstants.radDeadband) * OIConstants.radLimiter,
+          () -> getLimitedSpeed(drv.getLeftY()),
+          () -> getLimitedSpeed(drv.getLeftX()),
+          () -> getDeadband(drv.getRightX(), OIConstants.radDeadband) * OIConstants.radLimiter,
           () -> true,
           false);
 
@@ -203,6 +203,9 @@ public class RobotContainer {
     // While right bumper is pressed intake the cube then minimal power to hold it
     op.rightBumper().whileTrue(Commands.runOnce(() -> intake.intakeCube(), intake));
     op.rightBumper().onFalse(Commands.runOnce(() -> intake.holdCube(), intake));
+
+    // Zero Arm Encoder shouldn't be needed unless turned on without arm stowed.
+    op.start().onTrue(Commands.runOnce(() -> arm.zeroArm(), arm));
 
     // Button Board setting the level and column to be placed
     btn.button(1).onTrue(Commands.runOnce(() -> level = "ArmLow"));
