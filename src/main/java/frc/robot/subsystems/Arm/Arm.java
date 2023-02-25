@@ -82,11 +82,15 @@ public class Arm extends SubsystemBase {
   }
 
   public boolean isAtSetpoint() {
-    return armMotor.getClosedLoopError() < ERROR_THRESHOLD;
+    var error = armMotor.getClosedLoopError();
+    System.out.print(String.valueOf(error) + "///" + String.valueOf(armMotor.getClosedLoopTarget()));
+    return error < ERROR_THRESHOLD;
   }
 
   public void setArmPower(double percent) {
-    armMotor.set(percent);
+    if (Math.abs(percent) > 0.05) {
+      armMotor.set(percent);
+    }
   }
 
   private void setArmPosition(double position) {

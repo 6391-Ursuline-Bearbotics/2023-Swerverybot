@@ -91,17 +91,24 @@ public class RobotContainer {
                 "Test Path", new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS))));
 
     chooser.addOption(
-        "3 Score T1",
-        builder.getSwerveCommand(
-            PathPlanner.loadPathGroup(
-                "3 Score T1", new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS))));
-
-    chooser.addOption(
-        "1 Score + Dock T2",
+        "Cube Mobility Dock",
         builder
             .getSwerveCommand(
                 PathPlanner.loadPathGroup(
-                    "1 Score + Dock T2",
+                    "Cube Mobility Dock",
+                    new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS)))
+            .andThen(
+                Commands.run(
+                        () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
+                        drivebase)
+                    .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0)));
+
+    chooser.addOption(
+        "Cone Mobility Dock",
+        builder
+            .getSwerveCommand(
+                PathPlanner.loadPathGroup(
+                    "Cone Mobility Dock",
                     new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS)))
             .andThen(
                 Commands.run(
@@ -185,16 +192,16 @@ public class RobotContainer {
                 .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0));
 
     // Manual Arm High
-    op.y().onTrue(Commands.run(() -> arm.extendArmHigh(), arm).until(() -> arm.isAtSetpoint()));
+    op.y().onTrue(Commands.run(() -> arm.extendArmHigh(), arm).until(() -> arm.isAtSetpoint()).withTimeout(2));
 
     // Manual Arm Mid
-    op.x().onTrue(Commands.run(() -> arm.extendArmMid(), arm).until(() -> arm.isAtSetpoint()));
+    op.x().onTrue(Commands.run(() -> arm.extendArmMid(), arm).until(() -> arm.isAtSetpoint()).withTimeout(2));
 
     // Manual Arm Low
-    op.a().onTrue(Commands.run(() -> arm.extendArmLow(), arm).until(() -> arm.isAtSetpoint()));
+    op.a().onTrue(Commands.run(() -> arm.extendArmLow(), arm).until(() -> arm.isAtSetpoint()).withTimeout(2));
 
     // Stow Arm
-    op.b().onTrue(Commands.run(() -> arm.stowArm(), arm).until(() -> arm.isAtSetpoint()));
+    op.b().onTrue(Commands.run(() -> arm.stowArm(), arm).until(() -> arm.isAtSetpoint()).withTimeout(2));
 
     // While left bumper is pressed intake the cone then minimal power to hold it
     op.leftBumper().whileTrue(Commands.runOnce(() -> intake.intakeCone(), intake));
