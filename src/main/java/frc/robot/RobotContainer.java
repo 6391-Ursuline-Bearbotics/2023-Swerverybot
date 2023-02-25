@@ -192,16 +192,30 @@ public class RobotContainer {
                 .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0));
 
     // Manual Arm High
-    op.y().onTrue(Commands.run(() -> arm.extendArmHigh(), arm).until(() -> arm.isAtSetpoint()).withTimeout(2));
+    op.y()
+        .onTrue(
+            Commands.run(() -> arm.extendArmHigh(), arm)
+                .until(() -> arm.isAtSetpoint())
+                .withTimeout(2));
 
     // Manual Arm Mid
-    op.x().onTrue(Commands.run(() -> arm.extendArmMid(), arm).until(() -> arm.isAtSetpoint()).withTimeout(2));
+    op.x()
+        .onTrue(
+            Commands.run(() -> arm.extendArmMid(), arm)
+                .until(() -> arm.isAtSetpoint())
+                .withTimeout(2));
 
     // Manual Arm Low
-    op.a().onTrue(Commands.run(() -> arm.extendArmLow(), arm).until(() -> arm.isAtSetpoint()).withTimeout(2));
+    op.a()
+        .onTrue(
+            Commands.run(() -> arm.extendArmLow(), arm)
+                .until(() -> arm.isAtSetpoint())
+                .withTimeout(2));
 
     // Stow Arm
-    op.b().onTrue(Commands.run(() -> arm.stowArm(), arm).until(() -> arm.isAtSetpoint()).withTimeout(2));
+    op.b()
+        .onTrue(
+            Commands.run(() -> arm.stowArm(), arm).until(() -> arm.isAtSetpoint()).withTimeout(2));
 
     // While left bumper is pressed intake the cone then minimal power to hold it
     op.leftBumper().whileTrue(Commands.runOnce(() -> intake.intakeCone(), intake));

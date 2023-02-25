@@ -29,9 +29,11 @@ public class AutoMap {
 
     eventMapGetter.put("ConeGrab", () -> Commands.run(() -> intake.intakeCone()).withTimeout(5));
 
-    eventMapGetter.put("OuttakeCube", () -> Commands.run(() -> intake.outtakeCube()).withTimeout(0.1));
+    eventMapGetter.put(
+        "OuttakeCube", () -> Commands.run(() -> intake.outtakeCube()).withTimeout(0.1));
 
-    eventMapGetter.put("OuttakeCone", () -> Commands.run(() -> intake.intakeCube()).withTimeout(0.1));
+    eventMapGetter.put(
+        "OuttakeCone", () -> Commands.run(() -> intake.intakeCube()).withTimeout(0.1));
 
     eventMapGetter.forEach(
         (key, val) -> {

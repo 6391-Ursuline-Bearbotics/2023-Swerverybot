@@ -83,7 +83,8 @@ public class Arm extends SubsystemBase {
 
   public boolean isAtSetpoint() {
     var error = armMotor.getClosedLoopError();
-    System.out.print(String.valueOf(error) + "///" + String.valueOf(armMotor.getClosedLoopTarget()));
+    System.out.print(
+        String.valueOf(error) + "///" + String.valueOf(armMotor.getClosedLoopTarget()));
     return error < ERROR_THRESHOLD;
   }
 
