@@ -1,6 +1,10 @@
 package frc.robot.commands.swervedrive2.auto;
 
+import java.util.Optional;
+
 import com.pathplanner.lib.PathConstraints;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -15,8 +19,8 @@ public class GoToLoadingZone extends CommandBase {
   private Command currentCommand;
 
   public enum LOADING_SIDE {
-    LEFT,
-    RIGHT
+    BARRIER,
+    RAIL
   }
 
   public GoToLoadingZone(LOADING_SIDE selectedLoadingSide, SwerveSubsystem drive) {
@@ -28,7 +32,32 @@ public class GoToLoadingZone extends CommandBase {
 
   public Command getCommand() {
     Command command;
-    if (loadingArea.isPoseWithinScoringArea(drive.getPose())) {
+    Pose2d scoringArea = LoadingArea.getScoringExitArea(drive.getPose(), selectedLoadingSide);
+    // If we are within the loading area go direct
+    if (loadingArea.isPoseWithinLoadingArea(drive.getPose())) {
+      GoToPose goToPose;
+      switch (selectedLoadingSide) {
+        case BARRIER:
+          goToPose =
+              new GoToPose(
+                  loadingArea.getDoubleSubstationBarrier().getPoseMeters(),
+                  new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
+                  drive);
+          command = goToPose.getCommand();
+          break;
+        case RAIL:
+          goToPose =
+              new GoToPose(
+                  loadingArea.getDoubleSubstationRail().getPoseMeters(),
+                  new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
+                  drive);
+          command = goToPose.getCommand();
+          break;
+        default:
+          throw new IllegalArgumentException("Loading station enum not supported.");
+      }
+    } else if (!scoringArea.isEmpty()) {
+      // If we are within scoring area find the left / right exit
       GoToPose goToPose;
       switch (selectedLoadingSide) {
         case LEFT:

@@ -14,6 +14,8 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import swervelib.parser.PIDFConfig;
 import webblib.util.Gains;
 import webblib.util.HolonomicPose2d;
@@ -52,13 +54,15 @@ public final class Constants {
 
     public static final double maxSpeedMPS = 3;
     public static final double maxAccelerationMPS = 2;
+    public static final double midSpeedMPS = 2;
+    public static final double lowSpeedMPS = 1;
     public static final double balanceScale = 1.0, balanceScalePow = 1.0;
 
     public static final LoadingArea loadingArea =
         new LoadingArea(
             new RectanglePoseArea(new Translation2d(9.91, 6.82), new Translation2d(16.24, 7.97)),
             new RectanglePoseArea(new Translation2d(13.24, 5.66), new Translation2d(16.51, 7.97)),
-            new HolonomicPose2d(new Pose2d(15.79, 7.34, new Rotation2d()), new Rotation2d()),
+            new HolonomicPose2d(new Pose2d(15.75, 7.34, new Rotation2d()), new Rotation2d()),
             new HolonomicPose2d(new Pose2d(15.75, 6.00, new Rotation2d()), new Rotation2d()));
 
     public static final List<ScoringArea> scoreAreaList =
@@ -93,6 +97,22 @@ public final class Constants {
         };
     public static final Translation3d cameraTranslation = new Translation3d(0.5, 0.0, 0.5);
     public static final Rotation3d cameraRotation = new Rotation3d(0, 0, 0);
+
+    public static final Map<Integer, List<HolonomicPose2d>> barrierCorridor =
+      Map.of(
+          1,
+          List.of(
+              new HolonomicPose2d(new Pose2d(5.3, 4.46, new Rotation2d()), new Rotation2d()),
+              new HolonomicPose2d(new Pose2d(10.19, 4.46, new Rotation2d()), new Rotation2d()))
+          2,
+          new HolonomicPose2d(new Pose2d(15.75, 7.33, new Rotation2d()), new Rotation2d()));
+
+    public static final Map<Integer, HolonomicPose2d> blueBSubstation =
+      Map.of(
+          1,
+          new HolonomicPose2d(new Pose2d(10.19, 6.77, new Rotation2d()), new Rotation2d()),
+          2,
+          new HolonomicPose2d(new Pose2d(15.75, 6.0, new Rotation2d()), new Rotation2d()));
   }
 
   public static final class ArmConstants {
