@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.swervedrive;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -27,6 +28,9 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SwerveBalance swerveBalance =
       new SwerveBalance(Auton.balanceScale, Auton.balanceScalePow);
 
+  private final SlewRateLimiter xyLimiter = new SlewRateLimiter(5);
+  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(5);
+
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
    *
@@ -49,6 +53,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveSubsystem(
       SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg) {
     swerveDrive = new SwerveDrive(driveCfg, controllerCfg);
+    swerveDrive.swerveController.addSlewRateLimiters(xyLimiter, xyLimiter, rotLimiter);
   }
 
   /**

@@ -66,9 +66,9 @@ public class RobotContainer {
   private final TeleopDrive closedFieldRel =
       new TeleopDrive(
           drivebase,
-          () -> getLimitedSpeed(drv.getLeftY()),
-          () -> getLimitedSpeed(drv.getLeftX()),
-          () -> getDeadband(drv.getRightX(), OIConstants.radDeadband) * OIConstants.radLimiter,
+          () -> getLimitedSpeed(-drv.getLeftY()),
+          () -> getLimitedSpeed(-drv.getLeftX()),
+          () -> getDeadband(-drv.getRightX(), OIConstants.radDeadband) * OIConstants.radLimiter,
           () -> true,
           false);
 
@@ -121,7 +121,7 @@ public class RobotContainer {
     spdLimit.addOption("100%", 1.0);
     spdLimit.setDefaultOption("75%", 0.75);
     spdLimit.addOption("50%", 0.5);
-    spdLimit.addOption("25%", 0.25);
+    spdLimit.addOption("35%", 0.35);
     SmartDashboard.putData("Speed Limit", spdLimit);
   }
 
@@ -151,7 +151,7 @@ public class RobotContainer {
     arm.setDefaultCommand(new RunCommand(() -> arm.setArmPower(-op.getRightY()), arm));
 
     // Left Bumper slows the drive way down for fine positioning
-    drv.leftBumper().onTrue(Commands.runOnce(() -> limit = 0.2));
+    drv.leftBumper().onTrue(Commands.runOnce(() -> limit = 0.35));
     drv.leftBumper().onFalse(Commands.runOnce(() -> limit = spdLimit.getSelected()));
 
     // Buttons automatically drive a corridor / charge station
@@ -192,30 +192,16 @@ public class RobotContainer {
                 .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0));
 
     // Manual Arm High
-    op.y()
-        .onTrue(
-            Commands.run(() -> arm.extendArmHigh(), arm)
-                .until(() -> arm.isAtSetpoint())
-                .withTimeout(2));
+    op.y().onTrue(autoMap.getCommandInMap("ArmHigh"));
 
     // Manual Arm Mid
-    op.x()
-        .onTrue(
-            Commands.run(() -> arm.extendArmMid(), arm)
-                .until(() -> arm.isAtSetpoint())
-                .withTimeout(2));
+    op.x().onTrue(autoMap.getCommandInMap("ArmMid"));
 
     // Manual Arm Low
-    op.a()
-        .onTrue(
-            Commands.run(() -> arm.extendArmLow(), arm)
-                .until(() -> arm.isAtSetpoint())
-                .withTimeout(2));
+    op.a().onTrue(autoMap.getCommandInMap("ArmLow"));
 
     // Stow Arm
-    op.b()
-        .onTrue(
-            Commands.run(() -> arm.stowArm(), arm).until(() -> arm.isAtSetpoint()).withTimeout(2));
+    op.b().onTrue(autoMap.getCommandInMap("ArmStow"));
 
     // While left bumper is pressed intake the cone then minimal power to hold it
     op.leftBumper().whileTrue(Commands.runOnce(() -> intake.intakeCone(), intake));
