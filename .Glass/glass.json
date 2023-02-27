@@ -49,7 +49,6 @@
       "/SmartDashboard/Field": {
         "bottom": 544,
         "height": 8.013679504394531,
-        "image": "C:\\Users\\Administrator\\Documents\\FRC\\2023-Swerverybot\\2023-field.png",
         "left": 46,
         "right": 1088,
         "top": 36,
@@ -73,7 +72,7 @@
               "autoFit": true
             }
           ],
-          "height": 393,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -114,7 +113,7 @@
               "autoFit": true
             }
           ],
-          "height": 414,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -150,7 +149,7 @@
     "Plot <2>": {
       "plots": [
         {
-          "height": 288,
+          "height": 0,
           "series": [
             {
               "color": [

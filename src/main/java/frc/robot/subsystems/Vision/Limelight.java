@@ -24,13 +24,15 @@ public class Limelight extends SubsystemBase {
       drivebase.addVisionMeasurement(
           LimelightHelpers.toPose2D(botpose),
           Timer.getFPGATimestamp() - (botpose[6] / 1000.0),
-          true);
+          true,
+          1.0);
     } else if (alliance == Alliance.Red) {
       double[] botpose = LimelightHelpers.getBotPose_wpiBlue("limelight");
       drivebase.addVisionMeasurement(
           LimelightHelpers.toPose2D(botpose),
           Timer.getFPGATimestamp() - (botpose[6] / 1000.0),
-          true);
+          true,
+          1.0);
     }
   }
 

@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import java.util.ArrayList;
 import java.util.List;
+import swervelib.math.Matter;
 import swervelib.parser.PIDFConfig;
 import webblib.util.HolonomicPose2d;
 import webblib.util.RectanglePoseArea;
@@ -30,6 +31,8 @@ import webblib.util.chargedup.ScoringArea;
 public final class Constants {
 
   public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
+  public static final Matter CHASSIS =
+      new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double CHASSIS_MASS = ROBOT_MASS;
   public static final Translation3d CHASSIS_CG = new Translation3d(0, 0, Units.inchesToMeters(8));
   public static final double LOOP_TIME = 0.02; // s, 20ms + 110ms sprk max velocity lag
@@ -109,14 +112,14 @@ public final class Constants {
           {
             add(
                 new PathPoint(
+                    barrierCorridor.get(0).getTranslation(),
+                    new Rotation2d(),
+                    barrierCorridor.get(0).getRotation()));
+            add(
+                new PathPoint(
                     barrierCorridor.get(1).getTranslation(),
                     new Rotation2d(),
                     barrierCorridor.get(1).getRotation()));
-            add(
-                new PathPoint(
-                    barrierCorridor.get(2).getTranslation(),
-                    new Rotation2d(),
-                    barrierCorridor.get(2).getRotation()));
           }
         };
 
@@ -125,14 +128,14 @@ public final class Constants {
           {
             add(
                 new PathPoint(
-                    barrierCorridor.get(2).getTranslation(),
-                    new Rotation2d(Math.PI),
-                    barrierCorridor.get(2).getRotation()));
-            add(
-                new PathPoint(
                     barrierCorridor.get(1).getTranslation(),
                     new Rotation2d(Math.PI),
                     barrierCorridor.get(1).getRotation()));
+            add(
+                new PathPoint(
+                    barrierCorridor.get(0).getTranslation(),
+                    new Rotation2d(Math.PI),
+                    barrierCorridor.get(0).getRotation()));
           }
         };
 
@@ -149,14 +152,14 @@ public final class Constants {
           {
             add(
                 new PathPoint(
+                    barrierCorridor.get(0).getTranslation(),
+                    new Rotation2d(),
+                    barrierCorridor.get(0).getRotation()));
+            add(
+                new PathPoint(
                     barrierCorridor.get(1).getTranslation(),
                     new Rotation2d(),
                     barrierCorridor.get(1).getRotation()));
-            add(
-                new PathPoint(
-                    barrierCorridor.get(2).getTranslation(),
-                    new Rotation2d(),
-                    barrierCorridor.get(2).getRotation()));
           }
         };
 
@@ -165,14 +168,14 @@ public final class Constants {
           {
             add(
                 new PathPoint(
-                    barrierCorridor.get(2).getTranslation(),
-                    new Rotation2d(Math.PI),
-                    barrierCorridor.get(2).getRotation()));
-            add(
-                new PathPoint(
                     barrierCorridor.get(1).getTranslation(),
                     new Rotation2d(Math.PI),
                     barrierCorridor.get(1).getRotation()));
+            add(
+                new PathPoint(
+                    barrierCorridor.get(0).getTranslation(),
+                    new Rotation2d(Math.PI),
+                    barrierCorridor.get(0).getRotation()));
           }
         };
 

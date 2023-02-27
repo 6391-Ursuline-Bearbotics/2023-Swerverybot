@@ -71,7 +71,7 @@ public class RobotContainer {
           drivebase,
           () -> getLimitedSpeed(-drv.getLeftY()),
           () -> getLimitedSpeed(-drv.getLeftX()),
-          () -> getDeadband(-drv.getRightX(), OIConstants.radDeadband) * OIConstants.radLimiter,
+          () -> getDeadband(drv.getRightX(), OIConstants.radDeadband) * OIConstants.radLimiter,
           () -> true,
           false);
 

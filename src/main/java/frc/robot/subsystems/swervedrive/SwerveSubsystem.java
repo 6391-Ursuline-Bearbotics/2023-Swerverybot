@@ -239,7 +239,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   /** Forwards a vision measurement to the Swerve Library */
-  public void addVisionMeasurement(Pose2d robotPose, double timestamp, boolean soft) {
-    swerveDrive.addVisionMeasurement(robotPose, timestamp, soft);
+  public void addVisionMeasurement(Pose2d robotPose, double timestamp, boolean soft, double trust) {
+    swerveDrive.addVisionMeasurement(robotPose, timestamp, soft, trust);
   }
 }
