@@ -15,19 +15,34 @@ public class AutoMap {
 
     eventMapGetter.put(
         "ArmLow",
-        () -> Commands.run(() -> arm.extendArmLow(), arm).until(() -> arm.isAtSetpoint()));
+        () ->
+            Commands.run(() -> arm.extendArmLow(), arm)
+                .withTimeout(2)
+                .andThen(() -> arm.stopArm()));
     eventMapGetter.put(
         "ArmHigh",
-        () -> Commands.run(() -> arm.extendArmHigh(), arm).until(() -> arm.isAtSetpoint()));
+        () ->
+            Commands.run(() -> arm.extendArmHigh(), arm)
+                .withTimeout(2)
+                .andThen(() -> arm.stopArm()));
     eventMapGetter.put(
-        "ArmStow", () -> Commands.run(() -> arm.stowArm(), arm).until(() -> arm.isAtSetpoint()));
+        "ArmStow",
+        () ->
+            Commands.run(() -> arm.stowArm(), arm)
+                .withTimeout(2)
+                .andThen(() -> arm.stopArm()));
     eventMapGetter.put(
         "ArmMid",
-        () -> Commands.run(() -> arm.extendArmMid(), arm).until(() -> arm.isAtSetpoint()));
+        () ->
+            Commands.run(() -> arm.extendArmMid(), arm)
+                .withTimeout(2)
+                .andThen(() -> arm.stopArm()));
 
     eventMapGetter.put("CubeGrab", () -> Commands.run(() -> intake.intakeCube()).withTimeout(5));
 
     eventMapGetter.put("ConeGrab", () -> Commands.run(() -> intake.intakeCone()).withTimeout(5));
+
+    eventMapGetter.put("IntakeCone", () -> Commands.run(() -> intake.intakeCone()).withTimeout(0.25));
 
     eventMapGetter.put(
         "OuttakeCube", () -> Commands.run(() -> intake.outtakeCube()).withTimeout(0.1));

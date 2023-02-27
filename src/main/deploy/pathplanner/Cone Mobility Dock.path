@@ -10,13 +10,14 @@
         "x": 2.7360976792106237,
         "y": 3.3
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
+          "IntakeCone",
           "ArmHigh",
           "OuttakeCone",
           "ArmStow"
@@ -32,15 +33,15 @@
         "y": 3.3
       },
       "prevControl": {
-        "x": 4.199301359279367,
-        "y": 3.2681457547584225
+        "x": 4.198866745752266,
+        "y": 3.3
       },
       "nextControl": {
-        "x": 6.533568444240423,
-        "y": 3.331854245241577
+        "x": 4.198866745752266,
+        "y": 3.3
       },
-      "holonomicAngle": 0,
-      "isReversal": false,
+      "holonomicAngle": 180.0,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -57,11 +58,11 @@
         "y": 3.3
       },
       "prevControl": {
-        "x": 3.860665116524151,
-        "y": 3.2872724236240876
+        "x": 3.8448624498001216,
+        "y": 3.3
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
