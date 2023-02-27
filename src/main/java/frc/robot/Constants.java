@@ -4,8 +4,7 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.sensors.SensorInitializationStrategy;
+import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -15,7 +14,6 @@ import edu.wpi.first.math.util.Units;
 import java.util.ArrayList;
 import java.util.List;
 import swervelib.parser.PIDFConfig;
-import webblib.util.Gains;
 import webblib.util.HolonomicPose2d;
 import webblib.util.RectanglePoseArea;
 import webblib.util.chargedup.LoadingArea;
@@ -46,19 +44,21 @@ public final class Constants {
   }
 
   public static final class Auton {
-    public static final PIDFConfig xAutoPID = new PIDFConfig(0.7, 0, 0);
-    public static final PIDFConfig yAutoPID = new PIDFConfig(0.7, 0, 0);
-    public static final PIDFConfig angleAutoPID = new PIDFConfig(0.4, 0, 0.01);
+    public static final PIDFConfig xAutoPID = new PIDFConfig(4.0, 0, 0);
+    public static final PIDFConfig yAutoPID = new PIDFConfig(4.0, 0, 0);
+    public static final PIDFConfig angleAutoPID = new PIDFConfig(2.2, 0, 0.0);
 
-    public static final double maxSpeedMPS = 3;
+    public static final double maxSpeedMPS = 3; // 4?
     public static final double maxAccelerationMPS = 2;
+    public static final double midSpeedMPS = 2;
+    public static final double lowSpeedMPS = 1;
     public static final double balanceScale = 1.0, balanceScalePow = 1.0;
 
     public static final LoadingArea loadingArea =
         new LoadingArea(
             new RectanglePoseArea(new Translation2d(9.91, 6.82), new Translation2d(16.24, 7.97)),
             new RectanglePoseArea(new Translation2d(13.24, 5.66), new Translation2d(16.51, 7.97)),
-            new HolonomicPose2d(new Pose2d(15.79, 7.34, new Rotation2d()), new Rotation2d()),
+            new HolonomicPose2d(new Pose2d(15.75, 7.34, new Rotation2d()), new Rotation2d()),
             new HolonomicPose2d(new Pose2d(15.75, 6.00, new Rotation2d()), new Rotation2d()));
 
     public static final List<ScoringArea> scoreAreaList =
@@ -91,51 +91,103 @@ public final class Constants {
                         new Pose2d(1.62, 0.55, new Rotation2d()), new Rotation2d())));
           }
         };
+    public static final RectanglePoseArea scoreArea =
+        new RectanglePoseArea(new Translation2d(1.23, 0.0), new Translation2d(2.92, 5.33));
     public static final Translation3d cameraTranslation = new Translation3d(0.5, 0.0, 0.5);
     public static final Rotation3d cameraRotation = new Rotation3d(0, 0, 0);
+
+    public static final List<Pose2d> barrierCorridor =
+        new ArrayList<>() {
+          {
+            add(new Pose2d(2.53, 4.46, new Rotation2d(Math.PI)));
+            add(new Pose2d(5.3, 4.46, new Rotation2d(Math.PI)));
+          }
+        };
+
+    public static final List<PathPoint> barrierCorridorPPOut =
+        new ArrayList<>() {
+          {
+            add(
+                new PathPoint(
+                    barrierCorridor.get(1).getTranslation(),
+                    new Rotation2d(),
+                    barrierCorridor.get(1).getRotation()));
+            add(
+                new PathPoint(
+                    barrierCorridor.get(2).getTranslation(),
+                    new Rotation2d(),
+                    barrierCorridor.get(2).getRotation()));
+          }
+        };
+
+    public static final List<PathPoint> barrierCorridorPPIn =
+        new ArrayList<>() {
+          {
+            add(
+                new PathPoint(
+                    barrierCorridor.get(2).getTranslation(),
+                    new Rotation2d(Math.PI),
+                    barrierCorridor.get(2).getRotation()));
+            add(
+                new PathPoint(
+                    barrierCorridor.get(1).getTranslation(),
+                    new Rotation2d(Math.PI),
+                    barrierCorridor.get(1).getRotation()));
+          }
+        };
+
+    public static final List<Pose2d> bumpCorridor =
+        new ArrayList<>() {
+          {
+            add(new Pose2d(2.53, 1.08, new Rotation2d(Math.PI)));
+            add(new Pose2d(5.3, 1.08, new Rotation2d(Math.PI)));
+          }
+        };
+
+    public static final List<PathPoint> bumpCorridorPPOut =
+        new ArrayList<>() {
+          {
+            add(
+                new PathPoint(
+                    barrierCorridor.get(1).getTranslation(),
+                    new Rotation2d(),
+                    barrierCorridor.get(1).getRotation()));
+            add(
+                new PathPoint(
+                    barrierCorridor.get(2).getTranslation(),
+                    new Rotation2d(),
+                    barrierCorridor.get(2).getRotation()));
+          }
+        };
+
+    public static final List<PathPoint> bumpCorridorPPIn =
+        new ArrayList<>() {
+          {
+            add(
+                new PathPoint(
+                    barrierCorridor.get(2).getTranslation(),
+                    new Rotation2d(Math.PI),
+                    barrierCorridor.get(2).getRotation()));
+            add(
+                new PathPoint(
+                    barrierCorridor.get(1).getTranslation(),
+                    new Rotation2d(Math.PI),
+                    barrierCorridor.get(1).getRotation()));
+          }
+        };
+
+    public static final Pose2d stationWaypoint = new Pose2d(13.22, 6.77, new Rotation2d());
+    public static final PathPoint stationWaypointIn =
+        new PathPoint(
+            stationWaypoint.getTranslation(), new Rotation2d(), stationWaypoint.getRotation());
+    public static final PathPoint stationWaypointOut =
+        new PathPoint(
+            stationWaypoint.getTranslation(),
+            new Rotation2d(Math.PI),
+            stationWaypoint.getRotation());
   }
 
-  public static final class ArmConstants {
-    public static final int armPort = 30, dutyCyclePort = 0;
-    public static final Gains armPosition = new Gains(0.3, 0, 0, 0, 0, 0.6);
-    public static final double dutyCycleResolution = 1.0;
-    public static final double absolutePositionOffset = 0.312153;
-    public static final double maxRadians = 4.34;
-    public static final double minRadians = -0.62;
-    public static final double toleranceRadians = 0.10;
-    public static final double armInputScale = 2 * Math.PI / (maxRadians - minRadians);
-    public static final double armOffset = minRadians + (minRadians + maxRadians) / 2;
-    public static final double gravityFF = 0.0;
-    public static final boolean encoderInverted = true;
-
-    public static final class ArmConfig {
-      public TalonFXConfiguration config;
-
-      public ArmConfig() {
-        config = new TalonFXConfiguration();
-        config.nominalOutputForward = 0;
-        config.nominalOutputReverse = 0;
-        config.peakOutputForward = ArmConstants.armPosition.peakOutput;
-        config.peakOutputReverse = -ArmConstants.armPosition.peakOutput;
-        config.initializationStrategy = SensorInitializationStrategy.BootToZero;
-      }
-    }
-  }
-
-  public static final class GripperConstants {
-    public static final Gains gripperPosition = new Gains(0.14, 0, 0, 0, 0, 0.5);
-    public static final double positionOpen = 0.20,
-        positionCube = -11.38,
-        positionCone = -20.7,
-        positionStore = -16.0;
-    public static final int gripperID = 34;
-  }
-
-  public static final class LEDConstants {
-    public static final int PWMPort = 9, length = 10;
-  }
-
-  public static final class PDHConstants {
-    public static final int port = 50;
+  public static final class LED {
+    public static final int PWMPORT = 0, LENGTH = 10;
   }
 }

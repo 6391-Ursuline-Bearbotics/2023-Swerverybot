@@ -28,7 +28,6 @@ public class PathBuilder {
   }
 
   public Command getSwerveCommand(List<PathPlannerTrajectory> path) {
-    System.out.println("COMMAND GET");
     return autoBuilder.fullAuto(path);
   }
 }

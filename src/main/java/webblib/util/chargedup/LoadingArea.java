@@ -7,18 +7,18 @@ import webblib.util.RectanglePoseArea;
 public class LoadingArea {
   private final RectanglePoseArea largeLoadingRect;
   private final RectanglePoseArea smallLoadingRect;
-  private final HolonomicPose2d doubleSubstationLeft;
-  private final HolonomicPose2d doubleSubstationRight;
+  private final HolonomicPose2d doubleSubstationBarrier;
+  private final HolonomicPose2d doubleSubstationRail;
 
   public LoadingArea(
       RectanglePoseArea largeLoadingRect,
       RectanglePoseArea smallLoadingRect,
-      HolonomicPose2d doubleSubstationLeft,
-      HolonomicPose2d doubleSubstationRight) {
+      HolonomicPose2d doubleSubstationRail,
+      HolonomicPose2d doubleSubstationBarrier) {
     this.largeLoadingRect = largeLoadingRect;
     this.smallLoadingRect = smallLoadingRect;
-    this.doubleSubstationLeft = doubleSubstationLeft;
-    this.doubleSubstationRight = doubleSubstationRight;
+    this.doubleSubstationBarrier = doubleSubstationBarrier;
+    this.doubleSubstationRail = doubleSubstationRail;
   }
 
   public RectanglePoseArea getLargeLoadingRectangle() {
@@ -29,15 +29,15 @@ public class LoadingArea {
     return smallLoadingRect;
   }
 
-  public HolonomicPose2d getDoubleSubstationLeft() {
-    return doubleSubstationLeft;
+  public HolonomicPose2d getDoubleSubstationBarrier() {
+    return doubleSubstationBarrier;
   }
 
-  public HolonomicPose2d getDoubleSubstationRight() {
-    return doubleSubstationRight;
+  public HolonomicPose2d getDoubleSubstationRail() {
+    return doubleSubstationRail;
   }
 
-  public boolean isPoseWithinScoringArea(Pose2d pose) {
+  public boolean isPoseWithinLoadingArea(Pose2d pose) {
     return largeLoadingRect.isPoseWithinArea(pose) || smallLoadingRect.isPoseWithinArea(pose);
   }
 }

@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -30,6 +31,7 @@ import frc.robot.commands.swervedrive2.auto.PathBuilder;
 import frc.robot.commands.swervedrive2.drivebase.TeleopDrive;
 import frc.robot.subsystems.Arm.Arm;
 import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Vision.Limelight;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
@@ -48,7 +50,7 @@ public class RobotContainer {
       new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
   public static final Arm arm = new Arm();
   public static final Intake intake = new Intake();
-  // private final Limelight vision = new Limelight(drivebase);
+  private final Limelight vision = new Limelight(drivebase);
 
   private final AutoMap autoMap = new AutoMap(intake, arm);
   private final PathBuilder builder = new PathBuilder(drivebase, autoMap.getMap());
@@ -61,6 +63,7 @@ public class RobotContainer {
   private int column = 0;
   private String level = "ArmHigh";
   private double limit = 0.75;
+  private Alliance color = Alliance.Invalid;
 
   // the default commands
   private final TeleopDrive closedFieldRel =
@@ -95,7 +98,7 @@ public class RobotContainer {
         builder
             .getSwerveCommand(
                 PathPlanner.loadPathGroup(
-                    "Cube Mobility Dock",
+                    "CubeMobilityDock",
                     new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS)))
             .andThen(
                 Commands.run(
@@ -108,7 +111,7 @@ public class RobotContainer {
         builder
             .getSwerveCommand(
                 PathPlanner.loadPathGroup(
-                    "Cone Mobility Dock",
+                    "ConeMobilityDock",
                     new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS)))
             .andThen(
                 Commands.run(
@@ -134,6 +137,75 @@ public class RobotContainer {
       return axis;
     } else {
       return 0;
+    }
+  }
+
+  private LOADING_SIDE getLoadingSide(Boolean left) {
+    if (color == Alliance.Blue) {
+      if (left) {
+        return LOADING_SIDE.RAIL;
+      } else {
+        return LOADING_SIDE.BARRIER;
+      }
+    } else {
+      if (left) {
+        return LOADING_SIDE.BARRIER;
+      } else {
+        return LOADING_SIDE.RAIL;
+      }
+    }
+  }
+
+  private String getStationPath(Boolean left) {
+    if (color == Alliance.Blue) {
+      if (left) {
+        if (gamePiece()) {
+          return "CubeStationRail";
+        } else {
+          return "ConeStationRail";
+        }
+      } else {
+        if (gamePiece()) {
+          return "CubeStationBarrier";
+        } else {
+          return "ConeStationBarrier";
+        }
+      }
+    } else {
+      if (left) {
+        if (gamePiece()) {
+          return "CubeStationBarrier";
+        } else {
+          return "ConeStationBarrier";
+        }
+      } else {
+        if (gamePiece()) {
+          return "CubeStationRail";
+        } else {
+          return "ConeStationRail";
+        }
+      }
+    }
+  }
+
+  private Boolean gamePiece() {
+    if (column == 2 || column == 5 || column == 8 || level == "ArmLow") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public void setAllianceColor(Alliance color) {
+    this.color = color;
+    vision.setAlliance(color);
+  }
+
+  private void setColumn(int col) {
+    if (color == Alliance.Blue) {
+      column = col;
+    } else if (color == Alliance.Red) {
+      column = 10 - col;
     }
   }
 
@@ -172,13 +244,23 @@ public class RobotContainer {
 
     drv.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
         .whileTrue(
-            new ProxyCommand(() -> new GoToLoadingZone(LOADING_SIDE.LEFT, drivebase).getCommand())
-                .alongWith(autoMap.getCommandInMap("ArmHigh")));
+            new ProxyCommand(
+                    () -> new GoToLoadingZone(getLoadingSide(true), drivebase).getCommand())
+                .andThen(
+                    builder.getSwerveCommand(
+                        PathPlanner.loadPathGroup(
+                            getStationPath(true),
+                            new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS)))));
 
     drv.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5)
         .whileTrue(
-            new ProxyCommand(() -> new GoToLoadingZone(LOADING_SIDE.RIGHT, drivebase).getCommand())
-                .alongWith(autoMap.getCommandInMap("ArmHigh")));
+            new ProxyCommand(
+                    () -> new GoToLoadingZone(getLoadingSide(false), drivebase).getCommand())
+                .andThen(
+                    builder.getSwerveCommand(
+                        PathPlanner.loadPathGroup(
+                            getStationPath(false),
+                            new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS)))));
 
     // Zero the Gyro, should only be used during practice
     drv.start().onTrue(new InstantCommand(drivebase::zeroGyro));
@@ -215,22 +297,23 @@ public class RobotContainer {
     op.start().onTrue(Commands.runOnce(() -> arm.zeroArm(), arm));
 
     // Button Board setting the level and column to be placed
-    btn.button(1).onTrue(Commands.runOnce(() -> level = "ArmLow"));
-    btn.button(2).onTrue(Commands.runOnce(() -> level = "ArmMid"));
-    btn.button(3).onTrue(Commands.runOnce(() -> level = "ArmHigh"));
-    btn.button(4).onTrue(Commands.runOnce(() -> column = 1));
-    btn.button(5).onTrue(Commands.runOnce(() -> column = 2));
-    btn.button(6).onTrue(Commands.runOnce(() -> column = 3));
-    btn.button(7).onTrue(Commands.runOnce(() -> column = 4));
-    btn.button(8).onTrue(Commands.runOnce(() -> column = 5));
-    btn.button(9).onTrue(Commands.runOnce(() -> column = 6));
-    btn.button(10).onTrue(Commands.runOnce(() -> column = 7));
-    btn.button(11).onTrue(Commands.runOnce(() -> column = 8));
-    btn.button(12).onTrue(Commands.runOnce(() -> column = 9));
-    btn.button(13).whileTrue(Commands.runOnce(() -> intake.intakeCone(), intake));
-    btn.button(13).onFalse(Commands.runOnce(() -> intake.holdCone(), intake));
-    btn.button(14).whileTrue(Commands.runOnce(() -> intake.intakeCube(), intake));
-    btn.button(14).onFalse(Commands.runOnce(() -> intake.holdCube(), intake));
+
+    btn.button(1).onTrue(Commands.runOnce(() -> setColumn(1)));
+    btn.button(2).onTrue(Commands.runOnce(() -> setColumn(2)));
+    btn.button(3).onTrue(Commands.runOnce(() -> setColumn(3)));
+    btn.button(4).onTrue(Commands.runOnce(() -> setColumn(4)));
+    btn.button(5).onTrue(Commands.runOnce(() -> setColumn(5)));
+    btn.button(6).onTrue(Commands.runOnce(() -> setColumn(6)));
+    btn.button(7).onTrue(Commands.runOnce(() -> setColumn(7)));
+    btn.button(8).onTrue(Commands.runOnce(() -> setColumn(8)));
+    btn.button(9).onTrue(Commands.runOnce(() -> setColumn(9)));
+    btn.button(10).onTrue(Commands.runOnce(() -> level = "ArmLow"));
+    btn.button(11).onTrue(Commands.runOnce(() -> level = "ArmMid"));
+    btn.button(12).onTrue(Commands.runOnce(() -> level = "ArmHigh"));
+    // btn.button(13).whileTrue(Commands.runOnce(() -> intake.intakeCone(), intake));
+    // btn.button(13).onFalse(Commands.runOnce(() -> intake.holdCone(), intake));
+    // btn.button(14).whileTrue(Commands.runOnce(() -> intake.intakeCube(), intake));
+    // btn.button(14).onFalse(Commands.runOnce(() -> intake.holdCube(), intake));
   }
 
   /**
