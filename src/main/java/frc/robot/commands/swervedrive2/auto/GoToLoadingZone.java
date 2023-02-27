@@ -1,16 +1,14 @@
 package frc.robot.commands.swervedrive2.auto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPoint;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.Auton;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import java.util.ArrayList;
+import java.util.List;
 import webblib.util.chargedup.LoadingArea;
 
 public class GoToLoadingZone extends CommandBase {
@@ -61,12 +59,13 @@ public class GoToLoadingZone extends CommandBase {
       GoToPathPoints goToPathPoints;
       switch (selectedLoadingSide) {
         case BARRIER:
-          List<PathPoint> pointsBarrier = new ArrayList<PathPoint>() {
-            {
-              addAll(Auton.barrierCorridorPPOut);
-              add(Auton.stationWaypointIn);
-            }
-          };
+          List<PathPoint> pointsBarrier =
+              new ArrayList<PathPoint>() {
+                {
+                  addAll(Auton.barrierCorridorPPOut);
+                  add(Auton.stationWaypointIn);
+                }
+              };
           goToPathPoints =
               new GoToPathPoints(
                   pointsBarrier,
@@ -76,12 +75,13 @@ public class GoToLoadingZone extends CommandBase {
           command = goToPathPoints.getCommand();
           break;
         case RAIL:
-          List<PathPoint> pointsRail = new ArrayList<PathPoint>() {
-            {
-              addAll(Auton.bumpCorridorPPOut);
-              add(Auton.stationWaypointIn);
-            }
-          };
+          List<PathPoint> pointsRail =
+              new ArrayList<PathPoint>() {
+                {
+                  addAll(Auton.bumpCorridorPPOut);
+                  add(Auton.stationWaypointIn);
+                }
+              };
           goToPathPoints =
               new GoToPathPoints(
                   pointsRail,

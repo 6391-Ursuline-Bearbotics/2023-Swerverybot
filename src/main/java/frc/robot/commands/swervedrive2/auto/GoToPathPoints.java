@@ -6,7 +6,6 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.geometry.Pose2d;
-
 import frc.robot.Constants.Auton;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.util.ArrayList;
@@ -16,7 +15,11 @@ public class GoToPathPoints {
   private PPSwerveControllerCommand ppSwerveCommand;
   private PathPlannerTrajectory traj;
 
-  public GoToPathPoints(List<PathPoint> points, Pose2d firstPose, PathConstraints constraints, SwerveSubsystem drive) {
+  public GoToPathPoints(
+      List<PathPoint> points,
+      Pose2d firstPose,
+      PathConstraints constraints,
+      SwerveSubsystem drive) {
     PathPoint currentPathPoint;
     if (Math.hypot(
             drive.getFieldVelocity().vxMetersPerSecond, drive.getFieldVelocity().vyMetersPerSecond)

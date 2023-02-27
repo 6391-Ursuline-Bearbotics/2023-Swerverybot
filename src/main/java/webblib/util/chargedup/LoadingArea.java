@@ -1,10 +1,6 @@
 package webblib.util.chargedup;
 
-import java.util.Optional;
-
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.Constants.Auton;
-import frc.robot.commands.swervedrive2.auto.GoToLoadingZone.LOADING_SIDE;
 import webblib.util.HolonomicPose2d;
 import webblib.util.RectanglePoseArea;
 

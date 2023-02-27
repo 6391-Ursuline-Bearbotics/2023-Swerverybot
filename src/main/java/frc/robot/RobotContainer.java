@@ -7,9 +7,9 @@ package frc.robot;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -141,33 +141,30 @@ public class RobotContainer {
   }
 
   private LOADING_SIDE getLoadingSide(Boolean left) {
-    if (color == Alliance.Blue){
-      if (left){
+    if (color == Alliance.Blue) {
+      if (left) {
         return LOADING_SIDE.RAIL;
-      }
-      else {
+      } else {
         return LOADING_SIDE.BARRIER;
       }
     } else {
-      if (left){
+      if (left) {
         return LOADING_SIDE.BARRIER;
-      }
-      else {
+      } else {
         return LOADING_SIDE.RAIL;
       }
     }
   }
 
   private String getStationPath(Boolean left) {
-    if (color == Alliance.Blue){
-      if (left){
+    if (color == Alliance.Blue) {
+      if (left) {
         if (gamePiece()) {
           return "CubeStationRail";
         } else {
           return "ConeStationRail";
         }
-      }
-      else {
+      } else {
         if (gamePiece()) {
           return "CubeStationBarrier";
         } else {
@@ -175,14 +172,13 @@ public class RobotContainer {
         }
       }
     } else {
-      if (left){
+      if (left) {
         if (gamePiece()) {
           return "CubeStationBarrier";
         } else {
           return "ConeStationBarrier";
         }
-      }
-      else {
+      } else {
         if (gamePiece()) {
           return "CubeStationRail";
         } else {
@@ -206,10 +202,10 @@ public class RobotContainer {
   }
 
   private void setColumn(int col) {
-    if (color == Alliance.Blue){
-        column = col;
+    if (color == Alliance.Blue) {
+      column = col;
     } else if (color == Alliance.Red) {
-        column = 10 - col;
+      column = 10 - col;
     }
   }
 
@@ -248,18 +244,20 @@ public class RobotContainer {
 
     drv.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
         .whileTrue(
-            new ProxyCommand(() -> new GoToLoadingZone(getLoadingSide(true), drivebase).getCommand())
-                .andThen(builder
-                    .getSwerveCommand(
+            new ProxyCommand(
+                    () -> new GoToLoadingZone(getLoadingSide(true), drivebase).getCommand())
+                .andThen(
+                    builder.getSwerveCommand(
                         PathPlanner.loadPathGroup(
                             getStationPath(true),
                             new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS)))));
 
     drv.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5)
         .whileTrue(
-            new ProxyCommand(() -> new GoToLoadingZone(getLoadingSide(false), drivebase).getCommand())
-                .andThen(builder
-                    .getSwerveCommand(
+            new ProxyCommand(
+                    () -> new GoToLoadingZone(getLoadingSide(false), drivebase).getCommand())
+                .andThen(
+                    builder.getSwerveCommand(
                         PathPlanner.loadPathGroup(
                             getStationPath(false),
                             new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS)))));
@@ -299,7 +297,7 @@ public class RobotContainer {
     op.start().onTrue(Commands.runOnce(() -> arm.zeroArm(), arm));
 
     // Button Board setting the level and column to be placed
-    
+
     btn.button(1).onTrue(Commands.runOnce(() -> setColumn(1)));
     btn.button(2).onTrue(Commands.runOnce(() -> setColumn(2)));
     btn.button(3).onTrue(Commands.runOnce(() -> setColumn(3)));
@@ -312,10 +310,10 @@ public class RobotContainer {
     btn.button(10).onTrue(Commands.runOnce(() -> level = "ArmLow"));
     btn.button(11).onTrue(Commands.runOnce(() -> level = "ArmMid"));
     btn.button(12).onTrue(Commands.runOnce(() -> level = "ArmHigh"));
-    //btn.button(13).whileTrue(Commands.runOnce(() -> intake.intakeCone(), intake));
-    //btn.button(13).onFalse(Commands.runOnce(() -> intake.holdCone(), intake));
-    //btn.button(14).whileTrue(Commands.runOnce(() -> intake.intakeCube(), intake));
-    //btn.button(14).onFalse(Commands.runOnce(() -> intake.holdCube(), intake));
+    // btn.button(13).whileTrue(Commands.runOnce(() -> intake.intakeCone(), intake));
+    // btn.button(13).onFalse(Commands.runOnce(() -> intake.holdCone(), intake));
+    // btn.button(14).whileTrue(Commands.runOnce(() -> intake.intakeCube(), intake));
+    // btn.button(14).onFalse(Commands.runOnce(() -> intake.holdCube(), intake));
   }
 
   /**

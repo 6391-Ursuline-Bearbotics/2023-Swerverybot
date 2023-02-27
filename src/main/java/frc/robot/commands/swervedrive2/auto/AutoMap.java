@@ -27,10 +27,7 @@ public class AutoMap {
                 .andThen(() -> arm.stopArm()));
     eventMapGetter.put(
         "ArmStow",
-        () ->
-            Commands.run(() -> arm.stowArm(), arm)
-                .withTimeout(2)
-                .andThen(() -> arm.stopArm()));
+        () -> Commands.run(() -> arm.stowArm(), arm).withTimeout(2).andThen(() -> arm.stopArm()));
     eventMapGetter.put(
         "ArmMid",
         () ->
@@ -42,7 +39,8 @@ public class AutoMap {
 
     eventMapGetter.put("ConeGrab", () -> Commands.run(() -> intake.intakeCone()).withTimeout(5));
 
-    eventMapGetter.put("IntakeCone", () -> Commands.run(() -> intake.intakeCone()).withTimeout(0.25));
+    eventMapGetter.put(
+        "IntakeCone", () -> Commands.run(() -> intake.intakeCone()).withTimeout(0.25));
 
     eventMapGetter.put(
         "OuttakeCube", () -> Commands.run(() -> intake.outtakeCube()).withTimeout(0.1));
