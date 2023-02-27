@@ -44,18 +44,4 @@ public class LoadingArea {
   public boolean isPoseWithinLoadingArea(Pose2d pose) {
     return largeLoadingRect.isPoseWithinArea(pose) || smallLoadingRect.isPoseWithinArea(pose);
   }
-
-  /**
-   * Get best scoring area. Assumes scoring area zones do not overlap.
-   *
-   * @param pose current pose of robot
-   * @return either null if not in scoring area, or the scoring are if in scoring area
-   */
-  public static Pose2d getScoringExitArea(Pose2d pose, LOADING_SIDE side) {
-    if (side == LOADING_SIDE.RAIL) {
-      
-    }
-    else {
-    }
-  }
 }

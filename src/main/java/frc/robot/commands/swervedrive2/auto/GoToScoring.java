@@ -21,6 +21,12 @@ public class GoToScoring {
     RIGHT
   }
 
+  public enum SCORING_SIDE {
+    BARRIER,
+    MIDDLE,
+    BUMP
+  }
+
   public GoToScoring(SwerveSubsystem drive, POSITION selectedPosition) {
     this.drive = drive;
     this.selectedPosition = selectedPosition;
@@ -44,10 +50,9 @@ public class GoToScoring {
   }
 
   public Command getCommand() {
-    System.out.println("Scoring Position Scheduled");
     Optional<ScoringArea> scoringArea = getBestScoringArea(drive.getPose());
     Command command;
-    if (!scoringArea.isEmpty()) {
+    if (Auton.loadingArea.isPoseWithinLoadingArea(drive.getPose())) {
       GoToPose goToPose;
       switch (selectedPosition) {
         case LEFT:

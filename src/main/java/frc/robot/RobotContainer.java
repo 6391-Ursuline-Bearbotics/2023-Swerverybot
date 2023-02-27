@@ -98,7 +98,7 @@ public class RobotContainer {
         builder
             .getSwerveCommand(
                 PathPlanner.loadPathGroup(
-                    "Cube Mobility Dock",
+                    "CubeMobilityDock",
                     new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS)))
             .andThen(
                 Commands.run(
@@ -111,7 +111,7 @@ public class RobotContainer {
         builder
             .getSwerveCommand(
                 PathPlanner.loadPathGroup(
-                    "Cone Mobility Dock",
+                    "ConeMobilityDock",
                     new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS)))
             .andThen(
                 Commands.run(
@@ -137,6 +137,66 @@ public class RobotContainer {
       return axis;
     } else {
       return 0;
+    }
+  }
+
+  private LOADING_SIDE getLoadingSide(Boolean left) {
+    if (color == Alliance.Blue){
+      if (left){
+        return LOADING_SIDE.RAIL;
+      }
+      else {
+        return LOADING_SIDE.BARRIER;
+      }
+    } else {
+      if (left){
+        return LOADING_SIDE.BARRIER;
+      }
+      else {
+        return LOADING_SIDE.RAIL;
+      }
+    }
+  }
+
+  private String getStationPath(Boolean left) {
+    if (color == Alliance.Blue){
+      if (left){
+        if (gamePiece()) {
+          return "CubeStationRail";
+        } else {
+          return "ConeStationRail";
+        }
+      }
+      else {
+        if (gamePiece()) {
+          return "CubeStationBarrier";
+        } else {
+          return "ConeStationBarrier";
+        }
+      }
+    } else {
+      if (left){
+        if (gamePiece()) {
+          return "CubeStationBarrier";
+        } else {
+          return "ConeStationBarrier";
+        }
+      }
+      else {
+        if (gamePiece()) {
+          return "CubeStationRail";
+        } else {
+          return "ConeStationRail";
+        }
+      }
+    }
+  }
+
+  private Boolean gamePiece() {
+    if (column == 2 || column == 5 || column == 8 || level == "ArmLow") {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -188,13 +248,21 @@ public class RobotContainer {
 
     drv.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
         .whileTrue(
-            new ProxyCommand(() -> new GoToLoadingZone(LOADING_SIDE.LEFT, drivebase).getCommand())
-                .alongWith(autoMap.getCommandInMap("ArmHigh")));
+            new ProxyCommand(() -> new GoToLoadingZone(getLoadingSide(true), drivebase).getCommand())
+                .andThen(builder
+                    .getSwerveCommand(
+                        PathPlanner.loadPathGroup(
+                            getStationPath(true),
+                            new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS)))));
 
     drv.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5)
         .whileTrue(
-            new ProxyCommand(() -> new GoToLoadingZone(LOADING_SIDE.RIGHT, drivebase).getCommand())
-                .alongWith(autoMap.getCommandInMap("ArmHigh")));
+            new ProxyCommand(() -> new GoToLoadingZone(getLoadingSide(false), drivebase).getCommand())
+                .andThen(builder
+                    .getSwerveCommand(
+                        PathPlanner.loadPathGroup(
+                            getStationPath(false),
+                            new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS)))));
 
     // Zero the Gyro, should only be used during practice
     drv.start().onTrue(new InstantCommand(drivebase::zeroGyro));

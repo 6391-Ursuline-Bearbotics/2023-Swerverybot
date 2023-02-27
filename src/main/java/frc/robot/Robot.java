@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.ArmConstants.ArmConfig;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,11 +20,9 @@ public class Robot extends TimedRobot {
   private RobotContainer robotContainer;
   private Command autonomousCommand;
   public static Robot instance;
-  public static ArmConfig armConfig;
 
   public Robot() {
     instance = this;
-    armConfig = new ArmConfig();
   }
 
   public static Robot getInstance() {

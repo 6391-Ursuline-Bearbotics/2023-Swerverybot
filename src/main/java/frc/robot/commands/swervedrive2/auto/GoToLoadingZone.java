@@ -1,10 +1,11 @@
 package frc.robot.commands.swervedrive2.auto;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPoint;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -32,7 +33,6 @@ public class GoToLoadingZone extends CommandBase {
 
   public Command getCommand() {
     Command command;
-    Pose2d scoringArea = LoadingArea.getScoringExitArea(drive.getPose(), selectedLoadingSide);
     // If we are within the loading area go direct
     if (loadingArea.isPoseWithinLoadingArea(drive.getPose())) {
       GoToPose goToPose;
@@ -56,25 +56,39 @@ public class GoToLoadingZone extends CommandBase {
         default:
           throw new IllegalArgumentException("Loading station enum not supported.");
       }
-    } else if (!scoringArea.isEmpty()) {
+    } else if (Auton.scoreArea.isPoseWithinArea(drive.getPose())) {
       // If we are within scoring area find the left / right exit
-      GoToPose goToPose;
+      GoToPathPoints goToPathPoints;
       switch (selectedLoadingSide) {
-        case LEFT:
-          goToPose =
-              new GoToPose(
-                  loadingArea.getDoubleSubstationLeft().getPoseMeters(),
+        case BARRIER:
+          List<PathPoint> pointsBarrier = new ArrayList<PathPoint>() {
+            {
+              addAll(Auton.barrierCorridorPPOut);
+              add(Auton.stationWaypointIn);
+            }
+          };
+          goToPathPoints =
+              new GoToPathPoints(
+                  pointsBarrier,
+                  Auton.barrierCorridor.get(0),
                   new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
                   drive);
-          command = goToPose.getCommand();
+          command = goToPathPoints.getCommand();
           break;
-        case RIGHT:
-          goToPose =
-              new GoToPose(
-                  loadingArea.getDoubleSubstationRight().getPoseMeters(),
+        case RAIL:
+          List<PathPoint> pointsRail = new ArrayList<PathPoint>() {
+            {
+              addAll(Auton.bumpCorridorPPOut);
+              add(Auton.stationWaypointIn);
+            }
+          };
+          goToPathPoints =
+              new GoToPathPoints(
+                  pointsRail,
+                  Auton.bumpCorridor.get(0),
                   new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
                   drive);
-          command = goToPose.getCommand();
+          command = goToPathPoints.getCommand();
           break;
         default:
           throw new IllegalArgumentException("Loading station enum not supported.");
