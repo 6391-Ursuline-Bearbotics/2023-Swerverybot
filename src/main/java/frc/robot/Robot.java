@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +23,7 @@ public class Robot extends TimedRobot {
   private RobotContainer robotContainer;
   private Command autonomousCommand;
   public static Robot instance;
+  private Alliance ally = Alliance.Invalid;
 
   public Robot() {
     instance = this;
@@ -41,6 +45,7 @@ public class Robot extends TimedRobot {
       e.printStackTrace();
     }
     robotContainer = new RobotContainer();
+    checkDSUpdate();
   }
 
   /**
@@ -66,13 +71,25 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    checkDSUpdate();
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    checkDSUpdate();
+    if (ally == Alliance.Red) {
+      robotContainer.led.setAll(Color.kRed);
+    } else if (ally == Alliance.Blue) {
+      robotContainer.led.setAll(Color.kBlue);
+    } else {
+      robotContainer.led.rainbow();
+    }
+  }
 
   @Override
   public void autonomousInit() {
+    checkDSUpdate();
     autonomousCommand = robotContainer.getAuto();
     System.out.println("AUTO START");
   }
@@ -106,6 +123,7 @@ public class Robot extends TimedRobot {
       autonomousCommand.cancel();
     }
     isAutoDone = false;
+    checkDSUpdate();
     RobotContainer.intake.stop();
   }
 
@@ -122,4 +140,14 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+  void checkDSUpdate() {
+    Alliance currentAlliance = DriverStation.getAlliance();
+
+    // If we have data, and have a new alliance from last time
+    if (DriverStation.isDSAttached() && currentAlliance != ally) {
+      ally = currentAlliance;
+      robotContainer.setAllianceColor(ally);
+    }
+} 
 }

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -31,6 +32,7 @@ import frc.robot.commands.swervedrive2.auto.PathBuilder;
 import frc.robot.commands.swervedrive2.drivebase.TeleopDrive;
 import frc.robot.subsystems.Arm.Arm;
 import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.LED.LEDSubsystem;
 import frc.robot.subsystems.Vision.Limelight;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
@@ -51,6 +53,7 @@ public class RobotContainer {
   public static final Arm arm = new Arm();
   public static final Intake intake = new Intake();
   private final Limelight vision = new Limelight(drivebase);
+  public final LEDSubsystem led = new LEDSubsystem();
 
   private final AutoMap autoMap = new AutoMap(intake, arm);
   private final PathBuilder builder = new PathBuilder(drivebase, autoMap.getMap());
@@ -188,7 +191,7 @@ public class RobotContainer {
     }
   }
 
-  private Boolean gamePiece() {
+  public Boolean gamePiece() {
     if (column == 2 || column == 5 || column == 8 || level == "ArmLow") {
       return true;
     } else {
@@ -206,6 +209,11 @@ public class RobotContainer {
       column = col;
     } else if (color == Alliance.Red) {
       column = 10 - col;
+    }
+    if (gamePiece()) {
+      led.setAll(Color.kPurple);
+    } else {
+      led.setAll(Color.kOrange);
     }
   }
 

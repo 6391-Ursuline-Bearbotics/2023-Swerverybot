@@ -18,6 +18,8 @@ import swervelib.math.SwerveKinematics2;
 import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
+import swervelib.telemetry.SwerveDriveTelemetry;
+import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 import webblib.util.swerve.SwerveBalance;
 
 public class SwerveSubsystem extends SubsystemBase {
@@ -37,6 +39,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param directory Directory of swerve drive config files.
    */
   public SwerveSubsystem(File directory) {
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.NONE;
     try {
       swerveDrive = new SwerveParser(directory).createSwerveDrive();
     } catch (Exception e) {

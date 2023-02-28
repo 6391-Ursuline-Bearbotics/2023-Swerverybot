@@ -2,22 +2,14 @@ package frc.robot.subsystems.LED;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LED;
-import org.photonvision.PhotonCamera;
 
 public class LEDSubsystem extends SubsystemBase {
   private final AddressableLED m_led = new AddressableLED(LED.PWMPORT);
   private final AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(LED.LENGTH);
   private int m_rainbowFirstPixelHue;
-
-  private PhotonCamera ballCamera;
-  private boolean shooter = false;
-  private boolean redBall = false;
-  private boolean blueBall = false;
 
   public LEDSubsystem() {
     m_led.setLength(m_ledBuffer.getLength());
@@ -26,20 +18,7 @@ public class LEDSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    if (DriverStation.isEnabled()) {
-
-    } else {
-      Alliance ally = DriverStation.getAlliance();
-      if (ally == Alliance.Blue) {
-        setAll(Color.kBlue);
-      } else if (ally == Alliance.Red) {
-        setAll(Color.kRed);
-      } else {
-        rainbow();
-      }
-    }
-  }
+  public void periodic() {}
 
   public void rainbow() {
     // For every pixel
@@ -79,9 +58,10 @@ public class LEDSubsystem extends SubsystemBase {
     }
   }
 
-  private void setAll(Color color) {
-    for (var i = 0; i < m_ledBuffer.getLength() / 2; i++) {
+  public void setAll(Color color) {
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       m_ledBuffer.setLED(i, color);
     }
+    m_led.setData(m_ledBuffer);
   }
 }
