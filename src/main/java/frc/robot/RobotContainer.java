@@ -28,6 +28,7 @@ import frc.robot.commands.swervedrive2.auto.GoToLoadingZone;
 import frc.robot.commands.swervedrive2.auto.GoToLoadingZone.LOADING_SIDE;
 import frc.robot.commands.swervedrive2.auto.GoToScoring;
 import frc.robot.commands.swervedrive2.auto.GoToScoring.POSITION;
+import frc.robot.commands.swervedrive2.auto.GoToScoring.SCORING_SIDE;
 import frc.robot.commands.swervedrive2.auto.PathBuilder;
 import frc.robot.commands.swervedrive2.drivebase.TeleopDrive;
 import frc.robot.subsystems.Arm.Arm;
@@ -191,6 +192,26 @@ public class RobotContainer {
     }
   }
 
+  private SCORING_SIDE getCorridor(POSITION pos) {
+    if (color == Alliance.Blue) {
+      if (pos == POSITION.LEFT) {
+        return SCORING_SIDE.BARRIER;
+      } else if (pos == POSITION.MIDDLE) {
+        return SCORING_SIDE.MIDDLE;
+      } else {
+        return SCORING_SIDE.BUMP;
+      }
+    } else {
+      if (pos == POSITION.LEFT) {
+        return SCORING_SIDE.BUMP;
+      } else if (pos == POSITION.MIDDLE) {
+        return SCORING_SIDE.MIDDLE;
+      } else {
+        return SCORING_SIDE.BARRIER;
+      }
+    }
+  }
+
   public Boolean gamePiece() {
     if (column == 2 || column == 5 || column == 8 || level == "ArmLow") {
       return true;
@@ -237,18 +258,26 @@ public class RobotContainer {
     // Buttons automatically drive a corridor / charge station
     drv.x()
         .whileTrue(
-            new ProxyCommand(() -> new GoToScoring(drivebase, POSITION.LEFT).getCommand())
-                .alongWith(autoMap.getCommandInMap(level)));
+            new ProxyCommand(
+                    () ->
+                        new GoToScoring(drivebase, getCorridor(POSITION.LEFT), column).getCommand())
+                .andThen(autoMap.getCommandInMap(level)));
 
     drv.a()
         .whileTrue(
-            new ProxyCommand(() -> new GoToScoring(drivebase, POSITION.MIDDLE).getCommand())
-                .alongWith(autoMap.getCommandInMap(level)));
+            new ProxyCommand(
+                    () ->
+                        new GoToScoring(drivebase, getCorridor(POSITION.MIDDLE), column)
+                            .getCommand())
+                .andThen(autoMap.getCommandInMap(level)));
 
     drv.b()
         .whileTrue(
-            new ProxyCommand(() -> new GoToScoring(drivebase, POSITION.RIGHT).getCommand())
-                .alongWith(autoMap.getCommandInMap(level)));
+            new ProxyCommand(
+                    () ->
+                        new GoToScoring(drivebase, getCorridor(POSITION.RIGHT), column)
+                            .getCommand())
+                .andThen(autoMap.getCommandInMap(level)));
 
     drv.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
         .whileTrue(
@@ -318,10 +347,6 @@ public class RobotContainer {
     btn.button(10).onTrue(Commands.runOnce(() -> level = "ArmLow"));
     btn.button(11).onTrue(Commands.runOnce(() -> level = "ArmMid"));
     btn.button(12).onTrue(Commands.runOnce(() -> level = "ArmHigh"));
-    // btn.button(13).whileTrue(Commands.runOnce(() -> intake.intakeCone(), intake));
-    // btn.button(13).onFalse(Commands.runOnce(() -> intake.holdCone(), intake));
-    // btn.button(14).whileTrue(Commands.runOnce(() -> intake.intakeCube(), intake));
-    // btn.button(14).onFalse(Commands.runOnce(() -> intake.holdCube(), intake));
   }
 
   /**

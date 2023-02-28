@@ -33,27 +33,8 @@ public class GoToLoadingZone extends CommandBase {
     Command command;
     // If we are within the loading area go direct
     if (loadingArea.isPoseWithinLoadingArea(drive.getPose())) {
-      GoToPose goToPose;
-      switch (selectedLoadingSide) {
-        case BARRIER:
-          goToPose =
-              new GoToPose(
-                  loadingArea.getDoubleSubstationBarrier().getPoseMeters(),
-                  new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
-                  drive);
-          command = goToPose.getCommand();
-          break;
-        case RAIL:
-          goToPose =
-              new GoToPose(
-                  loadingArea.getDoubleSubstationRail().getPoseMeters(),
-                  new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
-                  drive);
-          command = goToPose.getCommand();
-          break;
-        default:
-          throw new IllegalArgumentException("Loading station enum not supported.");
-      }
+      // In loading area so just run the PathGroup that happens after this.
+      command = Commands.none();
     } else if (Auton.scoreArea.isPoseWithinArea(drive.getPose())) {
       // If we are within scoring area find the left / right exit
       GoToPathPoints goToPathPoints;
@@ -94,7 +75,21 @@ public class GoToLoadingZone extends CommandBase {
           throw new IllegalArgumentException("Loading station enum not supported.");
       }
     } else {
-      command = Commands.none();
+      // We are in the middle of the field so go to the stationWaypointIn
+      GoToPathPoints goToPathPoints;
+      List<PathPoint> pointsRail =
+          new ArrayList<PathPoint>() {
+            {
+              add(Auton.stationWaypointIn);
+            }
+          };
+      goToPathPoints =
+          new GoToPathPoints(
+              pointsRail,
+              Auton.stationWaypoint,
+              new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
+              drive);
+      command = goToPathPoints.getCommand();
     }
     return command;
   }

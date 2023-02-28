@@ -18,7 +18,6 @@ import swervelib.parser.PIDFConfig;
 import webblib.util.HolonomicPose2d;
 import webblib.util.RectanglePoseArea;
 import webblib.util.chargedup.LoadingArea;
-import webblib.util.chargedup.ScoringArea;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -64,36 +63,72 @@ public final class Constants {
             new HolonomicPose2d(new Pose2d(15.75, 7.34, new Rotation2d()), new Rotation2d()),
             new HolonomicPose2d(new Pose2d(15.75, 6.00, new Rotation2d()), new Rotation2d()));
 
-    public static final List<ScoringArea> scoreAreaList =
+    public static final List<Pose2d> scoringPoses =
+        new ArrayList<>() {
+          {
+            add(new Pose2d(1.73, Units.inchesToMeters(196.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(1.73, Units.inchesToMeters(174.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(1.73, Units.inchesToMeters(152.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(1.73, Units.inchesToMeters(130.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(1.73, Units.inchesToMeters(108.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(1.73, Units.inchesToMeters(86.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(1.73, Units.inchesToMeters(64.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(1.73, Units.inchesToMeters(42.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(1.73, Units.inchesToMeters(20.19), new Rotation2d(Math.PI)));
+          }
+        };
+
+    public static final List<PathPoint> scoringPP =
         new ArrayList<>() {
           {
             add(
-                new ScoringArea(
-                    new RectanglePoseArea(
-                        new Translation2d(1.23, 3.53), new Translation2d(2.86, 5.33)),
-                    // diagonal y's should not overlap
-                    new HolonomicPose2d(new Pose2d(1.62, 4.95, new Rotation2d()), new Rotation2d()),
-                    new HolonomicPose2d(new Pose2d(1.62, 4.40, new Rotation2d()), new Rotation2d()),
-                    new HolonomicPose2d(
-                        new Pose2d(1.62, 3.84, new Rotation2d()), new Rotation2d())));
+                new PathPoint(
+                    scoringPoses.get(0).getTranslation(),
+                    new Rotation2d(),
+                    scoringPoses.get(0).getRotation()));
             add(
-                new ScoringArea(
-                    new RectanglePoseArea(
-                        new Translation2d(1.23, 1.90), new Translation2d(2.92, 3.52)),
-                    new HolonomicPose2d(new Pose2d(1.62, 3.30, new Rotation2d()), new Rotation2d()),
-                    new HolonomicPose2d(new Pose2d(1.62, 2.72, new Rotation2d()), new Rotation2d()),
-                    new HolonomicPose2d(
-                        new Pose2d(1.62, 2.19, new Rotation2d()), new Rotation2d())));
+                new PathPoint(
+                    scoringPoses.get(1).getTranslation(),
+                    new Rotation2d(),
+                    scoringPoses.get(1).getRotation()));
             add(
-                new ScoringArea(
-                    new RectanglePoseArea(
-                        new Translation2d(1.23, 0.0), new Translation2d(2.89, 1.89)),
-                    new HolonomicPose2d(new Pose2d(1.62, 1.61, new Rotation2d()), new Rotation2d()),
-                    new HolonomicPose2d(new Pose2d(1.62, 1.03, new Rotation2d()), new Rotation2d()),
-                    new HolonomicPose2d(
-                        new Pose2d(1.62, 0.55, new Rotation2d()), new Rotation2d())));
+                new PathPoint(
+                    scoringPoses.get(2).getTranslation(),
+                    new Rotation2d(),
+                    scoringPoses.get(2).getRotation()));
+            add(
+                new PathPoint(
+                    scoringPoses.get(3).getTranslation(),
+                    new Rotation2d(),
+                    scoringPoses.get(3).getRotation()));
+            add(
+                new PathPoint(
+                    scoringPoses.get(4).getTranslation(),
+                    new Rotation2d(),
+                    scoringPoses.get(4).getRotation()));
+            add(
+                new PathPoint(
+                    scoringPoses.get(5).getTranslation(),
+                    new Rotation2d(),
+                    scoringPoses.get(5).getRotation()));
+            add(
+                new PathPoint(
+                    scoringPoses.get(6).getTranslation(),
+                    new Rotation2d(),
+                    scoringPoses.get(6).getRotation()));
+            add(
+                new PathPoint(
+                    scoringPoses.get(7).getTranslation(),
+                    new Rotation2d(),
+                    scoringPoses.get(7).getRotation()));
+            add(
+                new PathPoint(
+                    scoringPoses.get(8).getTranslation(),
+                    new Rotation2d(),
+                    scoringPoses.get(8).getRotation()));
           }
         };
+
     public static final RectanglePoseArea scoreArea =
         new RectanglePoseArea(new Translation2d(1.23, 0.0), new Translation2d(2.92, 5.33));
     public static final Translation3d cameraTranslation = new Translation3d(0.5, 0.0, 0.5);
