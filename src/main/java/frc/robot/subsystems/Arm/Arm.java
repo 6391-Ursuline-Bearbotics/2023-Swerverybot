@@ -9,7 +9,10 @@ import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 
 public class Arm extends SubsystemBase {
   WPI_TalonFX armMotor;
@@ -63,9 +66,7 @@ public class Arm extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+  public void periodic() {}
 
   public void stowArm() {
     setArmPosition(STOW);
@@ -110,5 +111,11 @@ public class Arm extends SubsystemBase {
 
   public void zeroArm() {
     armMotor.setSelectedSensorPosition(0);
+  }
+
+  public double getArmPosition() {
+    var pos = armMotor.getSelectedSensorPosition();
+    SmartDashboard.putNumber("Arm Position", pos);
+    return pos;
   }
 }

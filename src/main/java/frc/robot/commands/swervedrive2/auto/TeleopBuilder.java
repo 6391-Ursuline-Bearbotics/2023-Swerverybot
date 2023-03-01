@@ -14,24 +14,24 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PathBuilder {
-  private SwerveAutoBuilder autoBuilder;
+public class TeleopBuilder {
+  private SwerveAutoBuilder teleopBuilder;
   private SwerveSubsystem drivebase;
   public Map<String, Command> pathMap = new HashMap<>();
 
-  public PathBuilder(SwerveSubsystem drivebase, HashMap<String, Command> eventMap) {
+  public TeleopBuilder(SwerveSubsystem drivebase, HashMap<String, Command> eventMap) {
     this.drivebase = drivebase;
 
-    autoBuilder =
+    teleopBuilder =
         new SwerveAutoBuilder(
             drivebase::getPose, // Functional interface to feed supplier
-            drivebase::resetOdometry,
+            (Pose2d) -> {},
             // Position controllers
             new PIDConstants(Auton.xAutoPID.p, Auton.xAutoPID.i, Auton.xAutoPID.d),
             new PIDConstants(Auton.xAutoPID.p, Auton.xAutoPID.i, Auton.xAutoPID.d),
             drivebase::setChassisSpeeds,
             eventMap,
-            true,
+            false,
             drivebase);
   }
 
@@ -39,15 +39,8 @@ public class PathBuilder {
     return pathMap.get(path);
   }
 
-  public void loadAllPaths() {
-    File folder = new File(Filesystem.getDeployDirectory(), "pathplanner/");
-    File[] listOfFiles = folder.listFiles();
-
-    for (int i = 0; i < listOfFiles.length; i++) {
-      String filename = listOfFiles[i].getName();
-      filename = filename.substring(0, filename.length() - 5);
-      pathMap.put(filename, autoBuilder.fullAuto(PathPlanner.loadPathGroup(
+  public void loadPath(String filename) {
+    pathMap.put(filename, teleopBuilder.fullAuto(PathPlanner.loadPathGroup(
         filename, new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS))));
-    }
   }
 }

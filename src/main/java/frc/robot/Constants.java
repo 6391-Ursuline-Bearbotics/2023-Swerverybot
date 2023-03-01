@@ -149,12 +149,14 @@ public final class Constants {
                 new PathPoint(
                     barrierCorridor.get(0).getTranslation(),
                     new Rotation2d(),
-                    barrierCorridor.get(0).getRotation()));
+                    barrierCorridor.get(0).getRotation(),
+                    3.0));
             add(
                 new PathPoint(
                     barrierCorridor.get(1).getTranslation(),
                     new Rotation2d(),
-                    barrierCorridor.get(1).getRotation()));
+                    barrierCorridor.get(1).getRotation(),
+                    3.0));
           }
         };
 
@@ -165,12 +167,14 @@ public final class Constants {
                 new PathPoint(
                     barrierCorridor.get(1).getTranslation(),
                     new Rotation2d(Math.PI),
-                    barrierCorridor.get(1).getRotation()));
+                    barrierCorridor.get(1).getRotation(),
+                    3.0));
             add(
                 new PathPoint(
                     barrierCorridor.get(0).getTranslation(),
                     new Rotation2d(Math.PI),
-                    barrierCorridor.get(0).getRotation()));
+                    barrierCorridor.get(0).getRotation(),
+                    3.0));
           }
         };
 
@@ -187,14 +191,16 @@ public final class Constants {
           {
             add(
                 new PathPoint(
-                    barrierCorridor.get(0).getTranslation(),
+                    bumpCorridor.get(0).getTranslation(),
                     new Rotation2d(),
-                    barrierCorridor.get(0).getRotation()));
+                    bumpCorridor.get(0).getRotation(),
+                    3.0));
             add(
                 new PathPoint(
-                    barrierCorridor.get(1).getTranslation(),
+                    bumpCorridor.get(1).getTranslation(),
                     new Rotation2d(),
-                    barrierCorridor.get(1).getRotation()));
+                    bumpCorridor.get(1).getRotation(),
+                    3.0));
           }
         };
 
@@ -203,21 +209,49 @@ public final class Constants {
           {
             add(
                 new PathPoint(
-                    barrierCorridor.get(1).getTranslation(),
+                    bumpCorridor.get(1).getTranslation(),
                     new Rotation2d(Math.PI),
-                    barrierCorridor.get(1).getRotation()));
+                    bumpCorridor.get(1).getRotation(),
+                    3.0));
             add(
                 new PathPoint(
-                    barrierCorridor.get(0).getTranslation(),
+                    bumpCorridor.get(0).getTranslation(),
                     new Rotation2d(Math.PI),
-                    barrierCorridor.get(0).getRotation()));
+                    bumpCorridor.get(0).getRotation(),
+                    3.0));
+          }
+        };
+
+    public static final List<Pose2d> midCorridor =
+        new ArrayList<>() {
+          {
+            add(new Pose2d(2.53, 2.77, new Rotation2d(Math.PI)));
+            add(new Pose2d(5.3, 2.77, new Rotation2d(Math.PI)));
+          }
+        };
+    
+    public static final List<PathPoint> midCorridorPPIn =
+        new ArrayList<>() {
+          {
+            add(
+                new PathPoint(
+                    midCorridor.get(1).getTranslation(),
+                    new Rotation2d(Math.PI),
+                    midCorridor.get(1).getRotation(),
+                    3.0));
+            add(
+                new PathPoint(
+                    midCorridor.get(0).getTranslation(),
+                    new Rotation2d(Math.PI),
+                    midCorridor.get(0).getRotation(),
+                    3.0));
           }
         };
 
     public static final Pose2d stationWaypoint = new Pose2d(13.22, 6.77, new Rotation2d());
     public static final PathPoint stationWaypointIn =
         new PathPoint(
-            stationWaypoint.getTranslation(), new Rotation2d(), stationWaypoint.getRotation());
+            stationWaypoint.getTranslation(), new Rotation2d(), stationWaypoint.getRotation(), 3.0);
     public static final PathPoint stationWaypointOut =
         new PathPoint(
             stationWaypoint.getTranslation(),

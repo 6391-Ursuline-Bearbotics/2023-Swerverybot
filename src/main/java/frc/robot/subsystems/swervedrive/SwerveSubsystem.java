@@ -25,7 +25,7 @@ import webblib.util.swerve.SwerveBalance;
 public class SwerveSubsystem extends SubsystemBase {
 
   /** Swerve drive object. */
-  private final SwerveDrive swerveDrive;
+  public final SwerveDrive swerveDrive;
 
   private final SwerveBalance swerveBalance =
       new SwerveBalance(Auton.balanceScale, Auton.balanceScalePow);

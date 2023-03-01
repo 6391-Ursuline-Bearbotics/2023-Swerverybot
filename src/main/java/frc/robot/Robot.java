@@ -129,7 +129,12 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    var pos = robotContainer.arm.getArmPosition();
+    if (pos > 5000) {
+      robotContainer.setSpeedLimit(0.5);
+    }
+  }
 
   @Override
   public void testInit() {

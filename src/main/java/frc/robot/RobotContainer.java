@@ -30,6 +30,7 @@ import frc.robot.commands.swervedrive2.auto.GoToScoring;
 import frc.robot.commands.swervedrive2.auto.GoToScoring.POSITION;
 import frc.robot.commands.swervedrive2.auto.GoToScoring.SCORING_SIDE;
 import frc.robot.commands.swervedrive2.auto.PathBuilder;
+import frc.robot.commands.swervedrive2.auto.TeleopBuilder;
 import frc.robot.commands.swervedrive2.drivebase.TeleopDrive;
 import frc.robot.subsystems.Arm.Arm;
 import frc.robot.subsystems.Intake.Intake;
@@ -58,13 +59,14 @@ public class RobotContainer {
 
   private final AutoMap autoMap = new AutoMap(intake, arm);
   private final PathBuilder builder = new PathBuilder(drivebase, autoMap.getMap());
+  private final TeleopBuilder teleopBuilder = new TeleopBuilder(drivebase, autoMap.getMap());
 
   private final CommandXboxController drv = new CommandXboxController(OIConstants.driverID);
   private final CommandXboxController op = new CommandXboxController(OIConstants.operatorID);
   private final CommandGenericHID btn = new CommandGenericHID(OIConstants.buttonsID);
 
   // Grid Selection Variables
-  private int column = 0;
+  private int column = 1;
   private String level = "ArmHigh";
   private double limit = 0.75;
   private Alliance color = Alliance.Invalid;
@@ -86,24 +88,17 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureBindings();
-    initializeChooser();
   }
 
   private void initializeChooser() {
 
     chooser.setDefaultOption(
         "Default Test",
-        builder.getSwerveCommand(
-            PathPlanner.loadPathGroup(
-                "Test Path", new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS))));
+        teleopBuilder.getSwerveCommand("ConeStationRail"));
 
     chooser.addOption(
         "Cube Mobility Dock",
-        builder
-            .getSwerveCommand(
-                PathPlanner.loadPathGroup(
-                    "CubeMobilityDock",
-                    new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS)))
+        builder.getSwerveCommand("CubeMobilityDock")
             .andThen(
                 Commands.run(
                         () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
@@ -112,11 +107,7 @@ public class RobotContainer {
 
     chooser.addOption(
         "Cone Mobility Dock",
-        builder
-            .getSwerveCommand(
-                PathPlanner.loadPathGroup(
-                    "ConeMobilityDock",
-                    new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS)))
+        builder.getSwerveCommand("ConeMobilityDock")
             .andThen(
                 Commands.run(
                         () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
@@ -223,6 +214,9 @@ public class RobotContainer {
   public void setAllianceColor(Alliance color) {
     this.color = color;
     vision.setAlliance(color);
+    builder.loadAllPaths();
+    teleopBuilder.loadPath("ConeStationRail");
+    initializeChooser();
   }
 
   private void setColumn(int col) {
@@ -231,10 +225,20 @@ public class RobotContainer {
     } else if (color == Alliance.Red) {
       column = 10 - col;
     }
+    SmartDashboard.putNumber("Column", column);
+    SmartDashboard.putString("Level", level);
     if (gamePiece()) {
       led.setAll(Color.kPurple);
     } else {
       led.setAll(Color.kOrange);
+    }
+  }
+
+  public void setSpeedLimit(double lim) {
+    if (lim == 0.0) {
+      limit = spdLimit.getSelected();
+    } else {
+      limit = lim;
     }
   }
 
@@ -253,7 +257,7 @@ public class RobotContainer {
 
     // Left Bumper slows the drive way down for fine positioning
     drv.leftBumper().onTrue(Commands.runOnce(() -> limit = 0.35));
-    drv.leftBumper().onFalse(Commands.runOnce(() -> limit = spdLimit.getSelected()));
+    drv.leftBumper().onFalse(Commands.runOnce(() -> setSpeedLimit(0.0)));
 
     // Buttons automatically drive a corridor / charge station
     drv.x()
@@ -282,22 +286,16 @@ public class RobotContainer {
     drv.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
         .whileTrue(
             new ProxyCommand(
-                    () -> new GoToLoadingZone(getLoadingSide(true), drivebase).getCommand())
+                    () -> new GoToLoadingZone(getLoadingSide(true), drivebase, color).getCommand())
                 .andThen(
-                    builder.getSwerveCommand(
-                        PathPlanner.loadPathGroup(
-                            getStationPath(true),
-                            new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS)))));
+                    () -> builder.getSwerveCommand(getStationPath(true))));
 
     drv.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5)
         .whileTrue(
             new ProxyCommand(
-                    () -> new GoToLoadingZone(getLoadingSide(false), drivebase).getCommand())
+                    () -> new GoToLoadingZone(getLoadingSide(false), drivebase, color).getCommand())
                 .andThen(
-                    builder.getSwerveCommand(
-                        PathPlanner.loadPathGroup(
-                            getStationPath(false),
-                            new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS)))));
+                    () -> builder.getSwerveCommand(getStationPath(false))));
 
     // Zero the Gyro, should only be used during practice
     drv.start().onTrue(new InstantCommand(drivebase::zeroGyro));
