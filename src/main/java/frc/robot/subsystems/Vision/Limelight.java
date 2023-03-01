@@ -21,7 +21,7 @@ public class Limelight extends SubsystemBase {
   public void periodic() {
     if (alliance == Alliance.Blue) {
       double[] botpose = LimelightHelpers.getBotPose_wpiBlue("limelight");
-      if (false) { // botpose.length != 0) {
+      if (botpose.length != 0) {
         drivebase.addVisionMeasurement(
             LimelightHelpers.toPose2D(botpose),
             Timer.getFPGATimestamp() - (botpose[6] / 1000.0),
@@ -30,7 +30,7 @@ public class Limelight extends SubsystemBase {
       }
     } else if (alliance == Alliance.Red) {
       double[] botpose = LimelightHelpers.getBotPose_wpiRed("limelight");
-      if (false) { // botpose.length != 0) {
+      if (botpose.length != 0) {
         drivebase.addVisionMeasurement(
             LimelightHelpers.toPose2D(botpose),
             Timer.getFPGATimestamp() - (botpose[6] / 1000.0),

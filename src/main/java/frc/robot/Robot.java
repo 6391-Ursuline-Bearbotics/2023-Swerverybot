@@ -133,6 +133,8 @@ public class Robot extends TimedRobot {
     var pos = robotContainer.arm.getArmPosition();
     if (pos > 5000) {
       robotContainer.setSpeedLimit(0.5);
+    } else {
+      robotContainer.setSpeedLimit(0.0);
     }
   }
 
