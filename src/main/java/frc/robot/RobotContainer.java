@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -21,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.Auton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.swervedrive2.auto.AutoMap;
 import frc.robot.commands.swervedrive2.auto.GoToLoadingZone;
@@ -92,13 +89,12 @@ public class RobotContainer {
 
   private void initializeChooser() {
 
-    chooser.setDefaultOption(
-        "Default Test",
-        teleopBuilder.getSwerveCommand("ConeStationRail"));
+    chooser.setDefaultOption("Default Test", teleopBuilder.getSwerveCommand("ConeStationRail"));
 
     chooser.addOption(
         "Cube Mobility Dock",
-        builder.getSwerveCommand("CubeMobilityDock")
+        builder
+            .getSwerveCommand("CubeMobilityDock")
             .andThen(
                 Commands.run(
                         () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
@@ -107,7 +103,8 @@ public class RobotContainer {
 
     chooser.addOption(
         "Cone Mobility Dock",
-        builder.getSwerveCommand("ConeMobilityDock")
+        builder
+            .getSwerveCommand("ConeMobilityDock")
             .andThen(
                 Commands.run(
                         () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
@@ -287,15 +284,13 @@ public class RobotContainer {
         .whileTrue(
             new ProxyCommand(
                     () -> new GoToLoadingZone(getLoadingSide(true), drivebase, color).getCommand())
-                .andThen(
-                    () -> builder.getSwerveCommand(getStationPath(true))));
+                .andThen(() -> builder.getSwerveCommand(getStationPath(true))));
 
     drv.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5)
         .whileTrue(
             new ProxyCommand(
                     () -> new GoToLoadingZone(getLoadingSide(false), drivebase, color).getCommand())
-                .andThen(
-                    () -> builder.getSwerveCommand(getStationPath(false))));
+                .andThen(() -> builder.getSwerveCommand(getStationPath(false))));
 
     // Zero the Gyro, should only be used during practice
     drv.start().onTrue(new InstantCommand(drivebase::zeroGyro));

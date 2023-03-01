@@ -4,12 +4,10 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Auton;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,8 +44,11 @@ public class PathBuilder {
     for (int i = 0; i < listOfFiles.length; i++) {
       String filename = listOfFiles[i].getName();
       filename = filename.substring(0, filename.length() - 5);
-      pathMap.put(filename, autoBuilder.fullAuto(PathPlanner.loadPathGroup(
-        filename, new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS))));
+      pathMap.put(
+          filename,
+          autoBuilder.fullAuto(
+              PathPlanner.loadPathGroup(
+                  filename, new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS))));
     }
   }
 }

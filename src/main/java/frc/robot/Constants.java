@@ -229,7 +229,7 @@ public final class Constants {
             add(new Pose2d(5.3, 2.77, new Rotation2d(Math.PI)));
           }
         };
-    
+
     public static final List<PathPoint> midCorridorPPIn =
         new ArrayList<>() {
           {

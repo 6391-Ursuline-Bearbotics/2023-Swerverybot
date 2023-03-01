@@ -4,13 +4,9 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Auton;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +36,10 @@ public class TeleopBuilder {
   }
 
   public void loadPath(String filename) {
-    pathMap.put(filename, teleopBuilder.fullAuto(PathPlanner.loadPathGroup(
-        filename, new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS))));
+    pathMap.put(
+        filename,
+        teleopBuilder.fullAuto(
+            PathPlanner.loadPathGroup(
+                filename, new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS))));
   }
 }
