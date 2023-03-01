@@ -42,7 +42,7 @@ public final class Constants {
 
     public static double xyDeadband = 0.02;
     public static double radDeadband = 0.05;
-    public static double radLimiter = 0.5;
+    public static double radLimiter = 0.7;
   }
 
   public static final class Auton {

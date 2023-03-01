@@ -39,7 +39,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param directory Directory of swerve drive config files.
    */
   public SwerveSubsystem(File directory) {
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.NONE;
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try {
       swerveDrive = new SwerveParser(directory).createSwerveDrive();
     } catch (Exception e) {
