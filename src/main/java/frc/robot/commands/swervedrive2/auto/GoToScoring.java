@@ -43,7 +43,7 @@ public class GoToScoring {
                 {
                   add(Auton.stationWaypointOut);
                   addAll(Auton.barrierCorridorPPIn);
-                  add(Auton.scoringPP.get(column - 1));
+                  addAll(Auton.scoringPP.get(column - 1));
                 }
               };
           goToPathPoints =
@@ -60,7 +60,7 @@ public class GoToScoring {
                 {
                   add(Auton.stationWaypointOut);
                   addAll(Auton.bumpCorridorPPIn);
-                  add(Auton.scoringPP.get(column - 1));
+                  addAll(Auton.scoringPP.get(column - 1));
                 }
               };
           goToPathPoints =
@@ -77,7 +77,7 @@ public class GoToScoring {
                 {
                   add(Auton.stationWaypointOut);
                   addAll(Auton.midCorridorPPIn);
-                  add(Auton.scoringPP.get(column - 1));
+                  addAll(Auton.scoringPP.get(column - 1));
                 }
               };
           goToPathPoints =
@@ -92,13 +92,19 @@ public class GoToScoring {
           throw new IllegalArgumentException("Loading station enum not supported.");
       }
     } else if (Auton.scoreArea.isPoseWithinArea(drive.getPose())) {
-      GoToPose goToPose =
-          new GoToPose(
-              Auton.scoringPoses.get(column - 1),
-              Auton.scoringPoses.get(column - 1).getRotation(),
+      List<PathPoint> pointsScoring =
+          new ArrayList<PathPoint>() {
+            {
+              addAll(Auton.scoringPP.get(column - 1));
+            }
+          };
+      GoToPathPoints goToPathPoints =
+          new GoToPathPoints(
+              pointsScoring,
+              Auton.leadingPoses.get(column - 1),
               new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
               drive);
-      command = goToPose.getCommand();
+      command = goToPathPoints.getCommand();
     } else {
       // If within Loadin area navigate through selected corridor
       GoToPathPoints goToPathPoints;
@@ -108,7 +114,7 @@ public class GoToScoring {
               new ArrayList<PathPoint>() {
                 {
                   addAll(Auton.barrierCorridorPPIn);
-                  add(Auton.scoringPP.get(column - 1));
+                  addAll(Auton.scoringPP.get(column - 1));
                 }
               };
           goToPathPoints =
@@ -124,7 +130,7 @@ public class GoToScoring {
               new ArrayList<PathPoint>() {
                 {
                   addAll(Auton.bumpCorridorPPIn);
-                  add(Auton.scoringPP.get(column - 1));
+                  addAll(Auton.scoringPP.get(column - 1));
                 }
               };
           goToPathPoints =
@@ -140,7 +146,7 @@ public class GoToScoring {
               new ArrayList<PathPoint>() {
                 {
                   addAll(Auton.midCorridorPPIn);
-                  add(Auton.scoringPP.get(column - 1));
+                  addAll(Auton.scoringPP.get(column - 1));
                 }
               };
           goToPathPoints =

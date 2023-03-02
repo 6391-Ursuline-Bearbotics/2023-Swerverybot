@@ -24,6 +24,7 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
   public static Robot instance;
   private Alliance ally = Alliance.Invalid;
+  private double lastpos = 0;
 
   public Robot() {
     instance = this;
@@ -133,9 +134,10 @@ public class Robot extends TimedRobot {
     var pos = robotContainer.arm.getArmPosition();
     if (pos > 5000) {
       robotContainer.setSpeedLimit(0.5);
-    } else {
+    } else if (pos < 5000 && lastpos > 5000) {
       robotContainer.setSpeedLimit(0.0);
     }
+    lastpos = pos;
   }
 
   @Override

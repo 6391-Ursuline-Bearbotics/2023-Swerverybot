@@ -78,54 +78,168 @@ public final class Constants {
           }
         };
 
-    public static final List<PathPoint> scoringPP =
+    public static final List<Pose2d> leadingPoses =
+        new ArrayList<>() {
+          {
+            add(new Pose2d(2.23, Units.inchesToMeters(196.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.23, Units.inchesToMeters(174.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.23, Units.inchesToMeters(152.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.23, Units.inchesToMeters(130.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.23, Units.inchesToMeters(108.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.23, Units.inchesToMeters(86.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.23, Units.inchesToMeters(64.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.23, Units.inchesToMeters(42.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.23, Units.inchesToMeters(20.19), new Rotation2d(Math.PI)));
+          }
+        };
+
+    public static final List<List<PathPoint>> scoringPP =
         new ArrayList<>() {
           {
             add(
-                new PathPoint(
-                    scoringPoses.get(0).getTranslation(),
-                    new Rotation2d(),
-                    scoringPoses.get(0).getRotation()));
+                new ArrayList<>() {
+                  {
+                    add(
+                        new PathPoint(
+                            leadingPoses.get(0).getTranslation(),
+                            new Rotation2d(),
+                            leadingPoses.get(0).getRotation(),
+                            1.0));
+                    add(
+                        new PathPoint(
+                            scoringPoses.get(0).getTranslation(),
+                            new Rotation2d(),
+                            scoringPoses.get(0).getRotation()));
+                  }
+                });
             add(
-                new PathPoint(
-                    scoringPoses.get(1).getTranslation(),
-                    new Rotation2d(),
-                    scoringPoses.get(1).getRotation()));
+                new ArrayList<>() {
+                  {
+                    add(
+                        new PathPoint(
+                            leadingPoses.get(1).getTranslation(),
+                            new Rotation2d(),
+                            leadingPoses.get(1).getRotation(),
+                            1.0));
+                    add(
+                        new PathPoint(
+                            scoringPoses.get(1).getTranslation(),
+                            new Rotation2d(),
+                            scoringPoses.get(1).getRotation()));
+                  }
+                });
             add(
-                new PathPoint(
-                    scoringPoses.get(2).getTranslation(),
-                    new Rotation2d(),
-                    scoringPoses.get(2).getRotation()));
+                new ArrayList<>() {
+                  {
+                    add(
+                        new PathPoint(
+                            leadingPoses.get(2).getTranslation(),
+                            new Rotation2d(),
+                            leadingPoses.get(2).getRotation(),
+                            1.0));
+                    add(
+                        new PathPoint(
+                            scoringPoses.get(2).getTranslation(),
+                            new Rotation2d(),
+                            scoringPoses.get(2).getRotation()));
+                  }
+                });
             add(
-                new PathPoint(
-                    scoringPoses.get(3).getTranslation(),
-                    new Rotation2d(),
-                    scoringPoses.get(3).getRotation()));
+                new ArrayList<>() {
+                  {
+                    add(
+                        new PathPoint(
+                            leadingPoses.get(3).getTranslation(),
+                            new Rotation2d(),
+                            leadingPoses.get(3).getRotation(),
+                            1.0));
+                    add(
+                        new PathPoint(
+                            scoringPoses.get(3).getTranslation(),
+                            new Rotation2d(),
+                            scoringPoses.get(3).getRotation()));
+                  }
+                });
             add(
-                new PathPoint(
-                    scoringPoses.get(4).getTranslation(),
-                    new Rotation2d(),
-                    scoringPoses.get(4).getRotation()));
+                new ArrayList<>() {
+                  {
+                    add(
+                        new PathPoint(
+                            leadingPoses.get(4).getTranslation(),
+                            new Rotation2d(),
+                            leadingPoses.get(4).getRotation(),
+                            1.0));
+                    add(
+                        new PathPoint(
+                            scoringPoses.get(4).getTranslation(),
+                            new Rotation2d(),
+                            scoringPoses.get(4).getRotation()));
+                  }
+                });
             add(
-                new PathPoint(
-                    scoringPoses.get(5).getTranslation(),
-                    new Rotation2d(),
-                    scoringPoses.get(5).getRotation()));
+                new ArrayList<>() {
+                  {
+                    add(
+                        new PathPoint(
+                            leadingPoses.get(5).getTranslation(),
+                            new Rotation2d(),
+                            leadingPoses.get(5).getRotation(),
+                            1.0));
+                    add(
+                        new PathPoint(
+                            scoringPoses.get(5).getTranslation(),
+                            new Rotation2d(),
+                            scoringPoses.get(5).getRotation()));
+                  }
+                });
             add(
-                new PathPoint(
-                    scoringPoses.get(6).getTranslation(),
-                    new Rotation2d(),
-                    scoringPoses.get(6).getRotation()));
+                new ArrayList<>() {
+                  {
+                    add(
+                        new PathPoint(
+                            leadingPoses.get(6).getTranslation(),
+                            new Rotation2d(),
+                            leadingPoses.get(6).getRotation(),
+                            1.0));
+                    add(
+                        new PathPoint(
+                            scoringPoses.get(6).getTranslation(),
+                            new Rotation2d(),
+                            scoringPoses.get(6).getRotation()));
+                  }
+                });
             add(
-                new PathPoint(
-                    scoringPoses.get(7).getTranslation(),
-                    new Rotation2d(),
-                    scoringPoses.get(7).getRotation()));
+                new ArrayList<>() {
+                  {
+                    add(
+                        new PathPoint(
+                            leadingPoses.get(7).getTranslation(),
+                            new Rotation2d(),
+                            leadingPoses.get(7).getRotation(),
+                            1.0));
+                    add(
+                        new PathPoint(
+                            scoringPoses.get(7).getTranslation(),
+                            new Rotation2d(),
+                            scoringPoses.get(7).getRotation()));
+                  }
+                });
             add(
-                new PathPoint(
-                    scoringPoses.get(8).getTranslation(),
-                    new Rotation2d(),
-                    scoringPoses.get(8).getRotation()));
+                new ArrayList<>() {
+                  {
+                    add(
+                        new PathPoint(
+                            leadingPoses.get(8).getTranslation(),
+                            new Rotation2d(),
+                            leadingPoses.get(8).getRotation(),
+                            1.0));
+                    add(
+                        new PathPoint(
+                            scoringPoses.get(8).getTranslation(),
+                            new Rotation2d(),
+                            scoringPoses.get(8).getRotation()));
+                  }
+                });
           }
         };
 

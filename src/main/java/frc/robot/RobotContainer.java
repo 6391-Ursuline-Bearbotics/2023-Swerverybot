@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -222,13 +223,17 @@ public class RobotContainer {
     } else if (color == Alliance.Red) {
       column = 10 - col;
     }
-    SmartDashboard.putNumber("Column", column);
-    SmartDashboard.putString("Level", level);
+    SmartDashboard.putNumber("Column", col);
     if (gamePiece()) {
       led.setAll(Color.kPurple);
     } else {
       led.setAll(Color.kOrange);
     }
+  }
+
+  private void setLevel(String lev) {
+    level = lev;
+    SmartDashboard.putString("Level", level);
   }
 
   public void setSpeedLimit(double lim) {
@@ -253,31 +258,38 @@ public class RobotContainer {
     arm.setDefaultCommand(new RunCommand(() -> arm.setArmPower(-op.getRightY()), arm));
 
     // Left Bumper slows the drive way down for fine positioning
-    drv.leftBumper().onTrue(Commands.runOnce(() -> limit = 0.35));
+    drv.leftBumper().whileTrue(Commands.runOnce(() -> limit = 0.5));
     drv.leftBumper().onFalse(Commands.runOnce(() -> setSpeedLimit(0.0)));
 
     // Buttons automatically drive a corridor / charge station
     drv.x()
         .whileTrue(
-            new ProxyCommand(
-                    () ->
-                        new GoToScoring(drivebase, getCorridor(POSITION.LEFT), column).getCommand())
+            new ParallelCommandGroup(
+                    autoMap.getCommandInMap("ArmStow"),
+                    new ProxyCommand(
+                        () ->
+                            new GoToScoring(drivebase, getCorridor(POSITION.LEFT), column)
+                                .getCommand()))
                 .andThen(autoMap.getCommandInMap(level)));
 
     drv.a()
         .whileTrue(
-            new ProxyCommand(
-                    () ->
-                        new GoToScoring(drivebase, getCorridor(POSITION.MIDDLE), column)
-                            .getCommand())
+            new ParallelCommandGroup(
+                    autoMap.getCommandInMap("ArmStow"),
+                    new ProxyCommand(
+                        () ->
+                            new GoToScoring(drivebase, getCorridor(POSITION.MIDDLE), column)
+                                .getCommand()))
                 .andThen(autoMap.getCommandInMap(level)));
 
     drv.b()
         .whileTrue(
-            new ProxyCommand(
-                    () ->
-                        new GoToScoring(drivebase, getCorridor(POSITION.RIGHT), column)
-                            .getCommand())
+            new ParallelCommandGroup(
+                    autoMap.getCommandInMap("ArmStow"),
+                    new ProxyCommand(
+                        () ->
+                            new GoToScoring(drivebase, getCorridor(POSITION.RIGHT), column)
+                                .getCommand()))
                 .andThen(autoMap.getCommandInMap(level)));
 
     drv.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
@@ -337,9 +349,9 @@ public class RobotContainer {
     btn.button(7).onTrue(Commands.runOnce(() -> setColumn(7)));
     btn.button(8).onTrue(Commands.runOnce(() -> setColumn(8)));
     btn.button(9).onTrue(Commands.runOnce(() -> setColumn(9)));
-    btn.button(10).onTrue(Commands.runOnce(() -> level = "ArmLow"));
-    btn.button(11).onTrue(Commands.runOnce(() -> level = "ArmMid"));
-    btn.button(12).onTrue(Commands.runOnce(() -> level = "ArmHigh"));
+    btn.button(10).onTrue(Commands.runOnce(() -> setLevel("ArmLow")));
+    btn.button(11).onTrue(Commands.runOnce(() -> setLevel("ArmMid")));
+    btn.button(12).onTrue(Commands.runOnce(() -> setLevel("ArmHigh")));
   }
 
   /**
