@@ -4,6 +4,7 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
+import com.pathplanner.lib.PathPlannerTrajectory.EventMarker;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -17,12 +18,14 @@ public class GoToPathPoints {
   private PPSwerveControllerCommand ppSwerveCommand;
   private PathPlannerTrajectory traj;
   private Pose2d currentPose;
+  private List<EventMarker> markers;
 
   public GoToPathPoints(
       List<PathPoint> points,
       Pose2d firstPose,
       PathConstraints constraints,
-      SwerveSubsystem drive) {
+      SwerveSubsystem drive,
+      List<EventMarker> markers) {
     PathPoint currentPathPoint;
     currentPose = drive.getPose();
     if (DriverStation.getAlliance() == Alliance.Red) {
@@ -56,7 +59,7 @@ public class GoToPathPoints {
           }
         };
 
-    traj = PathPlanner.generatePath(constraints, path);
+    traj = PathPlanner.generatePath(constraints, path, markers);
     // position, heading(direction of travel), holonomic rotation
 
     ppSwerveCommand =

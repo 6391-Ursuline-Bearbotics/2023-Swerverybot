@@ -102,13 +102,13 @@ public final class Constants {
                     add(
                         new PathPoint(
                             leadingPoses.get(0).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             leadingPoses.get(0).getRotation(),
                             1.0));
                     add(
                         new PathPoint(
                             scoringPoses.get(0).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             scoringPoses.get(0).getRotation()));
                   }
                 });
@@ -118,13 +118,13 @@ public final class Constants {
                     add(
                         new PathPoint(
                             leadingPoses.get(1).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             leadingPoses.get(1).getRotation(),
                             1.0));
                     add(
                         new PathPoint(
                             scoringPoses.get(1).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             scoringPoses.get(1).getRotation()));
                   }
                 });
@@ -134,13 +134,13 @@ public final class Constants {
                     add(
                         new PathPoint(
                             leadingPoses.get(2).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             leadingPoses.get(2).getRotation(),
                             1.0));
                     add(
                         new PathPoint(
                             scoringPoses.get(2).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             scoringPoses.get(2).getRotation()));
                   }
                 });
@@ -150,13 +150,13 @@ public final class Constants {
                     add(
                         new PathPoint(
                             leadingPoses.get(3).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             leadingPoses.get(3).getRotation(),
                             1.0));
                     add(
                         new PathPoint(
                             scoringPoses.get(3).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             scoringPoses.get(3).getRotation()));
                   }
                 });
@@ -166,13 +166,13 @@ public final class Constants {
                     add(
                         new PathPoint(
                             leadingPoses.get(4).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             leadingPoses.get(4).getRotation(),
                             1.0));
                     add(
                         new PathPoint(
                             scoringPoses.get(4).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             scoringPoses.get(4).getRotation()));
                   }
                 });
@@ -182,13 +182,13 @@ public final class Constants {
                     add(
                         new PathPoint(
                             leadingPoses.get(5).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             leadingPoses.get(5).getRotation(),
                             1.0));
                     add(
                         new PathPoint(
                             scoringPoses.get(5).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             scoringPoses.get(5).getRotation()));
                   }
                 });
@@ -198,13 +198,13 @@ public final class Constants {
                     add(
                         new PathPoint(
                             leadingPoses.get(6).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             leadingPoses.get(6).getRotation(),
                             1.0));
                     add(
                         new PathPoint(
                             scoringPoses.get(6).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             scoringPoses.get(6).getRotation()));
                   }
                 });
@@ -214,13 +214,13 @@ public final class Constants {
                     add(
                         new PathPoint(
                             leadingPoses.get(7).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             leadingPoses.get(7).getRotation(),
                             1.0));
                     add(
                         new PathPoint(
                             scoringPoses.get(7).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             scoringPoses.get(7).getRotation()));
                   }
                 });
@@ -230,13 +230,13 @@ public final class Constants {
                     add(
                         new PathPoint(
                             leadingPoses.get(8).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             leadingPoses.get(8).getRotation(),
                             1.0));
                     add(
                         new PathPoint(
                             scoringPoses.get(8).getTranslation(),
-                            new Rotation2d(),
+                            new Rotation2d(Math.PI),
                             scoringPoses.get(8).getRotation()));
                   }
                 });

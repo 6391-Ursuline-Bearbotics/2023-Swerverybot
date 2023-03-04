@@ -252,9 +252,8 @@ public class RobotContainer {
                     autoMap.getCommandInMap("ArmStow"),
                     new ProxyCommand(
                         () ->
-                            new GoToScoring(drivebase, getCorridor(POSITION.LEFT), column)
-                                .getCommand()))
-                .andThen(autoMap.getCommandInMap(level)));
+                            new GoToScoring(drivebase, getCorridor(POSITION.LEFT), column, level)
+                                .getCommand())));
 
     drv.a()
         .whileTrue(
@@ -262,9 +261,8 @@ public class RobotContainer {
                     autoMap.getCommandInMap("ArmStow"),
                     new ProxyCommand(
                         () ->
-                            new GoToScoring(drivebase, getCorridor(POSITION.MIDDLE), column)
-                                .getCommand()))
-                .andThen(autoMap.getCommandInMap(level)));
+                            new GoToScoring(drivebase, getCorridor(POSITION.MIDDLE), column, level)
+                                .getCommand())));
 
     drv.b()
         .whileTrue(
@@ -272,21 +270,18 @@ public class RobotContainer {
                     autoMap.getCommandInMap("ArmStow"),
                     new ProxyCommand(
                         () ->
-                            new GoToScoring(drivebase, getCorridor(POSITION.RIGHT), column)
-                                .getCommand()))
-                .andThen(autoMap.getCommandInMap(level)));
+                            new GoToScoring(drivebase, getCorridor(POSITION.RIGHT), column, level)
+                                .getCommand())));
 
     drv.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
         .whileTrue(
             new ProxyCommand(
-                    () -> new GoToLoadingZone(true, drivebase, color).getCommand())
-                .andThen(() -> builder.getSwerveCommand(getStationPath(true))));
+                    () -> new GoToLoadingZone(true, drivebase, color).getCommand()));
 
     drv.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5)
         .whileTrue(
             new ProxyCommand(
-                    () -> new GoToLoadingZone(false, drivebase, color).getCommand())
-                .andThen(() -> builder.getSwerveCommand(getStationPath(false))));
+                    () -> new GoToLoadingZone(false, drivebase, color).getCommand()));
 
     // Zero the Gyro, should only be used during practice
     drv.start().onTrue(new InstantCommand(drivebase::zeroGyro));

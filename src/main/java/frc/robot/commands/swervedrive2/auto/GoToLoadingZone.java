@@ -2,7 +2,10 @@ package frc.robot.commands.swervedrive2.auto;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPoint;
+import com.pathplanner.lib.PathPlannerTrajectory.EventMarker;
+
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -22,6 +25,7 @@ public class GoToLoadingZone extends CommandBase {
   private Boolean left;
   private List<PathPoint> corridor;
   private Pose2d corridorFirst;
+  private final List<EventMarker> markers = new ArrayList<>();
 
   public enum LOADING_SIDE {
     BARRIER,
@@ -63,8 +67,15 @@ public class GoToLoadingZone extends CommandBase {
 
   public Command getCommand() {
     Command command;
+    Pose2d currentPose = drive.getPose();
+    if (ally == Alliance.Red) {
+      currentPose = new Pose2d(
+            currentPose.getX(),
+            8.02 - currentPose.getY(),
+            currentPose.getRotation().times(-1));
+    }
     // If we are within the loading area go direct
-    if (loadingArea.isPoseWithinLoadingArea(drive.getPose())) {
+    if (loadingArea.isPoseWithinLoadingArea(currentPose)) {
       // In loading area so just run the PathGroup that happens after this.
       GoToPathPoints goToPathPoints;
       List<PathPoint> points;
@@ -88,14 +99,16 @@ public class GoToLoadingZone extends CommandBase {
                 }
               };
       }
+      markers.add(new EventMarker(new ArrayList<String>() {{add("ArmHigh");}}, 1.0));
       goToPathPoints =
           new GoToPathPoints(
               points,
               leadPoint,
               new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
-              drive);
+              drive,
+              markers);
       command = goToPathPoints.getCommand();
-    } else if (Auton.scoreArea.isPoseWithinArea(drive.getPose())) {
+    } else if (Auton.scoreArea.isPoseWithinArea(currentPose)) {
       // If we are within scoring area find the left / right corridor
       GoToPathPoints goToPathPoints;
       switch (selectedLoadingSide) {
@@ -108,12 +121,14 @@ public class GoToLoadingZone extends CommandBase {
                   addAll(Auton.loadingBarrier);
                 }
               };
+          markers.add(new EventMarker(new ArrayList<String>() {{add("ArmHigh");}}, 4.0));
           goToPathPoints =
               new GoToPathPoints(
                   pointsBarrier,
                   corridorFirst,
                   new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
-                  drive);
+                  drive,
+                  markers);
           command = goToPathPoints.getCommand();
           break;
         case RAIL:
@@ -125,12 +140,14 @@ public class GoToLoadingZone extends CommandBase {
                   addAll(Auton.loadingRail);
                 }
               };
+          markers.add(new EventMarker(new ArrayList<String>() {{add("ArmHigh");}}, 4.0));
           goToPathPoints =
               new GoToPathPoints(
                   pointsRail,
                   corridorFirst,
                   new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
-                  drive);
+                  drive,
+                  markers);
           command = goToPathPoints.getCommand();
           break;
         default:
@@ -150,13 +167,14 @@ public class GoToLoadingZone extends CommandBase {
       } else {
         points.addAll(Auton.loadingRail);
       }
-
+      markers.add(new EventMarker(new ArrayList<String>() {{add("ArmHigh");}}, 2.0));
       goToPathPoints =
           new GoToPathPoints(
               points,
               Auton.stationWaypoint,
               new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
-              drive);
+              drive,
+              markers);
       command = goToPathPoints.getCommand();
     }
     return command;
