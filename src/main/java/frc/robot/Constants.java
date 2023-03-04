@@ -243,6 +243,56 @@ public final class Constants {
           }
         };
 
+    public static final List<Pose2d> loadingLead =
+        new ArrayList<>() {
+          {
+            add(new Pose2d(14.6, 7.34, new Rotation2d()));
+            add(new Pose2d(14.6, 6.0, new Rotation2d()));
+          }
+        };
+
+    public static final List<Pose2d> loadingFinish =
+        new ArrayList<>() {
+          {
+            add(new Pose2d(15.6, 7.34, new Rotation2d()));
+            add(new Pose2d(15.6, 6.0, new Rotation2d()));
+          }
+        };
+
+    public static final List<PathPoint> loadingRail =
+        new ArrayList<>() {
+          {
+            add(
+                new PathPoint(
+                    loadingLead.get(0).getTranslation(),
+                    new Rotation2d(),
+                    loadingLead.get(0).getRotation(),
+                    1.0));
+            add(
+                new PathPoint(
+                    loadingFinish.get(0).getTranslation(),
+                    new Rotation2d(),
+                    loadingFinish.get(0).getRotation()));
+          }
+        };
+        
+    public static final List<PathPoint> loadingBarrier =
+        new ArrayList<>() {
+          {
+            add(
+                new PathPoint(
+                    loadingLead.get(1).getTranslation(),
+                    new Rotation2d(),
+                    loadingLead.get(1).getRotation(),
+                    1.0));
+            add(
+                new PathPoint(
+                    loadingFinish.get(1).getTranslation(),
+                    new Rotation2d(),
+                    loadingFinish.get(1).getRotation()));
+          }
+        };
+
     public static final RectanglePoseArea scoreArea =
         new RectanglePoseArea(new Translation2d(1.23, 0.0), new Translation2d(2.92, 5.33));
     public static final Translation3d cameraTranslation = new Translation3d(0.5, 0.0, 0.5);

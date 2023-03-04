@@ -133,22 +133,6 @@ public class RobotContainer {
     }
   }
 
-  private LOADING_SIDE getLoadingSide(Boolean left) {
-    if (color == Alliance.Blue) {
-      if (left) {
-        return LOADING_SIDE.RAIL;
-      } else {
-        return LOADING_SIDE.BARRIER;
-      }
-    } else {
-      if (left) {
-        return LOADING_SIDE.BARRIER;
-      } else {
-        return LOADING_SIDE.RAIL;
-      }
-    }
-  }
-
   private String getStationPath(Boolean left) {
     if (color == Alliance.Blue) {
       if (left) {
@@ -295,13 +279,13 @@ public class RobotContainer {
     drv.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
         .whileTrue(
             new ProxyCommand(
-                    () -> new GoToLoadingZone(getLoadingSide(true), drivebase, color).getCommand())
+                    () -> new GoToLoadingZone(true, drivebase, color).getCommand())
                 .andThen(() -> builder.getSwerveCommand(getStationPath(true))));
 
     drv.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5)
         .whileTrue(
             new ProxyCommand(
-                    () -> new GoToLoadingZone(getLoadingSide(false), drivebase, color).getCommand())
+                    () -> new GoToLoadingZone(false, drivebase, color).getCommand())
                 .andThen(() -> builder.getSwerveCommand(getStationPath(false))));
 
     // Zero the Gyro, should only be used during practice

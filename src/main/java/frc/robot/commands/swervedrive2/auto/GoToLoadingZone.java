@@ -19,18 +19,46 @@ public class GoToLoadingZone extends CommandBase {
   private final LOADING_SIDE selectedLoadingSide;
   private Command currentCommand;
   private Alliance ally;
+  private Boolean left;
+  private List<PathPoint> corridor;
+  private Pose2d corridorFirst;
 
   public enum LOADING_SIDE {
     BARRIER,
     RAIL
   }
 
-  public GoToLoadingZone(LOADING_SIDE selectedLoadingSide, SwerveSubsystem drive, Alliance ally) {
+  public GoToLoadingZone(boolean left, SwerveSubsystem drive, Alliance ally) {
     this.drive = drive;
     this.ally = ally;
     addRequirements(drive);
-    this.selectedLoadingSide = selectedLoadingSide;
+    this.selectedLoadingSide = getLoadingSide(left);
+    this.left = left;
     currentCommand = Commands.none();
+  }
+
+  private LOADING_SIDE getLoadingSide(Boolean left) {
+    if (ally == Alliance.Blue) {
+      if (left) {
+        corridor = Auton.barrierCorridorPPOut;
+        corridorFirst = Auton.barrierCorridor.get(0);
+        return LOADING_SIDE.RAIL;
+      } else {
+        corridor = Auton.bumpCorridorPPOut;
+        corridorFirst = Auton.bumpCorridor.get(0);
+        return LOADING_SIDE.BARRIER;
+      }
+    } else {
+      if (left) {
+        corridor = Auton.bumpCorridorPPOut;
+        corridorFirst = Auton.bumpCorridor.get(0);
+        return LOADING_SIDE.BARRIER;
+      } else {
+        corridor = Auton.barrierCorridorPPOut;
+        corridorFirst = Auton.barrierCorridor.get(0);
+        return LOADING_SIDE.RAIL;
+      }
+    }
   }
 
   public Command getCommand() {
@@ -38,38 +66,52 @@ public class GoToLoadingZone extends CommandBase {
     // If we are within the loading area go direct
     if (loadingArea.isPoseWithinLoadingArea(drive.getPose())) {
       // In loading area so just run the PathGroup that happens after this.
-      command = Commands.none();
+      GoToPathPoints goToPathPoints;
+      List<PathPoint> points;
+      Pose2d leadPoint;
+      switch (selectedLoadingSide) {
+        case BARRIER:
+          leadPoint = Auton.loadingLead.get(1);
+          points =
+              new ArrayList<PathPoint>() {
+                {
+                  addAll(Auton.loadingBarrier);
+                }
+              };
+          break;
+        default:
+          leadPoint = Auton.loadingLead.get(0);
+          points =
+              new ArrayList<PathPoint>() {
+                {
+                  addAll(Auton.loadingRail);
+                }
+              };
+      }
+      goToPathPoints =
+          new GoToPathPoints(
+              points,
+              leadPoint,
+              new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
+              drive);
+      command = goToPathPoints.getCommand();
     } else if (Auton.scoreArea.isPoseWithinArea(drive.getPose())) {
       // If we are within scoring area find the left / right corridor
       GoToPathPoints goToPathPoints;
-      List<PathPoint> barrierCorridor;
-      List<PathPoint> railCorridor;
-      Pose2d barrierFirst;
-      Pose2d railFirst;
-      if (ally == Alliance.Blue) {
-        barrierCorridor = Auton.bumpCorridorPPOut;
-        railCorridor = Auton.barrierCorridorPPOut;
-        barrierFirst = Auton.bumpCorridor.get(0);
-        railFirst = Auton.barrierCorridor.get(0);
-      } else {
-        barrierCorridor = Auton.barrierCorridorPPOut;
-        railCorridor = Auton.bumpCorridorPPOut;
-        barrierFirst = Auton.barrierCorridor.get(0);
-        railFirst = Auton.bumpCorridor.get(0);
-      }
       switch (selectedLoadingSide) {
         case BARRIER:
           List<PathPoint> pointsBarrier =
               new ArrayList<PathPoint>() {
                 {
-                  addAll(barrierCorridor);
+                  addAll(corridor);
                   add(Auton.stationWaypointIn);
+                  addAll(Auton.loadingBarrier);
                 }
               };
           goToPathPoints =
               new GoToPathPoints(
                   pointsBarrier,
-                  barrierFirst,
+                  corridorFirst,
                   new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
                   drive);
           command = goToPathPoints.getCommand();
@@ -78,14 +120,15 @@ public class GoToLoadingZone extends CommandBase {
           List<PathPoint> pointsRail =
               new ArrayList<PathPoint>() {
                 {
-                  addAll(railCorridor);
+                  addAll(corridor);
                   add(Auton.stationWaypointIn);
+                  addAll(Auton.loadingRail);
                 }
               };
           goToPathPoints =
               new GoToPathPoints(
                   pointsRail,
-                  railFirst,
+                  corridorFirst,
                   new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
                   drive);
           command = goToPathPoints.getCommand();
@@ -96,15 +139,21 @@ public class GoToLoadingZone extends CommandBase {
     } else {
       // We are in the middle of the field so go to the stationWaypointIn
       GoToPathPoints goToPathPoints;
-      List<PathPoint> pointsRail =
+      List<PathPoint> points =
           new ArrayList<PathPoint>() {
             {
               add(Auton.stationWaypointIn);
             }
           };
+      if (selectedLoadingSide == LOADING_SIDE.BARRIER) {
+        points.addAll(Auton.loadingBarrier);
+      } else {
+        points.addAll(Auton.loadingRail);
+      }
+
       goToPathPoints =
           new GoToPathPoints(
-              pointsRail,
+              points,
               Auton.stationWaypoint,
               new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
               drive);

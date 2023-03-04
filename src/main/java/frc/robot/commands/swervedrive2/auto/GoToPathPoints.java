@@ -6,6 +6,8 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.Auton;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.List;
 public class GoToPathPoints {
   private PPSwerveControllerCommand ppSwerveCommand;
   private PathPlannerTrajectory traj;
+  private Pose2d currentPose;
 
   public GoToPathPoints(
       List<PathPoint> points,
@@ -21,17 +24,28 @@ public class GoToPathPoints {
       PathConstraints constraints,
       SwerveSubsystem drive) {
     PathPoint currentPathPoint;
+    currentPose = drive.getPose();
+    if (DriverStation.getAlliance() == Alliance.Red) {
+        firstPose = new Pose2d(
+            firstPose.getX(),
+            8.02 - firstPose.getY(),
+            firstPose.getRotation().times(-1));
+        currentPose = new Pose2d(
+            currentPose.getX(),
+            8.02 - currentPose.getY(),
+            currentPose.getRotation().times(-1));
+    }
     if (Math.hypot(
             drive.getFieldVelocity().vxMetersPerSecond, drive.getFieldVelocity().vyMetersPerSecond)
         > 0.2) {
       currentPathPoint =
-          PathPoint.fromCurrentHolonomicState(drive.getPose(), drive.getFieldVelocity());
+          PathPoint.fromCurrentHolonomicState(currentPose, drive.getFieldVelocity());
     } else {
       currentPathPoint =
           new PathPoint(
-              drive.getPose().getTranslation(),
-              firstPose.getTranslation().minus(drive.getPose().getTranslation()).getAngle(),
-              drive.getPose().getRotation());
+              currentPose.getTranslation(),
+              firstPose.getTranslation().minus(currentPose.getTranslation()).getAngle(),
+              currentPose.getRotation());
     }
 
     List<PathPoint> path =

@@ -2,6 +2,10 @@ package frc.robot.commands.swervedrive2.auto;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPoint;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Auton;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -33,6 +37,13 @@ public class GoToScoring {
 
   public Command getCommand() {
     Command command;
+    Pose2d currentPose = drive.getPose();
+    if (DriverStation.getAlliance() == Alliance.Red) {
+      currentPose = new Pose2d(
+            currentPose.getX(),
+            8.02 - currentPose.getY(),
+            currentPose.getRotation().times(-1));
+    }
     if (Auton.loadingArea.isPoseWithinLoadingArea(drive.getPose())) {
       // If within Loadin area navigate through selected corridor
       GoToPathPoints goToPathPoints;
