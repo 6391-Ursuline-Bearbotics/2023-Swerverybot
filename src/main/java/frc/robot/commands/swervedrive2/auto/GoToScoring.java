@@ -1,9 +1,8 @@
 package frc.robot.commands.swervedrive2.auto;
 
 import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.PathPlannerTrajectory.EventMarker;
-
+import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -32,7 +31,8 @@ public class GoToScoring {
     BUMP
   }
 
-  public GoToScoring(SwerveSubsystem drive, SCORING_SIDE selectedPosition, int column, String event) {
+  public GoToScoring(
+      SwerveSubsystem drive, SCORING_SIDE selectedPosition, int column, String event) {
     this.drive = drive;
     this.selectedPosition = selectedPosition;
     this.column = column;
@@ -43,10 +43,9 @@ public class GoToScoring {
     Command command;
     Pose2d currentPose = drive.getPose();
     if (DriverStation.getAlliance() == Alliance.Red) {
-      currentPose = new Pose2d(
-            currentPose.getX(),
-            8.02 - currentPose.getY(),
-            currentPose.getRotation().times(-1));
+      currentPose =
+          new Pose2d(
+              currentPose.getX(), 8.02 - currentPose.getY(), currentPose.getRotation().times(-1));
     }
     if (Auton.loadingArea.isPoseWithinLoadingArea(currentPose)) {
       // If within Loadin area navigate through selected corridor
@@ -61,7 +60,14 @@ public class GoToScoring {
                   addAll(Auton.scoringPP.get(column - 1));
                 }
               };
-          markers.add(new EventMarker(new ArrayList<String>() {{add(event);}}, 4.0));
+          markers.add(
+              new EventMarker(
+                  new ArrayList<String>() {
+                    {
+                      add(event);
+                    }
+                  },
+                  4.0));
           goToPathPoints =
               new GoToPathPoints(
                   pointsBarrier,
@@ -80,7 +86,14 @@ public class GoToScoring {
                   addAll(Auton.scoringPP.get(column - 1));
                 }
               };
-          markers.add(new EventMarker(new ArrayList<String>() {{add(event);}}, 4.0));
+          markers.add(
+              new EventMarker(
+                  new ArrayList<String>() {
+                    {
+                      add(event);
+                    }
+                  },
+                  4.0));
           goToPathPoints =
               new GoToPathPoints(
                   pointsBump,
@@ -99,7 +112,14 @@ public class GoToScoring {
                   addAll(Auton.scoringPP.get(column - 1));
                 }
               };
-          markers.add(new EventMarker(new ArrayList<String>() {{add(event);}}, 4.0));
+          markers.add(
+              new EventMarker(
+                  new ArrayList<String>() {
+                    {
+                      add(event);
+                    }
+                  },
+                  4.0));
           goToPathPoints =
               new GoToPathPoints(
                   pointsMid,
@@ -119,7 +139,14 @@ public class GoToScoring {
               addAll(Auton.scoringPP.get(column - 1));
             }
           };
-      markers.add(new EventMarker(new ArrayList<String>() {{add(event);}}, 1.0));
+      markers.add(
+          new EventMarker(
+              new ArrayList<String>() {
+                {
+                  add(event);
+                }
+              },
+              1.0));
       GoToPathPoints goToPathPoints =
           new GoToPathPoints(
               pointsScoring,
@@ -140,7 +167,14 @@ public class GoToScoring {
                   addAll(Auton.scoringPP.get(column - 1));
                 }
               };
-          markers.add(new EventMarker(new ArrayList<String>() {{add(event);}}, 3.0));
+          markers.add(
+              new EventMarker(
+                  new ArrayList<String>() {
+                    {
+                      add(event);
+                    }
+                  },
+                  3.0));
           goToPathPoints =
               new GoToPathPoints(
                   pointsBarrier,
@@ -158,7 +192,14 @@ public class GoToScoring {
                   addAll(Auton.scoringPP.get(column - 1));
                 }
               };
-          markers.add(new EventMarker(new ArrayList<String>() {{add(event);}}, 3.0));
+          markers.add(
+              new EventMarker(
+                  new ArrayList<String>() {
+                    {
+                      add(event);
+                    }
+                  },
+                  3.0));
           goToPathPoints =
               new GoToPathPoints(
                   pointsBump,
@@ -176,7 +217,14 @@ public class GoToScoring {
                   addAll(Auton.scoringPP.get(column - 1));
                 }
               };
-          markers.add(new EventMarker(new ArrayList<String>() {{add(event);}}, 3.0));
+          markers.add(
+              new EventMarker(
+                  new ArrayList<String>() {
+                    {
+                      add(event);
+                    }
+                  },
+                  3.0));
           goToPathPoints =
               new GoToPathPoints(
                   pointsMid,

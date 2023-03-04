@@ -1,11 +1,9 @@
 package frc.robot.commands.swervedrive2.auto;
 
 import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.PathPlannerTrajectory.EventMarker;
-
+import com.pathplanner.lib.PathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -69,10 +67,9 @@ public class GoToLoadingZone extends CommandBase {
     Command command;
     Pose2d currentPose = drive.getPose();
     if (ally == Alliance.Red) {
-      currentPose = new Pose2d(
-            currentPose.getX(),
-            8.02 - currentPose.getY(),
-            currentPose.getRotation().times(-1));
+      currentPose =
+          new Pose2d(
+              currentPose.getX(), 8.02 - currentPose.getY(), currentPose.getRotation().times(-1));
     }
     // If we are within the loading area go direct
     if (loadingArea.isPoseWithinLoadingArea(currentPose)) {
@@ -99,7 +96,14 @@ public class GoToLoadingZone extends CommandBase {
                 }
               };
       }
-      markers.add(new EventMarker(new ArrayList<String>() {{add("ArmHigh");}}, 1.0));
+      markers.add(
+          new EventMarker(
+              new ArrayList<String>() {
+                {
+                  add("ArmHigh");
+                }
+              },
+              1.0));
       goToPathPoints =
           new GoToPathPoints(
               points,
@@ -121,7 +125,14 @@ public class GoToLoadingZone extends CommandBase {
                   addAll(Auton.loadingBarrier);
                 }
               };
-          markers.add(new EventMarker(new ArrayList<String>() {{add("ArmHigh");}}, 4.0));
+          markers.add(
+              new EventMarker(
+                  new ArrayList<String>() {
+                    {
+                      add("ArmHigh");
+                    }
+                  },
+                  4.0));
           goToPathPoints =
               new GoToPathPoints(
                   pointsBarrier,
@@ -140,7 +151,14 @@ public class GoToLoadingZone extends CommandBase {
                   addAll(Auton.loadingRail);
                 }
               };
-          markers.add(new EventMarker(new ArrayList<String>() {{add("ArmHigh");}}, 4.0));
+          markers.add(
+              new EventMarker(
+                  new ArrayList<String>() {
+                    {
+                      add("ArmHigh");
+                    }
+                  },
+                  4.0));
           goToPathPoints =
               new GoToPathPoints(
                   pointsRail,
@@ -167,7 +185,14 @@ public class GoToLoadingZone extends CommandBase {
       } else {
         points.addAll(Auton.loadingRail);
       }
-      markers.add(new EventMarker(new ArrayList<String>() {{add("ArmHigh");}}, 2.0));
+      markers.add(
+          new EventMarker(
+              new ArrayList<String>() {
+                {
+                  add("ArmHigh");
+                }
+              },
+              2.0));
       goToPathPoints =
           new GoToPathPoints(
               points,

@@ -3,8 +3,8 @@ package frc.robot.commands.swervedrive2.auto;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.PathPlannerTrajectory.EventMarker;
+import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -29,20 +29,16 @@ public class GoToPathPoints {
     PathPoint currentPathPoint;
     currentPose = drive.getPose();
     if (DriverStation.getAlliance() == Alliance.Red) {
-        firstPose = new Pose2d(
-            firstPose.getX(),
-            8.02 - firstPose.getY(),
-            firstPose.getRotation().times(-1));
-        currentPose = new Pose2d(
-            currentPose.getX(),
-            8.02 - currentPose.getY(),
-            currentPose.getRotation().times(-1));
+      firstPose =
+          new Pose2d(firstPose.getX(), 8.02 - firstPose.getY(), firstPose.getRotation().times(-1));
+      currentPose =
+          new Pose2d(
+              currentPose.getX(), 8.02 - currentPose.getY(), currentPose.getRotation().times(-1));
     }
     if (Math.hypot(
             drive.getFieldVelocity().vxMetersPerSecond, drive.getFieldVelocity().vyMetersPerSecond)
         > 0.2) {
-      currentPathPoint =
-          PathPoint.fromCurrentHolonomicState(currentPose, drive.getFieldVelocity());
+      currentPathPoint = PathPoint.fromCurrentHolonomicState(currentPose, drive.getFieldVelocity());
     } else {
       currentPathPoint =
           new PathPoint(

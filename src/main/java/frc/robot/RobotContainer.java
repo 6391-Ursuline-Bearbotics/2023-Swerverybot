@@ -23,12 +23,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.swervedrive2.auto.AutoMap;
 import frc.robot.commands.swervedrive2.auto.GoToLoadingZone;
-import frc.robot.commands.swervedrive2.auto.GoToLoadingZone.LOADING_SIDE;
 import frc.robot.commands.swervedrive2.auto.GoToScoring;
 import frc.robot.commands.swervedrive2.auto.GoToScoring.POSITION;
 import frc.robot.commands.swervedrive2.auto.GoToScoring.SCORING_SIDE;
 import frc.robot.commands.swervedrive2.auto.PathBuilder;
-import frc.robot.commands.swervedrive2.auto.TeleopBuilder;
 import frc.robot.commands.swervedrive2.drivebase.TeleopDrive;
 import frc.robot.subsystems.Arm.Arm;
 import frc.robot.subsystems.Intake.Intake;
@@ -57,7 +55,6 @@ public class RobotContainer {
 
   private final AutoMap autoMap = new AutoMap(intake, arm);
   private final PathBuilder builder = new PathBuilder(drivebase, autoMap.getMap());
-  private final TeleopBuilder teleopBuilder = new TeleopBuilder(drivebase, autoMap.getMap());
 
   private final CommandXboxController drv = new CommandXboxController(OIConstants.driverID);
   private final CommandXboxController op = new CommandXboxController(OIConstants.operatorID);
@@ -90,7 +87,7 @@ public class RobotContainer {
 
   private void initializeChooser() {
 
-    chooser.setDefaultOption("Default Test", teleopBuilder.getSwerveCommand("ConeStationRail"));
+    chooser.setDefaultOption("Default Test", builder.getSwerveCommand("ConeStationRail"));
 
     chooser.addOption(
         "Cube Mobility Dock",
@@ -133,38 +130,6 @@ public class RobotContainer {
     }
   }
 
-  private String getStationPath(Boolean left) {
-    if (color == Alliance.Blue) {
-      if (left) {
-        if (gamePiece()) {
-          return "CubeStationRail";
-        } else {
-          return "ConeStationRail";
-        }
-      } else {
-        if (gamePiece()) {
-          return "CubeStationBarrier";
-        } else {
-          return "ConeStationBarrier";
-        }
-      }
-    } else {
-      if (left) {
-        if (gamePiece()) {
-          return "CubeStationBarrier";
-        } else {
-          return "ConeStationBarrier";
-        }
-      } else {
-        if (gamePiece()) {
-          return "CubeStationRail";
-        } else {
-          return "ConeStationRail";
-        }
-      }
-    }
-  }
-
   private SCORING_SIDE getCorridor(POSITION pos) {
     if (color == Alliance.Blue) {
       if (pos == POSITION.LEFT) {
@@ -197,7 +162,6 @@ public class RobotContainer {
     this.color = color;
     vision.setAlliance(color);
     builder.loadAllPaths();
-    teleopBuilder.loadPath("ConeStationRail");
     initializeChooser();
   }
 
@@ -249,39 +213,37 @@ public class RobotContainer {
     drv.x()
         .whileTrue(
             new ParallelCommandGroup(
-                    autoMap.getCommandInMap("ArmStow"),
-                    new ProxyCommand(
-                        () ->
-                            new GoToScoring(drivebase, getCorridor(POSITION.LEFT), column, level)
-                                .getCommand())));
+                autoMap.getCommandInMap("ArmStow"),
+                new ProxyCommand(
+                    () ->
+                        new GoToScoring(drivebase, getCorridor(POSITION.LEFT), column, level)
+                            .getCommand())));
 
     drv.a()
         .whileTrue(
             new ParallelCommandGroup(
-                    autoMap.getCommandInMap("ArmStow"),
-                    new ProxyCommand(
-                        () ->
-                            new GoToScoring(drivebase, getCorridor(POSITION.MIDDLE), column, level)
-                                .getCommand())));
+                autoMap.getCommandInMap("ArmStow"),
+                new ProxyCommand(
+                    () ->
+                        new GoToScoring(drivebase, getCorridor(POSITION.MIDDLE), column, level)
+                            .getCommand())));
 
     drv.b()
         .whileTrue(
             new ParallelCommandGroup(
-                    autoMap.getCommandInMap("ArmStow"),
-                    new ProxyCommand(
-                        () ->
-                            new GoToScoring(drivebase, getCorridor(POSITION.RIGHT), column, level)
-                                .getCommand())));
+                autoMap.getCommandInMap("ArmStow"),
+                new ProxyCommand(
+                    () ->
+                        new GoToScoring(drivebase, getCorridor(POSITION.RIGHT), column, level)
+                            .getCommand())));
 
     drv.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
         .whileTrue(
-            new ProxyCommand(
-                    () -> new GoToLoadingZone(true, drivebase, color).getCommand()));
+            new ProxyCommand(() -> new GoToLoadingZone(true, drivebase, color).getCommand()));
 
     drv.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5)
         .whileTrue(
-            new ProxyCommand(
-                    () -> new GoToLoadingZone(false, drivebase, color).getCommand()));
+            new ProxyCommand(() -> new GoToLoadingZone(false, drivebase, color).getCommand()));
 
     // Zero the Gyro, should only be used during practice
     drv.start().onTrue(new InstantCommand(drivebase::zeroGyro));

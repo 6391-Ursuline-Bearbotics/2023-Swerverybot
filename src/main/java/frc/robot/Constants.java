@@ -275,7 +275,7 @@ public final class Constants {
                     loadingFinish.get(0).getRotation()));
           }
         };
-        
+
     public static final List<PathPoint> loadingBarrier =
         new ArrayList<>() {
           {

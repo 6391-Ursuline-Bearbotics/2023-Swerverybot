@@ -106,6 +106,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param initialHolonomicPose The pose to set the odometry to
    */
   public void resetOdometry(Pose2d initialHolonomicPose) {
+    swerveDrive.setGyro(initialHolonomicPose.getRotation().getDegrees());
     swerveDrive.resetOdometry(initialHolonomicPose);
   }
 
