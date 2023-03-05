@@ -21,19 +21,19 @@ public class Limelight extends SubsystemBase {
   public void periodic() {
     LimelightHelpers.Results result =
         LimelightHelpers.getLatestResults("limelight").targetingResults;
-    if (result.valid) {
+    if (!(result.botpose[0] == 0 && result.botpose[1] == 0)) {
       if (alliance == Alliance.Blue) {
         // double[] botpose = LimelightHelpers.getBotPose_wpiBlue("limelight");
         drivebase.addVisionMeasurement(
             LimelightHelpers.toPose2D(result.botpose_wpiblue),
-            Timer.getFPGATimestamp() - (result.botpose_wpiblue[6] / 1000.0),
+            Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) - (result.latency_pipeline / 1000.0),
             true,
             1.0);
       } else if (alliance == Alliance.Red) {
         // double[] botpose = LimelightHelpers.getBotPose_wpiRed("limelight");
         drivebase.addVisionMeasurement(
             LimelightHelpers.toPose2D(result.botpose_wpired),
-            Timer.getFPGATimestamp() - (result.botpose_wpired[6] / 1000.0),
+            Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) - (result.latency_pipeline / 1000.0),
             true,
             1.0);
       }

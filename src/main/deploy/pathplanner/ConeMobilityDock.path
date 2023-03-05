@@ -17,10 +17,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "IntakeCone",
-          "ArmHigh",
-          "OuttakeCone",
-          "ArmStow"
+          "IntakeHigh",
+          "OuttakeCone"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -75,5 +73,13 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.012121212121205238,
+      "names": [
+        "event",
+        "ArmStow"
+      ]
+    }
+  ]
 }

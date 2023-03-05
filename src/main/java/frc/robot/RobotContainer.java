@@ -112,6 +112,10 @@ public class RobotContainer {
     SmartDashboard.putData("CHOOSE", chooser);
 
     spdLimit.addOption("100%", 1.0);
+    spdLimit.addOption("95%", 0.95);
+    spdLimit.addOption("90%", 0.9);
+    spdLimit.addOption("85%", 0.85);
+    spdLimit.addOption("80%", 0.8);
     spdLimit.setDefaultOption("75%", 0.75);
     spdLimit.addOption("50%", 0.5);
     spdLimit.addOption("35%", 0.35);
@@ -190,6 +194,7 @@ public class RobotContainer {
     } else {
       limit = lim;
     }
+    SmartDashboard.putNumber("level", limit);
   }
 
   /**

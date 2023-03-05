@@ -31,7 +31,7 @@ public class Arm extends SubsystemBase {
   static final double HIGH = 68000.0;
 
   /** Middle position in Falcon units */
-  static final double MID = 41000.0;
+  static final double MID = 34000.0;
 
   /** Low position in Falcon units */
   static final double LOW = 18594.0;

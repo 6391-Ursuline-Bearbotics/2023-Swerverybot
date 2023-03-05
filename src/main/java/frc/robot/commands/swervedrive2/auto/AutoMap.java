@@ -48,6 +48,12 @@ public class AutoMap {
     eventMapGetter.put(
         "OuttakeCone", () -> Commands.run(() -> intake.intakeCube()).withTimeout(0.1));
 
+    eventMapGetter.put(
+        "IntakeHigh", () -> getCommandInMap("IntakeCone").alongWith(getCommandInMap("ArmHigh")));
+
+    eventMapGetter.put(
+      "OuttakeStow", () -> getCommandInMap("OuttakeCone").alongWith(getCommandInMap("ArmStow")).andThen(() -> intake.stop()));
+
     eventMapGetter.forEach(
         (key, val) -> {
           eventMap.put(key, val.get());

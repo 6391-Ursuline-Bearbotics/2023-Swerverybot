@@ -87,7 +87,7 @@ public class SwerveModule {
     driveMotor.configureIntegratedEncoder(moduleConfiguration.getPositionEncoderConversion(true));
     driveMotor.configurePIDF(moduleConfiguration.velocityPIDF);
     driveMotor.setInverted(moduleConfiguration.driveMotorInverted);
-    driveMotor.setMotorBrake(true);
+    driveMotor.setMotorBrake(false);
 
     driveMotor.burnFlash();
     angleMotor.burnFlash();
