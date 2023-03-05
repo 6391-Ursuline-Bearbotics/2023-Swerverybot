@@ -64,6 +64,7 @@ public class RobotContainer {
   private int column = 1;
   private String level = "ArmHigh";
   private double limit = 0.75;
+  private double radLimiter = OIConstants.radLimiter;
   private Alliance color = Alliance.Invalid;
 
   // the default commands
@@ -72,7 +73,7 @@ public class RobotContainer {
           drivebase,
           () -> getLimitedSpeed(-drv.getLeftY()),
           () -> getLimitedSpeed(-drv.getLeftX()),
-          () -> getDeadband(-drv.getRightX(), OIConstants.radDeadband) * OIConstants.radLimiter,
+          () -> Math.pow(getDeadband(-drv.getRightX(), OIConstants.radDeadband), 3) * radLimiter,
           () -> true,
           false);
 
@@ -86,9 +87,6 @@ public class RobotContainer {
   }
 
   private void initializeChooser() {
-
-    chooser.setDefaultOption("Default Test", builder.getSwerveCommand("ConeStationRail"));
-
     chooser.addOption(
         "Cube Mobility Dock",
         builder
@@ -99,7 +97,7 @@ public class RobotContainer {
                         drivebase)
                     .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0)));
 
-    chooser.addOption(
+    chooser.setDefaultOption(
         "Cone Mobility Dock",
         builder
             .getSwerveCommand("ConeMobilityDock")
@@ -108,7 +106,11 @@ public class RobotContainer {
                         () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
                         drivebase)
                     .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0)));
-
+    
+    chooser.addOption("BumpGround2", builder.getSwerveCommand("ConeBump2"));
+    chooser.addOption("BarrierGround2", builder.getSwerveCommand("ConeBarrier2"));
+    chooser.addOption("Cone Only", autoMap.getCommandInMap("IntakeHigh").andThen(autoMap.getCommandInMap("OuttakeStow")));
+    chooser.addOption("Do Nothing", Commands.none());
     SmartDashboard.putData("CHOOSE", chooser);
 
     spdLimit.addOption("100%", 1.0);
@@ -123,7 +125,7 @@ public class RobotContainer {
   }
 
   private double getLimitedSpeed(double axis) {
-    return limit * getDeadband(axis, OIConstants.xyDeadband);
+    return limit * Math.pow(getDeadband(axis, OIConstants.xyDeadband), 3);
   }
 
   private double getDeadband(double axis, double deadband) {
@@ -191,8 +193,10 @@ public class RobotContainer {
   public void setSpeedLimit(double lim) {
     if (lim == 0.0) {
       limit = spdLimit.getSelected();
+      radLimiter = OIConstants.radLimiter;
     } else {
       limit = lim;
+      radLimiter = OIConstants.radSlow;
     }
     SmartDashboard.putNumber("level", limit);
   }

@@ -57,9 +57,9 @@ public class TeleopDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xVelocity = Math.pow(vX.getAsDouble(), 3) * controller.config.maxSpeed;
-    double yVelocity = Math.pow(vY.getAsDouble(), 3) * controller.config.maxSpeed;
-    double angVelocity = Math.pow(omega.getAsDouble(), 3) * controller.config.maxAngularVelocity;
+    double xVelocity = vX.getAsDouble() * controller.config.maxSpeed;
+    double yVelocity = vY.getAsDouble() * controller.config.maxSpeed;
+    double angVelocity = omega.getAsDouble() * controller.config.maxAngularVelocity;
     SmartDashboard.putNumber("vX", xVelocity);
     SmartDashboard.putNumber("vY", yVelocity);
     SmartDashboard.putNumber("omega", angVelocity);
