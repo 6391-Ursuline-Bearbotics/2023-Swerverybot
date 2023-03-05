@@ -133,7 +133,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     var pos = robotContainer.arm.getArmPosition();
     if (pos > 5000) {
-      robotContainer.setSpeedLimit(0.5);
+      robotContainer.setSpeedLimit(0.3);
     } else if (pos < 5000 && lastpos > 5000) {
       robotContainer.setSpeedLimit(0.0);
     }

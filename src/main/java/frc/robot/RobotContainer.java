@@ -84,6 +84,11 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureBindings();
+    SmartDashboard.putBoolean("ArmHigh", level == "ArmHigh");
+    SmartDashboard.putBoolean("ArmMid", level == "ArmMid");
+    SmartDashboard.putBoolean("ArmLow", level == "ArmLow");
+    SmartDashboard.putNumber("Column", column);
+    SmartDashboard.putNumber("limit", limit);
   }
 
   private void initializeChooser() {
@@ -111,7 +116,7 @@ public class RobotContainer {
     chooser.addOption("BarrierGround2", builder.getSwerveCommand("ConeBarrier2"));
     chooser.addOption("Cone Only", autoMap.getCommandInMap("IntakeHigh").andThen(autoMap.getCommandInMap("OuttakeStow")));
     chooser.addOption("Do Nothing", Commands.none());
-    SmartDashboard.putData("CHOOSE", chooser);
+    SmartDashboard.putData("Auto choices", chooser);
 
     spdLimit.addOption("100%", 1.0);
     spdLimit.addOption("95%", 0.95);
@@ -188,6 +193,9 @@ public class RobotContainer {
   private void setLevel(String lev) {
     level = lev;
     SmartDashboard.putString("Level", level);
+    SmartDashboard.putBoolean("ArmHigh", lev == "ArmHigh");
+    SmartDashboard.putBoolean("ArmMid", lev == "ArmMid");
+    SmartDashboard.putBoolean("ArmLow", lev == "ArmLow");
   }
 
   public void setSpeedLimit(double lim) {
@@ -198,7 +206,7 @@ public class RobotContainer {
       limit = lim;
       radLimiter = OIConstants.radSlow;
     }
-    SmartDashboard.putNumber("level", limit);
+    SmartDashboard.putNumber("limit", limit);
   }
 
   /**
@@ -215,7 +223,7 @@ public class RobotContainer {
     arm.setDefaultCommand(new RunCommand(() -> arm.setArmPower(-op.getRightY()), arm));
 
     // Left Bumper slows the drive way down for fine positioning
-    drv.leftBumper().whileTrue(Commands.runOnce(() -> limit = 0.5));
+    drv.leftBumper().whileTrue(Commands.runOnce(() -> setSpeedLimit(0.3)));
     drv.leftBumper().onFalse(Commands.runOnce(() -> setSpeedLimit(0.0)));
 
     // Buttons automatically drive a corridor / charge station
@@ -248,11 +256,15 @@ public class RobotContainer {
 
     drv.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
         .whileTrue(
-            new ProxyCommand(() -> new GoToLoadingZone(true, drivebase, color).getCommand()));
+          new ParallelCommandGroup(
+            autoMap.getCommandInMap("ArmStow"),
+            new ProxyCommand(() -> new GoToLoadingZone(true, drivebase, color).getCommand())));
 
     drv.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5)
         .whileTrue(
-            new ProxyCommand(() -> new GoToLoadingZone(false, drivebase, color).getCommand()));
+          new ParallelCommandGroup(
+            autoMap.getCommandInMap("ArmStow"),
+            new ProxyCommand(() -> new GoToLoadingZone(false, drivebase, color).getCommand())));
 
     // Zero the Gyro, should only be used during practice
     drv.start().onTrue(new InstantCommand(drivebase::zeroGyro));

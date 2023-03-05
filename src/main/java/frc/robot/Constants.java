@@ -43,7 +43,7 @@ public final class Constants {
     public static double xyDeadband = 0.02;
     public static double radDeadband = 0.05;
     public static double radLimiter = 0.5;
-    public static double radSlow = 0.35;
+    public static double radSlow = 0.15;
   }
 
   public static final class Auton {
@@ -52,7 +52,7 @@ public final class Constants {
     public static final PIDFConfig angleAutoPID = new PIDFConfig(2.2, 0, 0.0);
 
     public static final double maxSpeedMPS = 3; // 4?
-    public static final double maxAccelerationMPS = 2;
+    public static final double maxAccelerationMPS = 1.5;
     public static final double midSpeedMPS = 2;
     public static final double lowSpeedMPS = 1;
     public static final double balanceScale = 1.0, balanceScalePow = 1.0;
@@ -247,16 +247,16 @@ public final class Constants {
     public static final List<Pose2d> loadingLead =
         new ArrayList<>() {
           {
-            add(new Pose2d(14.6, 7.34, new Rotation2d()));
-            add(new Pose2d(14.6, 6.0, new Rotation2d()));
+            add(new Pose2d(13.8, 7.34, new Rotation2d()));
+            add(new Pose2d(13.8, 6.0, new Rotation2d()));
           }
         };
 
     public static final List<Pose2d> loadingFinish =
         new ArrayList<>() {
           {
-            add(new Pose2d(15.6, 7.34, new Rotation2d()));
-            add(new Pose2d(15.6, 6.0, new Rotation2d()));
+            add(new Pose2d(14.6, 7.34, new Rotation2d()));
+            add(new Pose2d(14.6, 6.0, new Rotation2d()));
           }
         };
 
@@ -268,12 +268,13 @@ public final class Constants {
                     loadingLead.get(0).getTranslation(),
                     new Rotation2d(),
                     loadingLead.get(0).getRotation(),
-                    1.0));
+                    0.5));
             add(
                 new PathPoint(
                     loadingFinish.get(0).getTranslation(),
                     new Rotation2d(),
-                    loadingFinish.get(0).getRotation()));
+                    loadingFinish.get(0).getRotation(),
+                    0.5));
           }
         };
 
@@ -413,7 +414,7 @@ public final class Constants {
           }
         };
 
-    public static final Pose2d stationWaypoint = new Pose2d(13.22, 6.77, new Rotation2d());
+    public static final Pose2d stationWaypoint = new Pose2d(12.72, 6.77, new Rotation2d());
     public static final PathPoint stationWaypointIn =
         new PathPoint(
             stationWaypoint.getTranslation(), new Rotation2d(), stationWaypoint.getRotation(), 3.0);

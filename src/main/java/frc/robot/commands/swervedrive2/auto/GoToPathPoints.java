@@ -56,6 +56,7 @@ public class GoToPathPoints {
         };
 
     traj = PathPlanner.generatePath(constraints, path, markers);
+    drive.swerveDrive.postTrajectory(traj);
     // position, heading(direction of travel), holonomic rotation
 
     ppSwerveCommand =
