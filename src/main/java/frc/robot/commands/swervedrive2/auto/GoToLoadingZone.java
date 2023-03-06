@@ -24,19 +24,21 @@ public class GoToLoadingZone extends CommandBase {
   private List<PathPoint> corridor;
   private Pose2d corridorFirst;
   private final List<EventMarker> markers = new ArrayList<>();
+  private final AutoMap autoMap;
 
   public enum LOADING_SIDE {
     BARRIER,
     RAIL
   }
 
-  public GoToLoadingZone(boolean left, SwerveSubsystem drive, Alliance ally) {
+  public GoToLoadingZone(boolean left, SwerveSubsystem drive, Alliance ally, AutoMap autoMap) {
     this.drive = drive;
     this.ally = ally;
     addRequirements(drive);
     this.selectedLoadingSide = getLoadingSide(left);
     this.left = left;
     currentCommand = Commands.none();
+    this.autoMap = autoMap;
   }
 
   private LOADING_SIDE getLoadingSide(Boolean left) {
@@ -110,7 +112,8 @@ public class GoToLoadingZone extends CommandBase {
               leadPoint,
               new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
               drive,
-              markers);
+              markers,
+              autoMap);
       command = goToPathPoints.getCommand();
     } else if (Auton.scoreArea.isPoseWithinArea(currentPose)) {
       // If we are within scoring area find the left / right corridor
@@ -139,7 +142,8 @@ public class GoToLoadingZone extends CommandBase {
                   corridorFirst,
                   new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
                   drive,
-                  markers);
+                  markers,
+                  autoMap);
           command = goToPathPoints.getCommand();
           break;
         case RAIL:
@@ -165,7 +169,8 @@ public class GoToLoadingZone extends CommandBase {
                   corridorFirst,
                   new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
                   drive,
-                  markers);
+                  markers,
+                  autoMap);
           command = goToPathPoints.getCommand();
           break;
         default:
@@ -199,7 +204,8 @@ public class GoToLoadingZone extends CommandBase {
               Auton.stationWaypoint,
               new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
               drive,
-              markers);
+              markers,
+              autoMap);
       command = goToPathPoints.getCommand();
     }
     return command;

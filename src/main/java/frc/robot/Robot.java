@@ -91,6 +91,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     checkDSUpdate();
+    robotContainer.drivebase.setMotorIdleMode(false);
     autonomousCommand = robotContainer.getAuto();
     System.out.println("AUTO START");
   }
@@ -125,7 +126,8 @@ public class Robot extends TimedRobot {
     }
     isAutoDone = false;
     checkDSUpdate();
-    RobotContainer.intake.stop();
+    robotContainer.drivebase.setMotorIdleMode(false);
+    robotContainer.intake.stop();
   }
 
   /** This function is called periodically during operator control. */

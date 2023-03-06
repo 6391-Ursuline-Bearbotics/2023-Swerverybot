@@ -18,6 +18,7 @@ public class GoToScoring {
   private final int column;
   private final List<EventMarker> markers = new ArrayList<>();
   private final String event;
+  private final AutoMap autoMap;
 
   public enum POSITION {
     LEFT,
@@ -32,11 +33,16 @@ public class GoToScoring {
   }
 
   public GoToScoring(
-      SwerveSubsystem drive, SCORING_SIDE selectedPosition, int column, String event) {
+      SwerveSubsystem drive,
+      SCORING_SIDE selectedPosition,
+      int column,
+      String event,
+      AutoMap autoMap) {
     this.drive = drive;
     this.selectedPosition = selectedPosition;
     this.column = column;
     this.event = event;
+    this.autoMap = autoMap;
   }
 
   public Command getCommand() {
@@ -74,7 +80,8 @@ public class GoToScoring {
                   Auton.stationWaypoint,
                   new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
                   drive,
-                  markers);
+                  markers,
+                  autoMap);
           command = goToPathPoints.getCommand();
           break;
         case BUMP:
@@ -100,7 +107,8 @@ public class GoToScoring {
                   Auton.stationWaypoint,
                   new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
                   drive,
-                  markers);
+                  markers,
+                  autoMap);
           command = goToPathPoints.getCommand();
           break;
         case MIDDLE:
@@ -126,7 +134,8 @@ public class GoToScoring {
                   Auton.stationWaypoint,
                   new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
                   drive,
-                  markers);
+                  markers,
+                  autoMap);
           command = goToPathPoints.getCommand();
           break;
         default:
@@ -153,7 +162,8 @@ public class GoToScoring {
               Auton.leadingPoses.get(column - 1),
               new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
               drive,
-              markers);
+              markers,
+              autoMap);
       command = goToPathPoints.getCommand();
     } else {
       // If within Loadin area navigate through selected corridor
@@ -181,7 +191,8 @@ public class GoToScoring {
                   Auton.barrierCorridor.get(1),
                   new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
                   drive,
-                  markers);
+                  markers,
+                  autoMap);
           command = goToPathPoints.getCommand();
           break;
         case BUMP:
@@ -206,7 +217,8 @@ public class GoToScoring {
                   Auton.bumpCorridor.get(1),
                   new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
                   drive,
-                  markers);
+                  markers,
+                  autoMap);
           command = goToPathPoints.getCommand();
           break;
         case MIDDLE:
@@ -231,7 +243,8 @@ public class GoToScoring {
                   Auton.midCorridor.get(1),
                   new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
                   drive,
-                  markers);
+                  markers,
+                  autoMap);
           command = goToPathPoints.getCommand();
           break;
         default:

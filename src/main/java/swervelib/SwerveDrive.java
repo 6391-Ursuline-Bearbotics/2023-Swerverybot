@@ -583,12 +583,10 @@ public class SwerveDrive {
   }
 
   public void setGyro(Double angle) {
-    if (!SwerveDriveTelemetry.isSimulation)
-    {
+    if (!SwerveDriveTelemetry.isSimulation) {
       imu.setYaw(angle);
-    } else
-    {
-      simIMU.setAngle(angle);
+    } else {
+      simIMU.setAngle(Math.toRadians(angle));
     }
   }
 }

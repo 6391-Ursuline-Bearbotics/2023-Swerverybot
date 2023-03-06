@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import static edu.wpi.first.wpilibj2.command.Commands.parallel;
+import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
+
+import com.pathplanner.lib.PathConstraints;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -13,16 +18,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.Auton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.swervedrive2.auto.AutoMap;
 import frc.robot.commands.swervedrive2.auto.GoToLoadingZone;
+import frc.robot.commands.swervedrive2.auto.GoToPose;
 import frc.robot.commands.swervedrive2.auto.GoToScoring;
 import frc.robot.commands.swervedrive2.auto.GoToScoring.POSITION;
 import frc.robot.commands.swervedrive2.auto.GoToScoring.SCORING_SIDE;
@@ -46,11 +50,11 @@ public class RobotContainer {
   private SendableChooser<Double> spdLimit = new SendableChooser<>();
 
   // The robot's subsystems
-  private final SwerveSubsystem drivebase =
+  public final SwerveSubsystem drivebase =
       new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
-  public static final Arm arm = new Arm();
-  public static final Intake intake = new Intake();
-  private final Limelight vision = new Limelight(drivebase);
+  public final Arm arm = new Arm();
+  public final Intake intake = new Intake();
+  public final Limelight vision = new Limelight(drivebase);
   public final LEDSubsystem led = new LEDSubsystem();
 
   private final AutoMap autoMap = new AutoMap(intake, arm);
@@ -111,10 +115,12 @@ public class RobotContainer {
                         () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
                         drivebase)
                     .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0)));
-    
+
     chooser.addOption("BumpGround2", builder.getSwerveCommand("ConeBump2"));
     chooser.addOption("BarrierGround2", builder.getSwerveCommand("ConeBarrier2"));
-    chooser.addOption("Cone Only", autoMap.getCommandInMap("IntakeHigh").andThen(autoMap.getCommandInMap("OuttakeStow")));
+    chooser.addOption(
+        "Cone Only",
+        autoMap.getCommandInMap("IntakeHigh").andThen(autoMap.getCommandInMap("OuttakeStow")));
     chooser.addOption("Do Nothing", Commands.none());
     SmartDashboard.putData("Auto choices", chooser);
 
@@ -220,62 +226,81 @@ public class RobotContainer {
     drivebase.setDefaultCommand(closedFieldRel);
 
     // This is the backup manual control of the Arm
-    arm.setDefaultCommand(new RunCommand(() -> arm.setArmPower(-op.getRightY()), arm));
+    arm.setDefaultCommand(Commands.run(() -> arm.setArmPower(-op.getRightY()), arm));
 
     // Left Bumper slows the drive way down for fine positioning
-    drv.leftBumper().whileTrue(Commands.runOnce(() -> setSpeedLimit(0.3)));
-    drv.leftBumper().onFalse(Commands.runOnce(() -> setSpeedLimit(0.0)));
+    drv.leftBumper().whileTrue(runOnce(() -> setSpeedLimit(0.3)));
+    drv.leftBumper().onFalse(runOnce(() -> setSpeedLimit(0.0)));
 
     // Buttons automatically drive a corridor / charge station
     drv.x()
         .whileTrue(
-            new ParallelCommandGroup(
-                autoMap.getCommandInMap("ArmStow"),
+            parallel(
+                new ProxyCommand(autoMap.getCommandInMap("ArmStow")),
                 new ProxyCommand(
                     () ->
-                        new GoToScoring(drivebase, getCorridor(POSITION.LEFT), column, level)
+                        new GoToScoring(
+                                drivebase, getCorridor(POSITION.LEFT), column, level, autoMap)
                             .getCommand())));
 
     drv.a()
         .whileTrue(
-            new ParallelCommandGroup(
-                autoMap.getCommandInMap("ArmStow"),
+            parallel(
+                new ProxyCommand(autoMap.getCommandInMap("ArmStow")),
                 new ProxyCommand(
                     () ->
-                        new GoToScoring(drivebase, getCorridor(POSITION.MIDDLE), column, level)
+                        new GoToScoring(
+                                drivebase, getCorridor(POSITION.MIDDLE), column, level, autoMap)
                             .getCommand())));
 
     drv.b()
         .whileTrue(
-            new ParallelCommandGroup(
-                autoMap.getCommandInMap("ArmStow"),
+            parallel(
+                new ProxyCommand(autoMap.getCommandInMap("ArmStow")),
                 new ProxyCommand(
                     () ->
-                        new GoToScoring(drivebase, getCorridor(POSITION.RIGHT), column, level)
+                        new GoToScoring(
+                                drivebase, getCorridor(POSITION.RIGHT), column, level, autoMap)
                             .getCommand())));
 
     drv.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
         .whileTrue(
-          new ParallelCommandGroup(
-            autoMap.getCommandInMap("ArmStow"),
-            new ProxyCommand(() -> new GoToLoadingZone(true, drivebase, color).getCommand())));
+            parallel(
+                new ProxyCommand(autoMap.getCommandInMap("ArmStow")),
+                new ProxyCommand(
+                    () -> new GoToLoadingZone(true, drivebase, color, autoMap).getCommand())));
 
     drv.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5)
         .whileTrue(
-          new ParallelCommandGroup(
-            autoMap.getCommandInMap("ArmStow"),
-            new ProxyCommand(() -> new GoToLoadingZone(false, drivebase, color).getCommand())));
+            parallel(
+                new ProxyCommand(autoMap.getCommandInMap("ArmStow")),
+                new ProxyCommand(
+                    () -> new GoToLoadingZone(false, drivebase, color, autoMap).getCommand())));
 
     // Zero the Gyro, should only be used during practice
-    drv.start().onTrue(new InstantCommand(drivebase::zeroGyro));
+    drv.start().onTrue(runOnce(drivebase::zeroGyro));
 
-    // Teleop AutoBalance will test if better than manual
-    drv.back()
+    // Set drive to brake mode
+    drv.back().onTrue(runOnce(() -> drivebase.setMotorIdleMode(true)));
+
+    // Teleop AutoBalance test
+    drv.povLeft()
         .whileTrue(
             Commands.run(
                     () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
                     drivebase)
                 .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0));
+
+    // Apriltag Balance test
+    drv.povRight()
+        .whileTrue(
+            new ProxyCommand(
+                () ->
+                    new GoToPose(
+                            Auton.centerChargeStation,
+                            new PathConstraints(2.0, 1.0),
+                            drivebase)
+                        .getCommand()));
 
     // Manual Arm High
     op.y().onTrue(autoMap.getCommandInMap("ArmHigh"));
@@ -290,30 +315,30 @@ public class RobotContainer {
     op.b().onTrue(autoMap.getCommandInMap("ArmStow"));
 
     // While left bumper is pressed intake the cone then minimal power to hold it
-    op.leftBumper().whileTrue(Commands.runOnce(() -> intake.intakeCone(), intake));
-    op.leftBumper().onFalse(Commands.runOnce(() -> intake.holdCone(), intake));
+    op.leftBumper().whileTrue(runOnce(() -> intake.intakeCone(), intake));
+    op.leftBumper().onFalse(runOnce(() -> intake.holdCone(), intake));
 
     // While right bumper is pressed intake the cube then minimal power to hold it
-    op.rightBumper().whileTrue(Commands.runOnce(() -> intake.intakeCube(), intake));
-    op.rightBumper().onFalse(Commands.runOnce(() -> intake.holdCube(), intake));
+    op.rightBumper().whileTrue(runOnce(() -> intake.intakeCube(), intake));
+    op.rightBumper().onFalse(runOnce(() -> intake.holdCube(), intake));
 
     // Zero Arm Encoder shouldn't be needed unless turned on without arm stowed.
-    op.start().onTrue(Commands.runOnce(() -> arm.zeroArm(), arm));
+    op.start().onTrue(runOnce(() -> arm.zeroArm(), arm));
 
     // Button Board setting the level and column to be placed
 
-    btn.button(1).onTrue(Commands.runOnce(() -> setColumn(1)));
-    btn.button(2).onTrue(Commands.runOnce(() -> setColumn(2)));
-    btn.button(3).onTrue(Commands.runOnce(() -> setColumn(3)));
-    btn.button(4).onTrue(Commands.runOnce(() -> setColumn(4)));
-    btn.button(5).onTrue(Commands.runOnce(() -> setColumn(5)));
-    btn.button(6).onTrue(Commands.runOnce(() -> setColumn(6)));
-    btn.button(7).onTrue(Commands.runOnce(() -> setColumn(7)));
-    btn.button(8).onTrue(Commands.runOnce(() -> setColumn(8)));
-    btn.button(9).onTrue(Commands.runOnce(() -> setColumn(9)));
-    btn.button(10).onTrue(Commands.runOnce(() -> setLevel("ArmLow")));
-    btn.button(11).onTrue(Commands.runOnce(() -> setLevel("ArmMid")));
-    btn.button(12).onTrue(Commands.runOnce(() -> setLevel("ArmHigh")));
+    btn.button(1).onTrue(runOnce(() -> setColumn(1)));
+    btn.button(2).onTrue(runOnce(() -> setColumn(2)));
+    btn.button(3).onTrue(runOnce(() -> setColumn(3)));
+    btn.button(4).onTrue(runOnce(() -> setColumn(4)));
+    btn.button(5).onTrue(runOnce(() -> setColumn(5)));
+    btn.button(6).onTrue(runOnce(() -> setColumn(6)));
+    btn.button(7).onTrue(runOnce(() -> setColumn(7)));
+    btn.button(8).onTrue(runOnce(() -> setColumn(8)));
+    btn.button(9).onTrue(runOnce(() -> setColumn(9)));
+    btn.button(10).onTrue(runOnce(() -> setLevel("ArmLow")));
+    btn.button(11).onTrue(runOnce(() -> setLevel("ArmMid")));
+    btn.button(12).onTrue(runOnce(() -> setLevel("ArmHigh")));
   }
 
   /**

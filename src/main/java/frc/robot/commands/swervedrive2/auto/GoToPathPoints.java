@@ -5,6 +5,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.EventMarker;
 import com.pathplanner.lib.PathPoint;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -18,17 +19,19 @@ public class GoToPathPoints {
   private PPSwerveControllerCommand ppSwerveCommand;
   private PathPlannerTrajectory traj;
   private Pose2d currentPose;
-  private List<EventMarker> markers;
+  private FollowPathWithEvents eventCommand;
 
   public GoToPathPoints(
       List<PathPoint> points,
       Pose2d firstPose,
       PathConstraints constraints,
       SwerveSubsystem drive,
-      List<EventMarker> markers) {
+      List<EventMarker> markers,
+      AutoMap eventMap) {
     PathPoint currentPathPoint;
     currentPose = drive.getPose();
-    if (DriverStation.getAlliance() == Alliance.Red) {
+    Alliance ally = DriverStation.getAlliance();
+    if (ally == Alliance.Red) {
       firstPose =
           new Pose2d(firstPose.getX(), 8.02 - firstPose.getY(), firstPose.getRotation().times(-1));
       currentPose =
@@ -56,7 +59,12 @@ public class GoToPathPoints {
         };
 
     traj = PathPlanner.generatePath(constraints, path, markers);
-    drive.swerveDrive.postTrajectory(traj);
+    if (ally == Alliance.Red) {
+      drive.swerveDrive.postTrajectory(
+          PathPlannerTrajectory.transformTrajectoryForAlliance(traj, ally));
+    } else {
+      drive.swerveDrive.postTrajectory(traj);
+    }
     // position, heading(direction of travel), holonomic rotation
 
     ppSwerveCommand =
@@ -71,9 +79,10 @@ public class GoToPathPoints {
             true,
             drive // Requires this drive subsystem
             );
+    eventCommand = new FollowPathWithEvents(ppSwerveCommand, markers, eventMap.getMap());
   }
 
-  public PPSwerveControllerCommand getCommand() {
-    return ppSwerveCommand;
+  public FollowPathWithEvents getCommand() {
+    return eventCommand;
   }
 }

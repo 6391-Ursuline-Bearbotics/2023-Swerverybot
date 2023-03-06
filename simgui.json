@@ -72,6 +72,7 @@
       "/LiveWindow/Ungrouped/Talon FX [7]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon FX [8]": "Motor Controller",
       "/SmartDashboard/Arm Sim": "Mechanism2d",
+      "/SmartDashboard/Auto choices": "String Chooser",
       "/SmartDashboard/CHOOSE": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Pigeon 2 [20]": "Gyro",
@@ -79,7 +80,7 @@
       "/SmartDashboard/Speed Limit": "String Chooser"
     },
     "windows": {
-      "/SmartDashboard/CHOOSE": {
+      "/SmartDashboard/Auto choices": {
         "window": {
           "visible": true
         }

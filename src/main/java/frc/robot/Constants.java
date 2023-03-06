@@ -110,7 +110,8 @@ public final class Constants {
                         new PathPoint(
                             scoringPoses.get(0).getTranslation(),
                             new Rotation2d(Math.PI),
-                            scoringPoses.get(0).getRotation()));
+                            scoringPoses.get(0).getRotation(),
+                            1.0));
                   }
                 });
             add(
@@ -126,7 +127,8 @@ public final class Constants {
                         new PathPoint(
                             scoringPoses.get(1).getTranslation(),
                             new Rotation2d(Math.PI),
-                            scoringPoses.get(1).getRotation()));
+                            scoringPoses.get(1).getRotation(),
+                            1.0));
                   }
                 });
             add(
@@ -142,7 +144,8 @@ public final class Constants {
                         new PathPoint(
                             scoringPoses.get(2).getTranslation(),
                             new Rotation2d(Math.PI),
-                            scoringPoses.get(2).getRotation()));
+                            scoringPoses.get(2).getRotation(),
+                            1.0));
                   }
                 });
             add(
@@ -158,7 +161,8 @@ public final class Constants {
                         new PathPoint(
                             scoringPoses.get(3).getTranslation(),
                             new Rotation2d(Math.PI),
-                            scoringPoses.get(3).getRotation()));
+                            scoringPoses.get(3).getRotation(),
+                            1.0));
                   }
                 });
             add(
@@ -174,7 +178,8 @@ public final class Constants {
                         new PathPoint(
                             scoringPoses.get(4).getTranslation(),
                             new Rotation2d(Math.PI),
-                            scoringPoses.get(4).getRotation()));
+                            scoringPoses.get(4).getRotation(),
+                            1.0));
                   }
                 });
             add(
@@ -190,7 +195,8 @@ public final class Constants {
                         new PathPoint(
                             scoringPoses.get(5).getTranslation(),
                             new Rotation2d(Math.PI),
-                            scoringPoses.get(5).getRotation()));
+                            scoringPoses.get(5).getRotation(),
+                            1.0));
                   }
                 });
             add(
@@ -206,7 +212,8 @@ public final class Constants {
                         new PathPoint(
                             scoringPoses.get(6).getTranslation(),
                             new Rotation2d(Math.PI),
-                            scoringPoses.get(6).getRotation()));
+                            scoringPoses.get(6).getRotation(),
+                            1.0));
                   }
                 });
             add(
@@ -222,7 +229,8 @@ public final class Constants {
                         new PathPoint(
                             scoringPoses.get(7).getTranslation(),
                             new Rotation2d(Math.PI),
-                            scoringPoses.get(7).getRotation()));
+                            scoringPoses.get(7).getRotation(),
+                            1.0));
                   }
                 });
             add(
@@ -238,7 +246,8 @@ public final class Constants {
                         new PathPoint(
                             scoringPoses.get(8).getTranslation(),
                             new Rotation2d(Math.PI),
-                            scoringPoses.get(8).getRotation()));
+                            scoringPoses.get(8).getRotation(),
+                            1.0));
                   }
                 });
           }
@@ -415,6 +424,18 @@ public final class Constants {
         };
 
     public static final Pose2d stationWaypoint = new Pose2d(12.72, 6.77, new Rotation2d());
+    public static final Pose2d centerChargeStation = new Pose2d(3.86, 2.73, new Rotation2d());
+    public static final List<PathPoint> centerChargePP =
+        new ArrayList<>() {
+          {
+            add(
+                new PathPoint(
+                    centerChargeStation.getTranslation(),
+                    centerChargeStation.getRotation(),
+                    centerChargeStation.getRotation(),
+                    3.0));
+          }
+        };
     public static final PathPoint stationWaypointIn =
         new PathPoint(
             stationWaypoint.getTranslation(), new Rotation2d(), stationWaypoint.getRotation(), 3.0);
