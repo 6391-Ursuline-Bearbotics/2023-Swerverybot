@@ -75,7 +75,11 @@ public class GoToPose {
   }
 
   public GoToPose(Pose2d pose, PathConstraints constraints, SwerveSubsystem drive) {
-    this(pose, pose.getTranslation().minus(drive.getPose().getTranslation()).getAngle(), constraints, drive);
+    this(
+        pose,
+        pose.getTranslation().minus(drive.getPose().getTranslation()).getAngle(),
+        constraints,
+        drive);
   }
 
   public PPSwerveControllerCommand getCommand() {

@@ -8,7 +8,6 @@ import static edu.wpi.first.wpilibj2.command.Commands.parallel;
 import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
 
 import com.pathplanner.lib.PathConstraints;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -130,6 +129,10 @@ public class RobotContainer {
     spdLimit.addOption("85%", 0.85);
     spdLimit.addOption("80%", 0.8);
     spdLimit.setDefaultOption("75%", 0.75);
+    spdLimit.addOption("70%", 0.7);
+    spdLimit.addOption("65%", 0.65);
+    spdLimit.addOption("60%", 0.6);
+    spdLimit.addOption("55%", 0.55);
     spdLimit.addOption("50%", 0.5);
     spdLimit.addOption("35%", 0.35);
     SmartDashboard.putData("Speed Limit", spdLimit);
@@ -297,9 +300,7 @@ public class RobotContainer {
             new ProxyCommand(
                 () ->
                     new GoToPose(
-                            Auton.centerChargeStation,
-                            new PathConstraints(2.0, 1.0),
-                            drivebase)
+                            Auton.centerChargeStation, new PathConstraints(2.0, 1.0), drivebase)
                         .getCommand()));
 
     // Manual Arm High
@@ -321,6 +322,8 @@ public class RobotContainer {
     // While right bumper is pressed intake the cube then minimal power to hold it
     op.rightBumper().whileTrue(runOnce(() -> intake.intakeCube(), intake));
     op.rightBumper().onFalse(runOnce(() -> intake.holdCube(), intake));
+
+    op.rightTrigger().whileTrue(runOnce(() -> vision.useLimelight()));
 
     // Zero Arm Encoder shouldn't be needed unless turned on without arm stowed.
     op.start().onTrue(runOnce(() -> arm.zeroArm(), arm));

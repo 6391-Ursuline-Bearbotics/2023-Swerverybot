@@ -18,7 +18,13 @@ public class Limelight extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
+  public void periodic() {}
+
+  public void setAlliance(Alliance alliance) {
+    this.alliance = alliance;
+  }
+
+  public void useLimelight() {
     LimelightHelpers.Results result =
         LimelightHelpers.getLatestResults("limelight").targetingResults;
     if (!(result.botpose[0] == 0 && result.botpose[1] == 0)) {
@@ -42,9 +48,5 @@ public class Limelight extends SubsystemBase {
             1.0);
       }
     }
-  }
-
-  public void setAlliance(Alliance alliance) {
-    this.alliance = alliance;
   }
 }
