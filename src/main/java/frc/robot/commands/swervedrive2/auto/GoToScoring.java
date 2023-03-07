@@ -155,7 +155,7 @@ public class GoToScoring {
                   add(event);
                 }
               },
-              1.0));
+              0.5));
       GoToPathPoints goToPathPoints =
           new GoToPathPoints(
               pointsScoring,

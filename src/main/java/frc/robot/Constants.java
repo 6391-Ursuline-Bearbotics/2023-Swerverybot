@@ -70,30 +70,30 @@ public final class Constants {
     public static final List<Pose2d> scoringPoses =
         new ArrayList<>() {
           {
-            add(new Pose2d(1.73, Units.inchesToMeters(196.19), new Rotation2d(Math.PI)));
-            add(new Pose2d(1.73, Units.inchesToMeters(174.19), new Rotation2d(Math.PI)));
-            add(new Pose2d(1.73, Units.inchesToMeters(152.19), new Rotation2d(Math.PI)));
-            add(new Pose2d(1.73, Units.inchesToMeters(130.19), new Rotation2d(Math.PI)));
-            add(new Pose2d(1.73, Units.inchesToMeters(108.19), new Rotation2d(Math.PI)));
-            add(new Pose2d(1.73, Units.inchesToMeters(86.19), new Rotation2d(Math.PI)));
-            add(new Pose2d(1.73, Units.inchesToMeters(64.19), new Rotation2d(Math.PI)));
-            add(new Pose2d(1.73, Units.inchesToMeters(42.19), new Rotation2d(Math.PI)));
-            add(new Pose2d(1.73, Units.inchesToMeters(20.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.05, Units.inchesToMeters(196.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.05, Units.inchesToMeters(174.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.05, Units.inchesToMeters(152.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.05, Units.inchesToMeters(130.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.05, Units.inchesToMeters(108.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.05, Units.inchesToMeters(86.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.05, Units.inchesToMeters(64.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.05, Units.inchesToMeters(42.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.05, Units.inchesToMeters(20.19), new Rotation2d(Math.PI)));
           }
         };
 
     public static final List<Pose2d> leadingPoses =
         new ArrayList<>() {
           {
-            add(new Pose2d(2.23, Units.inchesToMeters(196.19), new Rotation2d(Math.PI)));
-            add(new Pose2d(2.23, Units.inchesToMeters(174.19), new Rotation2d(Math.PI)));
-            add(new Pose2d(2.23, Units.inchesToMeters(152.19), new Rotation2d(Math.PI)));
-            add(new Pose2d(2.23, Units.inchesToMeters(130.19), new Rotation2d(Math.PI)));
-            add(new Pose2d(2.23, Units.inchesToMeters(108.19), new Rotation2d(Math.PI)));
-            add(new Pose2d(2.23, Units.inchesToMeters(86.19), new Rotation2d(Math.PI)));
-            add(new Pose2d(2.23, Units.inchesToMeters(64.19), new Rotation2d(Math.PI)));
-            add(new Pose2d(2.23, Units.inchesToMeters(42.19), new Rotation2d(Math.PI)));
-            add(new Pose2d(2.23, Units.inchesToMeters(20.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.3, Units.inchesToMeters(196.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.3, Units.inchesToMeters(174.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.3, Units.inchesToMeters(152.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.3, Units.inchesToMeters(130.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.3, Units.inchesToMeters(108.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.3, Units.inchesToMeters(86.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.3, Units.inchesToMeters(64.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.3, Units.inchesToMeters(42.19), new Rotation2d(Math.PI)));
+            add(new Pose2d(2.3, Units.inchesToMeters(20.19), new Rotation2d(Math.PI)));
           }
         };
 
@@ -427,7 +427,7 @@ public final class Constants {
         };
 
     public static final Pose2d stationWaypoint = new Pose2d(12.72, 6.77, new Rotation2d());
-    public static final Pose2d centerChargeStation = new Pose2d(3.86, 2.73, new Rotation2d());
+    public static final Pose2d centerChargeStation = new Pose2d(3.86, 2.73, new Rotation2d(Math.PI));
     public static final List<PathPoint> centerChargePP =
         new ArrayList<>() {
           {

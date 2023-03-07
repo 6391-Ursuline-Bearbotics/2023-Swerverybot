@@ -1,0 +1,76 @@
+<dashboard-tab
+    tab-name="TeleOperated"
+    slot="tab"
+    selected=""
+    source-provider="NetworkTables"
+>
+    <frc-field
+        source-key="/SmartDashboard/Field"
+        source-provider="NetworkTables"
+        style="transform: translate(542.656px, 189.844px); width: 737.333px; height: 387.49px;"
+        width="54.27083"
+        height="26.2916"
+        image="/field-images/2023-field.jpg"
+        top-left-field-corner-x="46"
+        top-left-field-corner-y="36"
+        bottom-right-field-corner-x="1088"
+        bottom-right-field-corner-y="544"
+    >
+        <frc-field-robot
+            source-key="/SmartDashboard/Field/Robot"
+            source-provider="NetworkTables"
+            style="width: 24.5744px; height: 36.8615px; transform: translate(17.6219px, 333.195px) rotate(89.9561deg);"
+            opacity="100"
+            pose="[0,0,0]"
+        ></frc-field-robot>
+    </frc-field>
+    <frc-gauge
+        source-provider="NetworkTables"
+        style="transform: translate(641.323px, 0px); width: 200px; height: 192px;"
+        source-key="/SmartDashboard/Column"
+        min="1"
+        max="9"
+    ></frc-gauge>
+    <frc-boolean-box
+        source-provider="NetworkTables"
+        style="transform: translate(851.334px, -0.000343506px); width: 130.656px; height: 62.6667px;"
+        source-key="/SmartDashboard/ArmLow"
+    ></frc-boolean-box>
+    <frc-boolean-box
+        source-provider="NetworkTables"
+        style="transform: translate(851.989px, 59.99px); width: 129.99px; height: 67.3334px;"
+        source-key="/SmartDashboard/ArmMid"
+    ></frc-boolean-box>
+    <frc-boolean-box
+        source-provider="NetworkTables"
+        style="transform: translate(852.334px, 128px); width: 128.656px; height: 66.6562px;"
+        source-key="/SmartDashboard/ArmHigh"
+    ></frc-boolean-box>
+    <frc-swerve-drivebase
+        source-provider="NetworkTables"
+        style="transform: translate(76.3229px, 146.333px); width: 295.323px; height: 388.333px;"
+        source-key="/SmartDashboard/swerve"
+        wheellocations="[2.5,2,2.5,-2,-2.5,2,-2.5,-2]"
+        measuredstates="[0,0,0,0,0,0,0,0]"
+        desiredstates="[0,0,0,0,0,0,0,0]"
+        sizeleftright="4"
+        sizefrontback="5"
+    ></frc-swerve-drivebase>
+    <frc-sendable-chooser
+        source-key="/SmartDashboard/Auto choices"
+        source-provider="NetworkTables"
+        style="transform: translate(125px, -3.58765e-05px);"
+        options="[]"
+    ></frc-sendable-chooser>
+    <frc-sendable-chooser
+        source-key="/SmartDashboard/Speed Limit"
+        source-provider="NetworkTables"
+        style="transform: translate(401.333px, 0px);"
+        options="[]"
+    ></frc-sendable-chooser>
+</dashboard-tab>
+<dashboard-tab
+    slot="tab"
+    tab-name="Autonomous"
+    source-provider="NetworkTables"
+></dashboard-tab>
