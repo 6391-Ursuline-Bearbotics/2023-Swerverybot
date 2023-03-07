@@ -2,42 +2,45 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 13.22,
-        "y": 6.77
+        "x": 1.8,
+        "y": 3.87
       },
       "prevControl": null,
       "nextControl": {
-        "x": 14.22,
-        "y": 6.77
+        "x": 2.605818020222803,
+        "y": 4.990442038129157
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
-      "velOverride": 2.0,
+      "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "IntakeHigh",
+          "OuttakeStow"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 14.6,
-        "y": 7.34
+        "x": 3.7530460749651375,
+        "y": 4.76099642718069
       },
       "prevControl": {
-        "x": 14.003658411818945,
-        "y": 7.34
+        "x": 2.5854779189575083,
+        "y": 4.76099642718069
       },
       "nextControl": {
-        "x": 15.599999999999993,
-        "y": 7.34
+        "x": 4.920614230972767,
+        "y": 4.76099642718069
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
-      "velOverride": 1.0,
+      "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
@@ -49,12 +52,12 @@
     },
     {
       "anchorPoint": {
-        "x": 15.6,
-        "y": 7.34
+        "x": 7.108688135086466,
+        "y": 7.385280602403781
       },
       "prevControl": {
-        "x": 14.681730780126818,
-        "y": 7.34
+        "x": 6.222586267951664,
+        "y": 6.073138514792236
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -63,28 +66,12 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "ArmStow"
-        ],
-        "executionBehavior": "sequential",
+        "names": [],
+        "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "markers": [
-    {
-      "position": 0.0,
-      "names": [
-        "event"
-      ]
-    },
-    {
-      "position": 1.0,
-      "names": [
-        "ArmHigh",
-        "ConeGrab"
-      ]
-    }
-  ]
+  "markers": []
 }

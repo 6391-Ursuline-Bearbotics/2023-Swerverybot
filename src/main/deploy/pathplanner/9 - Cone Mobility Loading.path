@@ -2,42 +2,45 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 13.22,
-        "y": 6.77
+        "x": 1.8,
+        "y": 0.51
       },
       "prevControl": null,
       "nextControl": {
-        "x": 14.22,
-        "y": 6.77
+        "x": 3.4949197626481125,
+        "y": 0.7170175342139599
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
-      "velOverride": 2.0,
+      "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "IntakeHigh",
+          "OuttakeStow"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 14.6,
-        "y": 7.34
+        "x": 5.359165351604407,
+        "y": 0.8317403396881933
       },
       "prevControl": {
-        "x": 14.003658411818945,
-        "y": 7.34
+        "x": 4.183256595493513,
+        "y": 0.6596561314768437
       },
       "nextControl": {
-        "x": 15.599999999999993,
-        "y": 7.34
+        "x": 6.5144285816968095,
+        "y": 1.0008032514090321
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
-      "velOverride": 1.0,
+      "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
@@ -49,12 +52,12 @@
     },
     {
       "anchorPoint": {
-        "x": 15.6,
-        "y": 7.34
+        "x": 7.108688135086466,
+        "y": 7.385280602403781
       },
       "prevControl": {
-        "x": 14.681730780126818,
-        "y": 7.34
+        "x": 4.799891674917518,
+        "y": 6.85468762708545
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -63,22 +66,12 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "ArmStow"
-        ],
-        "executionBehavior": "sequential",
+        "names": [],
+        "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "markers": [
-    {
-      "position": 1.0,
-      "names": [
-        "ArmHigh",
-        "CubeGrab"
-      ]
-    }
-  ]
+  "markers": []
 }

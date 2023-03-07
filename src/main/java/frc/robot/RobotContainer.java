@@ -95,28 +95,47 @@ public class RobotContainer {
   }
 
   private void initializeChooser() {
-    chooser.addOption(
-        "Cube Mobility Dock",
-        builder
-            .getSwerveCommand("CubeMobilityDock")
-            .andThen(
-                Commands.run(
-                        () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
-                        drivebase)
-                    .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0)));
-
     chooser.setDefaultOption(
-        "Cone Mobility Dock",
+        "6 - Cone Mobility Engage",
         builder
             .getSwerveCommand("ConeMobilityDock")
             .andThen(
+                // To switch to AprilTag Balance disable the lines below and enable after it.
                 Commands.run(
                         () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
                         drivebase)
                     .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0)));
+    // To use the gyro auto balance disable below enable above
+    /*              new ProxyCommand(
+    () ->
+        new GoToPose(
+                Auton.centerChargeStation, new PathConstraints(2.0, 1.0), drivebase)
+            .getCommand()))); */
 
-    chooser.addOption("BumpGround2", builder.getSwerveCommand("ConeBump2"));
-    chooser.addOption("BarrierGround2", builder.getSwerveCommand("ConeBarrier2"));
+    chooser.addOption(
+        "5 - Cube Mobility Engage",
+        builder
+            .getSwerveCommand("CubeMobilityDock")
+            .andThen(
+                // To switch to AprilTag Balance disable the lines below and enable after it.
+                Commands.run(
+                        () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
+                        drivebase)
+                    .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0)));
+    // To use the gyro auto balance disable below enable above
+    /*              new ProxyCommand(
+    () ->
+        new GoToPose(
+                Auton.centerChargeStation, new PathConstraints(2.0, 1.0), drivebase)
+            .getCommand()))); */
+
+    chooser.addOption("3 - Cone 2 Piece", builder.getSwerveCommand("ConeBarrier2"));
+    chooser.addOption("9 - Cone 2 Piece", builder.getSwerveCommand("ConeBump2"));
+    chooser.addOption("3 - Cone Mobility Loading", builder.getSwerveCommand("3 - Cone Mobility Loading"));
+    chooser.addOption("9 - Cone Mobility Loading", builder.getSwerveCommand("9 - Cone Mobility Loading"));
+    chooser.addOption("3 - Cone Mobility Straight", builder.getSwerveCommand("3 - Cone Mobility Straight"));
+    chooser.addOption("6 - Cone Mobility Straight", builder.getSwerveCommand("6 - Cone Mobility Straight"));
+    chooser.addOption("9 - Cone Mobility Straight", builder.getSwerveCommand("9 - Cone Mobility Straight"));
     chooser.addOption(
         "Cone Only",
         autoMap.getCommandInMap("IntakeHigh").andThen(autoMap.getCommandInMap("OuttakeStow")));
@@ -286,13 +305,19 @@ public class RobotContainer {
     // Set drive to brake mode
     drv.back().onTrue(runOnce(() -> drivebase.setMotorIdleMode(true)));
 
+    // Enable the Limelight
+    drv.povUp().onTrue(runOnce(() -> vision.useLimelight(true)));
+
+    // Disable the Limelight
+    drv.povDown().onTrue(runOnce(() -> vision.useLimelight(false)));
+
     // Teleop AutoBalance test
     drv.povLeft()
         .whileTrue(
             Commands.run(
                     () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
                     drivebase)
-                .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0));
+                .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < Auton.balanceLimitDeg));
 
     // Apriltag Balance test
     drv.povRight()
@@ -322,8 +347,6 @@ public class RobotContainer {
     // While right bumper is pressed intake the cube then minimal power to hold it
     op.rightBumper().whileTrue(runOnce(() -> intake.intakeCube(), intake));
     op.rightBumper().onFalse(runOnce(() -> intake.holdCube(), intake));
-
-    op.rightTrigger().whileTrue(runOnce(() -> vision.useLimelight()));
 
     // Zero Arm Encoder shouldn't be needed unless turned on without arm stowed.
     op.start().onTrue(runOnce(() -> arm.zeroArm(), arm));

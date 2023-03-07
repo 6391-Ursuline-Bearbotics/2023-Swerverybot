@@ -91,7 +91,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     checkDSUpdate();
-    robotContainer.drivebase.setMotorIdleMode(false);
+    robotContainer.drivebase.setMotorIdleMode(true);
+    robotContainer.vision.useLimelight(false);
     autonomousCommand = robotContainer.getAuto();
     System.out.println("AUTO START");
   }
@@ -127,6 +128,7 @@ public class Robot extends TimedRobot {
     isAutoDone = false;
     checkDSUpdate();
     robotContainer.drivebase.setMotorIdleMode(false);
+    robotContainer.vision.useLimelight(true);
     robotContainer.intake.stop();
   }
 
