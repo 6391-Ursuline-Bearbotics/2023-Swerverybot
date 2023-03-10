@@ -55,7 +55,7 @@ public final class Constants {
     public static final double maxAccelerationMPS = 1.5;
     public static final double midSpeedMPS = 2;
     public static final double lowSpeedMPS = 1;
-    
+
     public static final double balanceScale = 0.8;
     public static final double balanceScalePow = 1.0;
     public static final double balanceLimitDeg = 2.0;
@@ -427,7 +427,8 @@ public final class Constants {
         };
 
     public static final Pose2d stationWaypoint = new Pose2d(12.72, 6.77, new Rotation2d());
-    public static final Pose2d centerChargeStation = new Pose2d(3.86, 2.73, new Rotation2d(Math.PI));
+    public static final Pose2d centerChargeStation =
+        new Pose2d(3.86, 2.73, new Rotation2d(Math.PI));
     public static final List<PathPoint> centerChargePP =
         new ArrayList<>() {
           {
@@ -450,6 +451,6 @@ public final class Constants {
   }
 
   public static final class LED {
-    public static final int PWMPORT = 0, LENGTH = 10;
+    public static final int PWMPORT = 0, LENGTH = 20;
   }
 }

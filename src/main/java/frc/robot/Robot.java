@@ -93,6 +93,7 @@ public class Robot extends TimedRobot {
     checkDSUpdate();
     robotContainer.drivebase.setMotorIdleMode(true);
     robotContainer.vision.useLimelight(false);
+    robotContainer.arm.zeroArm();
     autonomousCommand = robotContainer.getAuto();
     System.out.println("AUTO START");
   }

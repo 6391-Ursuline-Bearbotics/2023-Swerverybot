@@ -131,11 +131,26 @@ public class RobotContainer {
 
     chooser.addOption("3 - Cone 2 Piece", builder.getSwerveCommand("ConeBarrier2"));
     chooser.addOption("9 - Cone 2 Piece", builder.getSwerveCommand("ConeBump2"));
-    chooser.addOption("3 - Cone Mobility Loading", builder.getSwerveCommand("3 - Cone Mobility Loading"));
-    chooser.addOption("9 - Cone Mobility Loading", builder.getSwerveCommand("9 - Cone Mobility Loading"));
-    chooser.addOption("3 - Cone Mobility Straight", builder.getSwerveCommand("3 - Cone Mobility Straight"));
-    chooser.addOption("6 - Cone Mobility Straight", builder.getSwerveCommand("6 - Cone Mobility Straight"));
-    chooser.addOption("9 - Cone Mobility Straight", builder.getSwerveCommand("9 - Cone Mobility Straight"));
+    chooser.addOption(
+        "3 - Cone Mobility Loading", builder.getSwerveCommand("3 - Cone Mobility Loading"));
+    chooser.addOption(
+        "9 - Cone Mobility Loading", builder.getSwerveCommand("9 - Cone Mobility Loading"));
+    chooser.addOption(
+        "3 - Cone Mobility Straight", builder.getSwerveCommand("3 - Cone Mobility Straight"));
+    chooser.addOption(
+        "6 - Cone Mobility Straight", builder.getSwerveCommand("6 - Cone Mobility Straight"));
+    chooser.addOption(
+        "9 - Cone Mobility Straight", builder.getSwerveCommand("9 - Cone Mobility Straight"));
+    chooser.addOption(
+        "6 - Cone Engage",
+        builder
+            .getSwerveCommand("6 - Cone Engage")
+            .andThen(
+                // To switch to AprilTag Balance disable the lines below and enable after it.
+                Commands.run(
+                        () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
+                        drivebase)
+                    .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0)));
     chooser.addOption(
         "Cone Only",
         autoMap.getCommandInMap("IntakeHigh").andThen(autoMap.getCommandInMap("OuttakeStow")));
@@ -317,7 +332,10 @@ public class RobotContainer {
             Commands.run(
                     () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
                     drivebase)
-                .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < Auton.balanceLimitDeg));
+                .until(
+                    () ->
+                        Math.abs(drivebase.getPlaneInclination().getDegrees())
+                            < Auton.balanceLimitDeg));
 
     // Apriltag Balance test
     drv.povRight()
