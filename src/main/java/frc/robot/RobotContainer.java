@@ -98,13 +98,13 @@ public class RobotContainer {
     chooser.setDefaultOption(
         "6 - Cone Mobility Engage",
         builder
-            .getSwerveCommand("ConeMobilityDock")
-            .andThen(
+            .getSwerveCommand("ConeMobilityDock"));
+/*             .andThen(
                 // To switch to AprilTag Balance disable the lines below and enable after it.
                 Commands.run(
                         () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
                         drivebase)
-                    .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0)));
+                    .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0))); */
     // To use the gyro auto balance disable below enable above
     /*              new ProxyCommand(
     () ->
@@ -115,13 +115,13 @@ public class RobotContainer {
     chooser.addOption(
         "5 - Cube Mobility Engage",
         builder
-            .getSwerveCommand("CubeMobilityDock")
-            .andThen(
+            .getSwerveCommand("CubeMobilityDock"));
+/*             .andThen(
                 // To switch to AprilTag Balance disable the lines below and enable after it.
                 Commands.run(
                         () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
                         drivebase)
-                    .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0)));
+                    .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0))); */
     // To use the gyro auto balance disable below enable above
     /*              new ProxyCommand(
     () ->
@@ -144,13 +144,13 @@ public class RobotContainer {
     chooser.addOption(
         "6 - Cone Engage",
         builder
-            .getSwerveCommand("6 - Cone Engage")
-            .andThen(
+            .getSwerveCommand("6 - Cone Engage"));
+/*             .andThen(
                 // To switch to AprilTag Balance disable the lines below and enable after it.
                 Commands.run(
                         () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
                         drivebase)
-                    .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0)));
+                    .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0))); */
     chooser.addOption(
         "Cone Only",
         autoMap.getCommandInMap("IntakeHigh").andThen(autoMap.getCommandInMap("OuttakeStow")));
