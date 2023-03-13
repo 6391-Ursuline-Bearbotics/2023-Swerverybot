@@ -335,7 +335,8 @@ public class RobotContainer {
                 .until(
                     () ->
                         Math.abs(drivebase.getPlaneInclination().getDegrees())
-                            < Auton.balanceLimitDeg));
+                            < Auton.balanceLimitDeg)
+                .alongWith(Commands.run(() -> SmartDashboard.putNumber("Plane Angle", drivebase.getPlaneInclination().getDegrees()))));
 
     // Apriltag Balance test
     drv.povRight()

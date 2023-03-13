@@ -56,7 +56,7 @@ public final class Constants {
     public static final double midSpeedMPS = 2;
     public static final double lowSpeedMPS = 1;
 
-    public static final double balanceScale = 0.8;
+    public static final double balanceScale = 2.5;
     public static final double balanceScalePow = 1.0;
     public static final double balanceLimitDeg = 2.0;
 
