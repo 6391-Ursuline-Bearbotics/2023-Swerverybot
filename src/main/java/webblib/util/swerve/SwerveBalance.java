@@ -38,9 +38,9 @@ public class SwerveBalance {
     var yGrad = -pitch.getCos() * roll.getTan();
 
     var vyMetersPerSecond =
-        BetterMath.signedAbsFunc(yGrad, (x) -> Math.pow(Math.abs(x * scale), scalePow));
+        -BetterMath.signedAbsFunc(yGrad, (x) -> Math.pow(Math.abs(x * scale), scalePow));
     var vxMetersPerSecond =
-        BetterMath.signedAbsFunc(xGrad, (x) -> Math.pow(Math.abs(x * scale), scalePow));
+        -BetterMath.signedAbsFunc(xGrad, (x) -> Math.pow(Math.abs(x * scale), scalePow));
 
     return new Translation2d(vxMetersPerSecond, vyMetersPerSecond);
   }

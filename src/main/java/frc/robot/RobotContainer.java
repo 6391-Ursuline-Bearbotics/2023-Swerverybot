@@ -266,7 +266,7 @@ public class RobotContainer {
     arm.setDefaultCommand(Commands.run(() -> arm.setArmPower(-op.getRightY()), arm));
 
     // Left Bumper slows the drive way down for fine positioning
-    drv.leftBumper().whileTrue(runOnce(() -> setSpeedLimit(0.3)));
+    drv.leftBumper().whileTrue(runOnce(() -> setSpeedLimit(0.15)));
     drv.leftBumper().onFalse(runOnce(() -> setSpeedLimit(0.0)));
 
     // Buttons automatically drive a corridor / charge station
@@ -318,7 +318,8 @@ public class RobotContainer {
     drv.start().onTrue(runOnce(drivebase::zeroGyro));
 
     // Set drive to brake mode
-    drv.back().onTrue(runOnce(() -> drivebase.setMotorIdleMode(true)));
+    drv.back().onTrue(runOnce(() -> drivebase.setMotorIdleMode(true))
+        .andThen(Commands.runOnce(() -> drivebase.lockPose())));
 
     // Enable the Limelight
     drv.povUp().onTrue(runOnce(() -> vision.useLimelight(true)));
