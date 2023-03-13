@@ -4,6 +4,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class PathPoint {
   public final Translation2d position;
@@ -75,6 +77,9 @@ public class PathPoint {
     Rotation2d heading =
         new Rotation2d(
             Math.atan2(currentSpeeds.vyMetersPerSecond, currentSpeeds.vxMetersPerSecond));
+    if (DriverStation.getAlliance() == Alliance.Red) {
+      heading = heading.times(-1);
+    }
     return new PathPoint(
         currentPose.getTranslation(), heading, currentPose.getRotation(), linearVel);
   }

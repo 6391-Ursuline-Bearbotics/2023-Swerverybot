@@ -13,12 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GoToScoring {
-  private final SwerveSubsystem drive;
-  private final SCORING_SIDE selectedPosition;
-  private final int column;
   private final List<EventMarker> markers = new ArrayList<>();
-  private final String event;
-  private final AutoMap autoMap;
+  Command command;
+  GoToPathPoints goToPathPoints;
 
   public enum POSITION {
     LEFT,
@@ -38,15 +35,7 @@ public class GoToScoring {
       int column,
       String event,
       AutoMap autoMap) {
-    this.drive = drive;
-    this.selectedPosition = selectedPosition;
-    this.column = column;
-    this.event = event;
-    this.autoMap = autoMap;
-  }
 
-  public Command getCommand() {
-    Command command;
     Pose2d currentPose = drive.getPose();
     if (DriverStation.getAlliance() == Alliance.Red) {
       currentPose =
@@ -55,14 +44,14 @@ public class GoToScoring {
     }
     if (Auton.loadingArea.isPoseWithinLoadingArea(currentPose)) {
       // If within Loadin area navigate through selected corridor
-      GoToPathPoints goToPathPoints;
       switch (selectedPosition) {
         case BARRIER:
           List<PathPoint> pointsBarrier =
               new ArrayList<PathPoint>() {
                 {
                   add(Auton.stationWaypointOut);
-                  addAll(Auton.barrierCorridorPPIn);
+                  add(Auton.barrierCorridorOuter);
+                  add(Auton.barrierCorridorInner);
                   addAll(Auton.scoringPP.get(column - 1));
                 }
               };
@@ -89,7 +78,8 @@ public class GoToScoring {
               new ArrayList<PathPoint>() {
                 {
                   add(Auton.stationWaypointOut);
-                  addAll(Auton.bumpCorridorPPIn);
+                  add(Auton.bumpCorridorOuter);
+                  add(Auton.bumpCorridorInner);
                   addAll(Auton.scoringPP.get(column - 1));
                 }
               };
@@ -116,7 +106,8 @@ public class GoToScoring {
               new ArrayList<PathPoint>() {
                 {
                   add(Auton.stationWaypointOut);
-                  addAll(Auton.midCorridorPPIn);
+                  add(Auton.midCorridorOuter);
+                  add(Auton.midCorridorInner);
                   addAll(Auton.scoringPP.get(column - 1));
                 }
               };
@@ -142,6 +133,7 @@ public class GoToScoring {
           throw new IllegalArgumentException("Loading station enum not supported.");
       }
     } else if (Auton.scoreArea.isPoseWithinArea(currentPose)) {
+      // Within the scoring area so go direct to the leading / scoring spot
       List<PathPoint> pointsScoring =
           new ArrayList<PathPoint>() {
             {
@@ -156,7 +148,7 @@ public class GoToScoring {
                 }
               },
               0.5));
-      GoToPathPoints goToPathPoints =
+      goToPathPoints =
           new GoToPathPoints(
               pointsScoring,
               Auton.leadingPoses.get(column - 1),
@@ -165,15 +157,99 @@ public class GoToScoring {
               markers,
               autoMap);
       command = goToPathPoints.getCommand();
+    } else if (Auton.chargeArea.isPoseWithinArea(currentPose)) {
+      // Within the charge area so go to only last corridor point then scoring
+      switch (selectedPosition) {
+        case BARRIER:
+          List<PathPoint> chargeBarrier =
+              new ArrayList<PathPoint>() {
+                {
+                  add(Auton.barrierCorridorInner);
+                  addAll(Auton.scoringPP.get(column - 1));
+                }
+              };
+          markers.add(
+              new EventMarker(
+                  new ArrayList<String>() {
+                    {
+                      add(event);
+                    }
+                  },
+                  2.0));
+          goToPathPoints =
+              new GoToPathPoints(
+                  chargeBarrier,
+                  Auton.barrierCorridor.get(0),
+                  new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
+                  drive,
+                  markers,
+                  autoMap);
+          command = goToPathPoints.getCommand();
+          break;
+        case BUMP:
+          List<PathPoint> chargeBump =
+              new ArrayList<PathPoint>() {
+                {
+                  add(Auton.bumpCorridorInner);
+                  addAll(Auton.scoringPP.get(column - 1));
+                }
+              };
+          markers.add(
+              new EventMarker(
+                  new ArrayList<String>() {
+                    {
+                      add(event);
+                    }
+                  },
+                  2.0));
+          goToPathPoints =
+              new GoToPathPoints(
+                  chargeBump,
+                  Auton.bumpCorridor.get(0),
+                  new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
+                  drive,
+                  markers,
+                  autoMap);
+          command = goToPathPoints.getCommand();
+          break;
+        case MIDDLE:
+          List<PathPoint> chargeMid =
+              new ArrayList<PathPoint>() {
+                {
+                  add(Auton.midCorridorInner);
+                  addAll(Auton.scoringPP.get(column - 1));
+                }
+              };
+          markers.add(
+              new EventMarker(
+                  new ArrayList<String>() {
+                    {
+                      add(event);
+                    }
+                  },
+                  2.0));
+          goToPathPoints =
+              new GoToPathPoints(
+                  chargeMid,
+                  Auton.midCorridor.get(0),
+                  new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS),
+                  drive,
+                  markers,
+                  autoMap);
+          command = goToPathPoints.getCommand();
+          break;
+        default:
+          throw new IllegalArgumentException("Loading station enum not supported.");
+      }
     } else {
-      // If within Loadin area navigate through selected corridor
-      GoToPathPoints goToPathPoints;
+      // This must be in the "middle" of the field
       switch (selectedPosition) {
         case BARRIER:
           List<PathPoint> pointsBarrier =
               new ArrayList<PathPoint>() {
                 {
-                  addAll(Auton.barrierCorridorPPIn);
+                  add(Auton.barrierCorridorOuter);
+                  add(Auton.barrierCorridorInner);
                   addAll(Auton.scoringPP.get(column - 1));
                 }
               };
@@ -199,7 +275,8 @@ public class GoToScoring {
           List<PathPoint> pointsBump =
               new ArrayList<PathPoint>() {
                 {
-                  addAll(Auton.bumpCorridorPPIn);
+                  add(Auton.bumpCorridorOuter);
+                  add(Auton.bumpCorridorInner);
                   addAll(Auton.scoringPP.get(column - 1));
                 }
               };
@@ -225,7 +302,8 @@ public class GoToScoring {
           List<PathPoint> pointsMid =
               new ArrayList<PathPoint>() {
                 {
-                  addAll(Auton.midCorridorPPIn);
+                  add(Auton.midCorridorOuter);
+                  add(Auton.midCorridorInner);
                   addAll(Auton.scoringPP.get(column - 1));
                 }
               };
@@ -251,6 +329,9 @@ public class GoToScoring {
           throw new IllegalArgumentException("Loading station enum not supported.");
       }
     }
+  }
+
+  public Command getCommand() {
     return command;
   }
 }

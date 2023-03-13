@@ -32,11 +32,8 @@ public class GoToPathPoints {
     currentPose = drive.getPose();
     Alliance ally = DriverStation.getAlliance();
     if (ally == Alliance.Red) {
-      firstPose =
-          new Pose2d(firstPose.getX(), 8.02 - firstPose.getY(), firstPose.getRotation().times(-1));
-      currentPose =
-          new Pose2d(
-              currentPose.getX(), 8.02 - currentPose.getY(), currentPose.getRotation().times(-1));
+      //firstPose = flipPose(firstPose);
+      currentPose = flipPose(currentPose);
     }
     if (Math.hypot(
             drive.getFieldVelocity().vxMetersPerSecond, drive.getFieldVelocity().vyMetersPerSecond)
@@ -84,5 +81,9 @@ public class GoToPathPoints {
 
   public FollowPathWithEvents getCommand() {
     return eventCommand;
+  }
+
+  private Pose2d flipPose(Pose2d pose) {
+    return new Pose2d(pose.getX(), 8.02 - pose.getY(), pose.getRotation().times(-1));
   }
 }
