@@ -391,7 +391,8 @@ public class SwerveDrive {
     if (!SwerveDriveTelemetry.isSimulation) {
       double[] ypr = new double[3];
       imu.getYawPitchRoll(ypr);
-      SmartDashboard.putNumber("Pitch", swerveDriveConfiguration.invertedIMU ? 360 - ypr[2] : ypr[2]);
+      SmartDashboard.putNumber(
+          "Pitch", swerveDriveConfiguration.invertedIMU ? 360 - ypr[2] : ypr[2]);
       return Rotation2d.fromDegrees(swerveDriveConfiguration.invertedIMU ? 360 - ypr[2] : ypr[2]);
     } else {
       return simIMU.getPitch();

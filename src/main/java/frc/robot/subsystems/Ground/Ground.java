@@ -135,6 +135,7 @@ public class Ground extends SubsystemBase {
   public void retractGround() {
     stopIntake();
     stowArm();
+    outtakeCube();
   }
 
   private void setIntakeMotor(double percent, int amps) {

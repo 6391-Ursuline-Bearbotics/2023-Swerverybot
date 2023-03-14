@@ -42,8 +42,6 @@ public class Arm extends SubsystemBase {
   /** Threshold to determine how close we need to be to our position target in encoder ticks */
   static final double ERROR_THRESHOLD = 100;
 
-  private int armCounter = 0;
-
   /** Creates a new Arm. */
   public Arm() {
     armMotor = new WPI_TalonFX(8);
@@ -84,19 +82,6 @@ public class Arm extends SubsystemBase {
 
   public void stopArm() {
     armMotor.set(0);
-  }
-
-  public boolean isAtSetpoint() {
-    var error = armMotor.getClosedLoopError();
-    var noErr = Math.abs(error) < ERROR_THRESHOLD;
-    System.out.print(String.valueOf(noErr) + "///" + String.valueOf(Math.abs(error)));
-
-    if (noErr) {
-      armCounter++;
-    } else {
-      armCounter = 0;
-    }
-    return armCounter > 4;
   }
 
   public void setArmPower(double percent) {

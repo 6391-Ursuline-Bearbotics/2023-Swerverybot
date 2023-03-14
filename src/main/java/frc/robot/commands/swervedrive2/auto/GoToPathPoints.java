@@ -32,7 +32,7 @@ public class GoToPathPoints {
     currentPose = drive.getPose();
     Alliance ally = DriverStation.getAlliance();
     if (ally == Alliance.Red) {
-      //firstPose = flipPose(firstPose);
+      // firstPose = flipPose(firstPose);
       currentPose = flipPose(currentPose);
     }
     if (Math.hypot(

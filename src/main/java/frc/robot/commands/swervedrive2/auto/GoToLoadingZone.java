@@ -20,25 +20,26 @@ public class GoToLoadingZone extends CommandBase {
   private final LOADING_SIDE selectedLoadingSide;
   private Command currentCommand;
   private Alliance ally;
-  private Boolean left;
   private List<PathPoint> corridor;
   private Pose2d corridorFirst;
   private final List<EventMarker> markers = new ArrayList<>();
   private final AutoMap autoMap;
+  private final String piece;
 
   public enum LOADING_SIDE {
     BARRIER,
     RAIL
   }
 
-  public GoToLoadingZone(boolean left, SwerveSubsystem drive, Alliance ally, AutoMap autoMap) {
+  public GoToLoadingZone(
+      boolean left, SwerveSubsystem drive, Alliance ally, AutoMap autoMap, String piece) {
     this.drive = drive;
     this.ally = ally;
     addRequirements(drive);
     this.selectedLoadingSide = getLoadingSide(left);
-    this.left = left;
     currentCommand = Commands.none();
     this.autoMap = autoMap;
+    this.piece = piece;
   }
 
   private LOADING_SIDE getLoadingSide(Boolean left) {
@@ -68,6 +69,14 @@ public class GoToLoadingZone extends CommandBase {
   public Command getCommand() {
     Command command;
     Pose2d currentPose = drive.getPose();
+    markers.add(
+        new EventMarker(
+            new ArrayList<String>() {
+              {
+                add("ArmStow");
+              }
+            },
+            0.0));
     if (ally == Alliance.Red) {
       currentPose =
           new Pose2d(
@@ -102,6 +111,7 @@ public class GoToLoadingZone extends CommandBase {
           new EventMarker(
               new ArrayList<String>() {
                 {
+                  add(piece);
                   add("ArmHigh");
                 }
               },
@@ -132,6 +142,7 @@ public class GoToLoadingZone extends CommandBase {
               new EventMarker(
                   new ArrayList<String>() {
                     {
+                      add(piece);
                       add("ArmHigh");
                     }
                   },
@@ -159,6 +170,7 @@ public class GoToLoadingZone extends CommandBase {
               new EventMarker(
                   new ArrayList<String>() {
                     {
+                      add(piece);
                       add("ArmHigh");
                     }
                   },
@@ -194,6 +206,7 @@ public class GoToLoadingZone extends CommandBase {
           new EventMarker(
               new ArrayList<String>() {
                 {
+                  add(piece);
                   add("ArmHigh");
                 }
               },

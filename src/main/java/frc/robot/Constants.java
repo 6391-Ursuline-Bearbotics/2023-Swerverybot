@@ -333,18 +333,18 @@ public final class Constants {
           }
         };
 
-    public static final PathPoint barrierCorridorOuter =   
+    public static final PathPoint barrierCorridorOuter =
         new PathPoint(
             barrierCorridor.get(1).getTranslation(),
             new Rotation2d(Math.PI),
             barrierCorridor.get(1).getRotation(),
             3.0);
     public static final PathPoint barrierCorridorInner =
-                new PathPoint(
-                    barrierCorridor.get(0).getTranslation(),
-                    new Rotation2d(Math.PI),
-                    barrierCorridor.get(0).getRotation(),
-                    3.0);
+        new PathPoint(
+            barrierCorridor.get(0).getTranslation(),
+            new Rotation2d(Math.PI),
+            barrierCorridor.get(0).getRotation(),
+            3.0);
 
     public static final List<Pose2d> bumpCorridor =
         new ArrayList<>() {
@@ -379,11 +379,11 @@ public final class Constants {
             bumpCorridor.get(1).getRotation(),
             3.0);
     public static final PathPoint bumpCorridorInner =
-                new PathPoint(
-                    bumpCorridor.get(0).getTranslation(),
-                    new Rotation2d(Math.PI),
-                    bumpCorridor.get(0).getRotation(),
-                    3.0);
+        new PathPoint(
+            bumpCorridor.get(0).getTranslation(),
+            new Rotation2d(Math.PI),
+            bumpCorridor.get(0).getRotation(),
+            3.0);
 
     public static final List<Pose2d> midCorridor =
         new ArrayList<>() {

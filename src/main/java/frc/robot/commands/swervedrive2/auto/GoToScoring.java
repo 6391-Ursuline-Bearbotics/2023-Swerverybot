@@ -35,7 +35,14 @@ public class GoToScoring {
       int column,
       String event,
       AutoMap autoMap) {
-
+    markers.add(
+        new EventMarker(
+            new ArrayList<String>() {
+              {
+                add("ArmStow");
+              }
+            },
+            0.0));
     Pose2d currentPose = drive.getPose();
     if (DriverStation.getAlliance() == Alliance.Red) {
       currentPose =
