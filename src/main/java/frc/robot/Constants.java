@@ -42,7 +42,7 @@ public final class Constants {
 
     public static double xyDeadband = 0.02;
     public static double radDeadband = 0.05;
-    public static double radLimiter = 0.5;
+    public static double radLimiter = 0.4;
     public static double radSlow = 0.15;
   }
 
@@ -67,7 +67,7 @@ public final class Constants {
             new HolonomicPose2d(new Pose2d(15.75, 7.34, new Rotation2d()), new Rotation2d()),
             new HolonomicPose2d(new Pose2d(15.75, 6.00, new Rotation2d()), new Rotation2d()));
 
-    private static final double scoringX = 2.05;
+    private static final double scoringX = 1.95;
     public static final List<Pose2d> scoringPoses =
         new ArrayList<>() {
           {
@@ -83,7 +83,7 @@ public final class Constants {
           }
         };
 
-    private static final double leadingX = 2.3;
+    private static final double leadingX = 2.2;
     public static final List<Pose2d> leadingPoses =
         new ArrayList<>() {
           {
@@ -310,8 +310,8 @@ public final class Constants {
     public static final List<Pose2d> barrierCorridor =
         new ArrayList<>() {
           {
-            add(new Pose2d(2.53, 4.46, new Rotation2d(Math.PI)));
-            add(new Pose2d(5.3, 4.46, new Rotation2d(Math.PI)));
+            add(new Pose2d(2.53, 4.66, new Rotation2d(Math.PI)));
+            add(new Pose2d(5.3, 4.66, new Rotation2d(Math.PI)));
           }
         };
 
@@ -349,8 +349,8 @@ public final class Constants {
     public static final List<Pose2d> bumpCorridor =
         new ArrayList<>() {
           {
-            add(new Pose2d(2.53, 1.08, new Rotation2d(Math.PI)));
-            add(new Pose2d(5.3, 1.08, new Rotation2d(Math.PI)));
+            add(new Pose2d(2.53, 0.88, new Rotation2d(Math.PI)));
+            add(new Pose2d(5.3, 0.88, new Rotation2d(Math.PI)));
           }
         };
 

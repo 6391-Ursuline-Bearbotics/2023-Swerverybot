@@ -155,9 +155,9 @@ public class RobotContainer {
     spdLimit.addOption("90%", 0.9);
     spdLimit.addOption("85%", 0.85);
     spdLimit.addOption("80%", 0.8);
-    spdLimit.setDefaultOption("75%", 0.75);
+    spdLimit.addOption("75%", 0.75);
     spdLimit.addOption("70%", 0.7);
-    spdLimit.addOption("65%", 0.65);
+    spdLimit.setDefaultOption("65%", 0.65);
     spdLimit.addOption("60%", 0.6);
     spdLimit.addOption("55%", 0.55);
     spdLimit.addOption("50%", 0.5);

@@ -19,7 +19,7 @@ public class Arm extends SubsystemBase {
   static final int ARM_CURRENT_LIMIT_A = 20;
 
   /** Percent output to run the arm up/down at */
-  static final double ARM_OUTPUT_POWER = 0.4;
+  static final double ARM_OUTPUT_POWER = 0.5;
 
   /** Time to extend or retract arm in auto */
   static final double ARM_EXTEND_TIME_S = 2.0;
@@ -56,8 +56,8 @@ public class Arm extends SubsystemBase {
     config.slot0.kP = kP;
     config.closedloopRamp = 0.25;
     config.openloopRamp = 0.25;
-    config.peakOutputForward = 0.3;
-    config.peakOutputReverse = -0.3;
+    config.peakOutputForward = ARM_OUTPUT_POWER;
+    config.peakOutputReverse = -ARM_OUTPUT_POWER;
     armMotor.configAllSettings(config);
   }
 

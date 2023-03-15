@@ -24,7 +24,7 @@ public class AutoMap {
         "ArmHigh",
         () ->
             Commands.run(() -> arm.extendArmHigh(), arm)
-                .withTimeout(2)
+                .withTimeout(1.7)
                 .andThen(() -> arm.stopArm(), arm));
     eventMapGetter.put(
         "ArmStow",
