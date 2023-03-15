@@ -130,7 +130,8 @@ public class RobotContainer {
     chooser.addOption(
         "3 - Cone Mobility Loading", builder.getSwerveCommand("3 - Cone Mobility Loading"));
     chooser.addOption(
-        "9 - Cone Mobility Loading", builder.getSwerveCommand("9 - Cone Mobility Loading"));
+        "9 - Cone Mobility Loading", Commands.runOnce(() -> vision.useLimelight(true), vision)
+            .andThen(builder.getSwerveCommand("9 - Cone Mobility Loading")));
     chooser.addOption(
         "3 - Cone Mobility Straight", builder.getSwerveCommand("3 - Cone Mobility Straight"));
     chooser.addOption(
@@ -146,8 +147,10 @@ public class RobotContainer {
         .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0))); */
     chooser.addOption(
         "Cone Only",
-        autoMap.getCommandInMap("IntakeHigh").andThen(autoMap.getCommandInMap("OuttakeStow")));
-    chooser.addOption("Do Nothing", Commands.none());
+        autoMap.getCommandInMap("IntakeHigh")
+            .andThen(autoMap.getCommandInMap("OuttakeStow"))
+            .andThen(Commands.runOnce(() -> drivebase.swerveDrive.setGyro(180.0))));
+    chooser.addOption("Do Nothing", Commands.runOnce(() -> drivebase.swerveDrive.setGyro(180.0)));
     SmartDashboard.putData("Auto choices", chooser);
 
     spdLimit.addOption("100%", 1.0);

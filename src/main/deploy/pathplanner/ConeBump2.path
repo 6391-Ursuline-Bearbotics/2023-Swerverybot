@@ -18,7 +18,7 @@
       "stopEvent": {
         "names": [
           "IntakeHigh",
-          "OuttakeStow"
+          "OuttakeCone"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -60,16 +60,18 @@
         "y": 1.07
       },
       "nextControl": {
-        "x": 1.8130267721007296,
+        "x": 1.7869732278992705,
         "y": 1.07
       },
       "holonomicAngle": 180.0,
-      "isReversal": false,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "OuttakeCube"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -116,12 +118,39 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "OuttakeCube"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.01,
+      "names": [
+        "ArmStow"
+      ]
+    },
+    {
+      "position": 1.381818181818182,
+      "names": [
+        "ArmHigh"
+      ]
+    },
+    {
+      "position": 2.01,
+      "names": [
+        "ArmStow"
+      ]
+    },
+    {
+      "position": 3.527272727272719,
+      "names": [
+        "ArmMid"
+      ]
+    }
+  ]
 }

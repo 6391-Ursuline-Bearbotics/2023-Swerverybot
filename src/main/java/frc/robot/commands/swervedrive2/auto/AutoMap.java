@@ -52,7 +52,7 @@ public class AutoMap {
         "OuttakeCube", () -> Commands.run(() -> intake.outtakeCube(), intake).withTimeout(0.1));
 
     eventMapGetter.put(
-        "OuttakeCone", () -> Commands.run(() -> intake.intakeCube(), intake).withTimeout(0.1));
+        "OuttakeCone", () -> Commands.run(() -> intake.outtakeCone(), intake).withTimeout(0.1));
 
     eventMapGetter.put(
         "DropIntake", () -> Commands.run(() -> ground.deployGround(), ground).withTimeout(0.5));

@@ -300,6 +300,8 @@ public final class Constants {
           }
         };
 
+    public static final RectanglePoseArea field =
+        new RectanglePoseArea(new Translation2d(0.0, 0.0), new Translation2d(16.54, 8.02));
     public static final RectanglePoseArea scoreArea =
         new RectanglePoseArea(new Translation2d(1.23, 0.0), new Translation2d(2.92, 5.33));
     public static final RectanglePoseArea chargeArea =

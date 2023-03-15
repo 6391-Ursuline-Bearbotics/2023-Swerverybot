@@ -18,7 +18,7 @@
       "stopEvent": {
         "names": [
           "IntakeHigh",
-          "OuttakeStow"
+          "OuttakeCone"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -144,6 +144,12 @@
       "position": 3.6606060606061903,
       "names": [
         "ArmMid"
+      ]
+    },
+    {
+      "position": 0.01,
+      "names": [
+        "ArmStow"
       ]
     }
   ]
