@@ -23,16 +23,13 @@ public class Ground extends SubsystemBase {
   static final int ARM_CURRENT_LIMIT_A = 20;
 
   /** Percent output to run the arm up/down at */
-  static final double ARM_OUTPUT_POWER = 0.4;
-
-  /** Time to extend or retract arm in auto */
-  static final double ARM_EXTEND_TIME_S = 2.0;
+  static final double ARM_OUTPUT_POWER = 0.3;
 
   /** Stow position in Falcon units */
   static final double STOW = 0.0;
 
   /** Extend position in Falcon units */
-  static final double EXTEND = 68000.0;
+  static final double EXTEND = 39000.0;
 
   /** Proportional term of PID for arm position control */
   static final double kP = 0.1;
@@ -41,12 +38,12 @@ public class Ground extends SubsystemBase {
   static final double ERROR_THRESHOLD = 100;
 
   /** How many amps the intake can use while picking up cube */
-  static final int CUBE_CURRENT_LIMIT_A = 25;
+  static final int CUBE_CURRENT_LIMIT_A = 40;
 
   /** Percent output for intaking cube */
   static final double CUBE_OUTPUT_POWER = 0.5;
 
-  private int armCounter = 0;
+  private int counter = 0;
 
   /** Creates a new Ground Intake. */
   public Ground() {
@@ -66,14 +63,21 @@ public class Ground extends SubsystemBase {
     config.peakOutputReverse = -0.3;
     armMotor.configAllSettings(config);
     intakeMotor = new CANSparkMax(5, MotorType.kBrushless);
-    intakeMotor.setInverted(false);
+    intakeMotor.setInverted(true);
     intakeMotor.setIdleMode(IdleMode.kBrake);
   }
 
   @Override
   public void periodic() {
-    if (intakeMotor.getOutputCurrent() > CUBE_CURRENT_LIMIT_A -2) {
-      intakeMotor.set(0.0);
+    SmartDashboard.putNumber("GIntake Current", intakeMotor.getOutputCurrent());
+    if (intakeMotor.getOutputCurrent() > CUBE_CURRENT_LIMIT_A) {
+      if (counter > 5) {
+        intakeMotor.set(0.0);
+      } else {
+        counter++;
+      }
+    } else {
+      counter = 0;
     }
   }
 
@@ -87,18 +91,6 @@ public class Ground extends SubsystemBase {
 
   public void stopArm() {
     armMotor.set(0);
-  }
-
-  public boolean isAtSetpoint() {
-    var error = armMotor.getClosedLoopError();
-    var noErr = Math.abs(error) < ERROR_THRESHOLD;
-
-    if (noErr) {
-      armCounter++;
-    } else {
-      armCounter = 0;
-    }
-    return armCounter > 4;
   }
 
   public void setArmPower(double percent) {

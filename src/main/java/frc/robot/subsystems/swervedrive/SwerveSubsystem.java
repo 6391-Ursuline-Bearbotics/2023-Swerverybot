@@ -30,9 +30,9 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SwerveBalance swerveBalance =
       new SwerveBalance(Auton.balanceScale, Auton.balanceScalePow);
 
-  private final SlewRateLimiter xLimiter = new SlewRateLimiter(5);
-  private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
-  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(5);
+  private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter yLimiter = new SlewRateLimiter(0.5);
+  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(0.5);
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.

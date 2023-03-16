@@ -59,7 +59,7 @@ public class AutoMap {
     // For handoff from ground to intake
     eventMapGetter.put(
         "IntakeCube", () -> run(() -> intake.intakeCube(), intake)
-            .withTimeout(0.2)
+            .withTimeout(0.5)
             .andThen(runOnce(() -> intake.stop(), intake)));
 
     // For placing both type of game pieces on the grid
@@ -79,7 +79,7 @@ public class AutoMap {
         "RetractIntake", () -> run(() -> ground.stowArm(), ground).withTimeout(0.9)
             .andThen(runOnce(() -> ground.stopArm(), ground)));
 
-    eventMapGetter.put("GroundOuttake", () -> run(() -> ground.outtakeCube(), ground).withTimeout(0.2)
+    eventMapGetter.put("GroundOuttake", () -> run(() -> ground.outtakeCube(), ground).withTimeout(0.5)
         .andThen(runOnce(() -> ground.stopIntake(), ground)));
 
     eventMapGetter.put(
@@ -96,8 +96,8 @@ public class AutoMap {
             // Bring the Arm in first as this can take a bit
             getCommandInMap("ArmStow")
             // Meanwhile start the intake sucking in and drop it
-            .alongWith(runOnce(() -> ground.intakeCube()))
-                .andThen(getCommandInMap("DropIntake")));
+            .alongWith(runOnce(() -> ground.intakeCube())
+                .andThen(getCommandInMap("DropIntake"))));
 
     eventMapGetter.put("GroundStow", () -> 
             // Bring the Arm in first as this can take a bit
