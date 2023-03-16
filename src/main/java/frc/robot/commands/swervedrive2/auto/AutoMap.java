@@ -1,12 +1,14 @@
 package frc.robot.commands.swervedrive2.auto;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Arm.Arm;
 import frc.robot.subsystems.Ground.Ground;
 import frc.robot.subsystems.Intake.Intake;
 import java.util.HashMap;
 import java.util.function.Supplier;
+
+import static edu.wpi.first.wpilibj2.command.Commands.run;
+import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
 
 public class AutoMap {
   private HashMap<String, Command> eventMap = new HashMap<>();
@@ -17,52 +19,68 @@ public class AutoMap {
     eventMapGetter.put(
         "ArmLow",
         () ->
-            Commands.run(() -> arm.extendArmLow(), arm)
-                .withTimeout(2)
+            run(() -> arm.extendArmLow(), arm)
+                .withTimeout(1.2)
                 .andThen(() -> arm.stopArm(), arm));
     eventMapGetter.put(
         "ArmHigh",
         () ->
-            Commands.run(() -> arm.extendArmHigh(), arm)
+            run(() -> arm.extendArmHigh(), arm)
                 .withTimeout(1.7)
                 .andThen(() -> arm.stopArm(), arm));
     eventMapGetter.put(
         "ArmStow",
         () ->
-            Commands.run(() -> arm.stowArm(), arm)
-                .withTimeout(2)
+            run(() -> arm.stowArm(), arm)
+                .withTimeout(1.7)
                 .andThen(() -> arm.stopArm(), arm));
     eventMapGetter.put(
         "ArmMid",
         () ->
-            Commands.run(() -> arm.extendArmMid(), arm)
-                .withTimeout(2)
+            run(() -> arm.extendArmMid(), arm)
+                .withTimeout(1.2)
                 .andThen(() -> arm.stopArm(), arm));
 
+    // For grabbing from the loading station
     eventMapGetter.put(
-        "CubeGrab", () -> Commands.run(() -> intake.intakeCube(), intake).withTimeout(5));
-
-    eventMapGetter.put(
-        "ConeGrab", () -> Commands.run(() -> intake.intakeCone(), intake).withTimeout(5));
-
-    eventMapGetter.put(
-        "IntakeCone", () -> Commands.run(() -> intake.intakeCone(), intake).withTimeout(0.25));
+        "CubeGrab", () -> run(() -> intake.intakeCube(), intake)
+            .withTimeout(5)
+            .andThen(runOnce(() -> intake.stop(), intake)));
 
     eventMapGetter.put(
-        "OuttakeCube", () -> Commands.run(() -> intake.outtakeCube(), intake).withTimeout(0.1));
+        "ConeGrab", () -> run(() -> intake.intakeCone(), intake)
+            .withTimeout(5)
+            .andThen(runOnce(() -> intake.stop(), intake)));
+
+    // Only used to pull cone in tighter at beginning of auto
+    eventMapGetter.put(
+        "IntakeCone", () -> run(() -> intake.intakeCone(), intake).withTimeout(0.25));
+
+    // For handoff from ground to intake
+    eventMapGetter.put(
+        "IntakeCube", () -> run(() -> intake.intakeCube(), intake)
+            .withTimeout(0.2)
+            .andThen(runOnce(() -> intake.stop(), intake)));
+
+    // For placing both type of game pieces on the grid
+    eventMapGetter.put(
+        "OuttakeCube", () -> run(() -> intake.outtakeCube(), intake).withTimeout(0.1));
 
     eventMapGetter.put(
-        "OuttakeCone", () -> Commands.run(() -> intake.outtakeCone(), intake).withTimeout(0.1));
+        "OuttakeCone", () -> run(() -> intake.outtakeCone(), intake).withTimeout(0.1)
+            .andThen(runOnce(() -> intake.stop(), intake)));
+
+    // Automatic control of the ground arm
+    eventMapGetter.put(
+        "DropIntake", () -> run(() -> ground.extendArm(), ground).withTimeout(0.9)
+            .andThen(runOnce(() -> ground.stopArm(), ground)));
 
     eventMapGetter.put(
-        "DropIntake", () -> Commands.run(() -> ground.deployGround(), ground).withTimeout(0.5));
+        "RetractIntake", () -> run(() -> ground.stowArm(), ground).withTimeout(0.9)
+            .andThen(runOnce(() -> ground.stopArm(), ground)));
 
-    eventMapGetter.put(
-        "RetractIntake", () -> Commands.run(() -> ground.retractGround(), ground).withTimeout(0.5));
-
-    eventMapGetter.put("GroundIntake", () -> Commands.run(() -> ground.intakeCube(), ground));
-
-    eventMapGetter.put("GroundOuttake", () -> Commands.run(() -> ground.outtakeCube(), ground));
+    eventMapGetter.put("GroundOuttake", () -> run(() -> ground.outtakeCube(), ground).withTimeout(0.2)
+        .andThen(runOnce(() -> ground.stopIntake(), ground)));
 
     eventMapGetter.put(
         "IntakeHigh", () -> getCommandInMap("IntakeCone").alongWith(getCommandInMap("ArmHigh")));
@@ -74,9 +92,22 @@ public class AutoMap {
                 .alongWith(getCommandInMap("ArmStow"))
                 .andThen(() -> intake.stop(), intake));
 
-    eventMapGetter.put("GroundDeploy", () -> getCommandInMap("DropIntake"));
+    eventMapGetter.put("GroundDeploy", () -> 
+            // Bring the Arm in first as this can take a bit
+            getCommandInMap("ArmStow")
+            // Meanwhile start the intake sucking in and drop it
+            .alongWith(runOnce(() -> ground.intakeCube()))
+                .andThen(getCommandInMap("DropIntake")));
 
-    eventMapGetter.put("GroundStow", () -> getCommandInMap("RetractIntake"));
+    eventMapGetter.put("GroundStow", () -> 
+            // Bring the Arm in first as this can take a bit
+            getCommandInMap("ArmStow")
+            // Stop Intake and bring it in
+            .alongWith(runOnce(() -> ground.stopIntake())
+                .andThen(getCommandInMap("RetractIntake")))
+            // Run intake cube and Ground Outake
+            .andThen(getCommandInMap("IntakeCube")
+                .alongWith(getCommandInMap("GroundOuttake"))));
 
     eventMapGetter.forEach(
         (key, val) -> {

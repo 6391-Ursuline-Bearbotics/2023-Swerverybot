@@ -71,7 +71,11 @@ public class Ground extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    if (intakeMotor.getOutputCurrent() > CUBE_CURRENT_LIMIT_A -2) {
+      intakeMotor.set(0.0);
+    }
+  }
 
   public void stowArm() {
     setArmPosition(STOW);
@@ -125,17 +129,6 @@ public class Ground extends SubsystemBase {
 
   public void stopIntake() {
     setIntakeMotor(0, 0);
-  }
-
-  public void deployGround() {
-    intakeCube();
-    extendArm();
-  }
-
-  public void retractGround() {
-    stopIntake();
-    stowArm();
-    outtakeCube();
   }
 
   private void setIntakeMotor(double percent, int amps) {

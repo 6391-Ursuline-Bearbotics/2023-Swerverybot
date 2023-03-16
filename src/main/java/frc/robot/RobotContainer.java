@@ -382,6 +382,10 @@ public class RobotContainer {
 
     op.povDown().onTrue(autoMap.getCommandInMap("GroundStow"));
 
+    op.povLeft().onTrue(autoMap.getCommandInMap("RetractIntake"));
+
+    op.povRight().onTrue(autoMap.getCommandInMap("GroundOuttake"));
+
     // Button Board setting the level and column to be placed
     btn.button(1).onTrue(runOnce(() -> setColumn(1)));
     btn.button(2).onTrue(runOnce(() -> setColumn(2)));
