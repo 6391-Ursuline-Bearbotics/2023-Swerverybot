@@ -276,6 +276,10 @@ public class RobotContainer {
     drv.leftBumper().whileTrue(runOnce(() -> setSpeedLimit(0.15)));
     drv.leftBumper().onFalse(runOnce(() -> setSpeedLimit(0.0)));
 
+    // Right Bumper trusts the Limelight regardless of robot pose
+    drv.rightBumper().onTrue(runOnce(() -> vision.trustLL(true)));
+    drv.rightBumper().onFalse(runOnce(() -> vision.trustLL(false)));
+
     // Buttons automatically drive a corridor / charge station
     drv.x()
         .whileTrue(

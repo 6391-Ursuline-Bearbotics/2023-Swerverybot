@@ -151,6 +151,30 @@
       "names": [
         "ArmStow"
       ]
+    },
+    {
+      "position": 0.7272727272727274,
+      "names": [
+        "GroundDeploy"
+      ]
+    },
+    {
+      "position": 1.1272727272727274,
+      "names": [
+        "GroundStow"
+      ]
+    },
+    {
+      "position": 2.799999999999996,
+      "names": [
+        "GroundDeploy"
+      ]
+    },
+    {
+      "position": 3.1636363636363574,
+      "names": [
+        "GroundStow"
+      ]
     }
   ]
 }

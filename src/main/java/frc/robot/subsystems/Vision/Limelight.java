@@ -16,6 +16,7 @@ public class Limelight extends SubsystemBase {
   SwerveSubsystem drivebase;
   Alliance alliance;
   private Boolean enable = true;
+  private Boolean trust = false;
   private int fieldError = 0;
   private int distanceError = 0;
 
@@ -35,7 +36,7 @@ public class Limelight extends SubsystemBase {
         if (Auton.field.isPoseWithinArea(LimelightHelpers.toPose2D(result.botpose))) {
             if (alliance == Alliance.Blue) {
               Pose2d botpose = LimelightHelpers.toPose2D(result.botpose_wpiblue);
-              if (drivebase.getPose().getTranslation().getDistance(botpose.getTranslation()) < 1.0) {
+              if (drivebase.getPose().getTranslation().getDistance(botpose.getTranslation()) < 1.0 || trust) {
                 drivebase.addVisionMeasurement(
                     botpose,
                     Timer.getFPGATimestamp()
@@ -49,7 +50,7 @@ public class Limelight extends SubsystemBase {
               }
             } else if (alliance == Alliance.Red) {
               Pose2d botpose = LimelightHelpers.toPose2D(result.botpose_wpired);
-              if (drivebase.getPose().getTranslation().getDistance(botpose.getTranslation()) < 1.0) {
+              if (drivebase.getPose().getTranslation().getDistance(botpose.getTranslation()) < 1.0 || trust) {
                 drivebase.addVisionMeasurement(
                     botpose,
                     Timer.getFPGATimestamp()
@@ -76,5 +77,9 @@ public class Limelight extends SubsystemBase {
 
   public void useLimelight(boolean enable) {
     this.enable = enable;
+  }
+
+  public void trustLL(boolean trust) {
+    this.trust = trust;
   }
 }

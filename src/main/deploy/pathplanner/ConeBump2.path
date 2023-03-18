@@ -151,6 +151,30 @@
       "names": [
         "ArmMid"
       ]
+    },
+    {
+      "position": 0.7272727272727274,
+      "names": [
+        "GroundDeploy"
+      ]
+    },
+    {
+      "position": 1.1272727272727272,
+      "names": [
+        "GroundStow"
+      ]
+    },
+    {
+      "position": 2.7636363636363646,
+      "names": [
+        "GroundDeploy"
+      ]
+    },
+    {
+      "position": 3.1999999999999935,
+      "names": [
+        "GroundStow"
+      ]
     }
   ]
 }
