@@ -33,24 +33,10 @@ public class Limelight extends SubsystemBase {
       LimelightHelpers.Results result =
           LimelightHelpers.getLatestResults("limelight").targetingResults;
       if (!(result.botpose[0] == 0 && result.botpose[1] == 0)) {
-        if (Auton.field.isPoseWithinArea(LimelightHelpers.toPose2D(result.botpose))) {
-            if (alliance == Alliance.Blue) {
-              Pose2d botpose = LimelightHelpers.toPose2D(result.botpose_wpiblue);
-              if (drivebase.getPose().getTranslation().getDistance(botpose.getTranslation()) < 1.0 || trust) {
-                drivebase.addVisionMeasurement(
-                    botpose,
-                    Timer.getFPGATimestamp()
-                        - (result.latency_capture / 1000.0)
-                        - (result.latency_pipeline / 1000.0),
-                    true,
-                    1.0);
-              } else {
-                distanceError++;
-                SmartDashboard.putNumber("Limelight Error", distanceError);
-              }
-            } else if (alliance == Alliance.Red) {
-              Pose2d botpose = LimelightHelpers.toPose2D(result.botpose_wpired);
-              if (drivebase.getPose().getTranslation().getDistance(botpose.getTranslation()) < 1.0 || trust) {
+        if (alliance == Alliance.Blue) {
+          Pose2d botpose = LimelightHelpers.toPose2D(result.botpose_wpiblue);
+          if (Auton.field.isPoseWithinArea(botpose)) {
+              if (drivebase.getPose().getTranslation().getDistance(botpose.getTranslation()) < 5.0 || trust) {
                 drivebase.addVisionMeasurement(
                     botpose,
                     Timer.getFPGATimestamp()
@@ -63,13 +49,30 @@ public class Limelight extends SubsystemBase {
                 SmartDashboard.putNumber("Limelight Error", distanceError);
               }
             }
+            } else if (alliance == Alliance.Red) {
+              Pose2d botpose = LimelightHelpers.toPose2D(result.botpose_wpired);
+              if (Auton.field.isPoseWithinArea(botpose)) {
+                if (drivebase.getPose().getTranslation().getDistance(botpose.getTranslation()) < 5.0 || trust) {
+                  drivebase.addVisionMeasurement(
+                      botpose,
+                      Timer.getFPGATimestamp()
+                          - (result.latency_capture / 1000.0)
+                          - (result.latency_pipeline / 1000.0),
+                      true,
+                      1.0);
+                } else {
+                  distanceError++;
+                  SmartDashboard.putNumber("Limelight Error", distanceError);
+                }
+              }
+            }
         } else {
           fieldError++;
           SmartDashboard.putNumber("Field Error", fieldError);
         }
       }
     }
-  }
+
 
   public void setAlliance(Alliance alliance) {
     this.alliance = alliance;

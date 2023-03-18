@@ -56,7 +56,7 @@ public final class Constants {
     public static final double midSpeedMPS = 2;
     public static final double lowSpeedMPS = 1;
 
-    public static final double balanceScale = 2.5;
+    public static final double balanceScale = 1.4;
     public static final double balanceScalePow = 1.0;
     public static final double balanceLimitDeg = 2.0;
 
@@ -330,7 +330,7 @@ public final class Constants {
                 new PathPoint(
                     barrierCorridor.get(1).getTranslation(),
                     new Rotation2d(),
-                    barrierCorridor.get(1).getRotation(),
+                    new Rotation2d(),
                     3.0));
           }
         };
@@ -369,7 +369,7 @@ public final class Constants {
                 new PathPoint(
                     bumpCorridor.get(1).getTranslation(),
                     new Rotation2d(),
-                    bumpCorridor.get(1).getRotation(),
+                    new Rotation2d(),
                     3.0));
           }
         };
@@ -428,7 +428,7 @@ public final class Constants {
     public static final PathPoint stationWaypointOut =
         new PathPoint(
             stationWaypoint.getTranslation(),
-            new Rotation2d(Math.PI),
+            new Rotation2d(),
             stationWaypoint.getRotation());
   }
 

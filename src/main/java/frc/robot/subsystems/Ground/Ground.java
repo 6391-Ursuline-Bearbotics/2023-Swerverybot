@@ -71,7 +71,7 @@ public class Ground extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("GIntake Current", intakeMotor.getOutputCurrent());
     if (intakeMotor.getOutputCurrent() > CUBE_CURRENT_LIMIT_A) {
-      if (counter > 5) {
+      if (counter > 10) {
         intakeMotor.set(0.0);
       } else {
         counter++;

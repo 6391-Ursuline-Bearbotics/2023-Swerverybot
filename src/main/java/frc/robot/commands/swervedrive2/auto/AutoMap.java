@@ -67,7 +67,7 @@ public class AutoMap {
         "OuttakeCube", () -> run(() -> intake.outtakeCube(), intake).withTimeout(0.1));
 
     eventMapGetter.put(
-        "OuttakeCone", () -> run(() -> intake.outtakeCone(), intake).withTimeout(0.1)
+        "OuttakeCone", () -> run(() -> intake.outtakeCone(), intake).withTimeout(0.2)
             .andThen(runOnce(() -> intake.stop(), intake)));
 
     // Automatic control of the ground arm
