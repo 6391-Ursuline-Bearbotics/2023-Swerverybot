@@ -97,16 +97,18 @@ public class RobotContainer {
 
   private void initializeChooser() {
     chooser.setDefaultOption(
-        "6 - Cone Mobility Engage", builder.getSwerveCommand("ConeMobilityDock")
-                .andThen(
-    // To switch to AprilTag Balance disable the lines below and enable after it.
-    Commands.run(
-      () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
-      drivebase)
-  .until(
-      () ->
-          Math.abs(drivebase.getPlaneInclination().getDegrees())
-              < Auton.balanceLimitDeg)));
+        "6 - Cone Mobility Engage",
+        builder
+            .getSwerveCommand("ConeMobilityDock")
+            .andThen(
+                // To switch to AprilTag Balance disable the lines below and enable after it.
+                Commands.run(
+                        () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
+                        drivebase)
+                    .until(
+                        () ->
+                            Math.abs(drivebase.getPlaneInclination().getDegrees())
+                                < Auton.balanceLimitDeg)));
     // To use the gyro auto balance disable below enable above
     /*              new ProxyCommand(
     () ->
@@ -114,13 +116,16 @@ public class RobotContainer {
                 Auton.centerChargeStation, new PathConstraints(2.0, 1.0), drivebase)
             .getCommand()))); */
 
-    chooser.addOption("5 - Cube Mobility Engage", builder.getSwerveCommand("CubeMobilityDock")
-                .andThen(
-    // To switch to AprilTag Balance disable the lines below and enable after it.
-    Commands.run(
-            () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
-            drivebase)
-        .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0)));
+    chooser.addOption(
+        "5 - Cube Mobility Engage",
+        builder
+            .getSwerveCommand("CubeMobilityDock")
+            .andThen(
+                // To switch to AprilTag Balance disable the lines below and enable after it.
+                Commands.run(
+                        () -> drivebase.drive(drivebase.getBalanceTranslation(), 0, false, false),
+                        drivebase)
+                    .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0)));
     // To use the gyro auto balance disable below enable above
     /*              new ProxyCommand(
     () ->
@@ -133,7 +138,8 @@ public class RobotContainer {
     chooser.addOption(
         "3 - Cone Mobility Loading", builder.getSwerveCommand("3 - Cone Mobility Loading"));
     chooser.addOption(
-        "9 - Cone Mobility Loading", Commands.runOnce(() -> vision.useLimelight(true), vision)
+        "9 - Cone Mobility Loading",
+        Commands.runOnce(() -> vision.useLimelight(true), vision)
             .andThen(builder.getSwerveCommand("9 - Cone Mobility Loading")));
     chooser.addOption(
         "3 - Cone Mobility Straight", builder.getSwerveCommand("3 - Cone Mobility Straight"));
@@ -150,7 +156,8 @@ public class RobotContainer {
         .until(() -> Math.abs(drivebase.getPlaneInclination().getDegrees()) < 2.0))); */
     chooser.addOption(
         "Cone Only",
-        autoMap.getCommandInMap("IntakeHigh")
+        autoMap
+            .getCommandInMap("IntakeHigh")
             .andThen(autoMap.getCommandInMap("OuttakeStow"))
             .andThen(Commands.runOnce(() -> drivebase.swerveDrive.setGyro(180.0))));
     chooser.addOption("Do Nothing", Commands.runOnce(() -> drivebase.swerveDrive.setGyro(180.0)));
@@ -289,35 +296,40 @@ public class RobotContainer {
             new ProxyCommand(
                 () ->
                     new GoToScoring(drivebase, getCorridor(POSITION.LEFT), column, level, autoMap)
-                        .getCommand()));
+                        .getCommand())
+            .andThen(autoMap.getCommandInMap(level)));
 
     drv.a()
         .whileTrue(
             new ProxyCommand(
                 () ->
                     new GoToScoring(drivebase, getCorridor(POSITION.MIDDLE), column, level, autoMap)
-                        .getCommand()));
+                        .getCommand())
+            .andThen(autoMap.getCommandInMap(level)));
 
     drv.b()
         .whileTrue(
             new ProxyCommand(
                 () ->
                     new GoToScoring(drivebase, getCorridor(POSITION.RIGHT), column, level, autoMap)
-                        .getCommand()));
+                        .getCommand())
+            .andThen(autoMap.getCommandInMap(level)));
 
     drv.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
         .whileTrue(
             new ProxyCommand(
                 () ->
                     new GoToLoadingZone(true, drivebase, color, autoMap, gamePieceString())
-                        .getCommand()));
+                        .getCommand())
+            .andThen(autoMap.getCommandInMap("ArmHigh")));
 
     drv.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5)
         .whileTrue(
             new ProxyCommand(
                 () ->
                     new GoToLoadingZone(false, drivebase, color, autoMap, gamePieceString())
-                        .getCommand()));
+                        .getCommand())
+            .andThen(autoMap.getCommandInMap("ArmHigh")));
 
     // Zero the Gyro, should only be used during practice
     drv.start().onTrue(runOnce(drivebase::zeroGyro));
@@ -392,6 +404,10 @@ public class RobotContainer {
     op.povLeft().onTrue(autoMap.getCommandInMap("RetractIntake"));
 
     op.povRight().onTrue(autoMap.getCommandInMap("GroundOuttake"));
+
+    // Right trigger trusts the Limelight regardless of robot pose
+    op.rightTrigger().onTrue(runOnce(() -> vision.trustLL(true)));
+    op.rightTrigger().onFalse(runOnce(() -> vision.trustLL(false)));
 
     // Button Board setting the level and column to be placed
     btn.button(1).onTrue(runOnce(() -> setColumn(1)));

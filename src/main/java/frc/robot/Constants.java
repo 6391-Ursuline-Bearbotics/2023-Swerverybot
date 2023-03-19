@@ -367,10 +367,7 @@ public final class Constants {
                     3.0));
             add(
                 new PathPoint(
-                    bumpCorridor.get(1).getTranslation(),
-                    new Rotation2d(),
-                    new Rotation2d(),
-                    3.0));
+                    bumpCorridor.get(1).getTranslation(), new Rotation2d(), new Rotation2d(), 3.0));
           }
         };
 
@@ -427,9 +424,7 @@ public final class Constants {
             stationWaypoint.getTranslation(), new Rotation2d(), stationWaypoint.getRotation(), 3.0);
     public static final PathPoint stationWaypointOut =
         new PathPoint(
-            stationWaypoint.getTranslation(),
-            new Rotation2d(),
-            stationWaypoint.getRotation());
+            stationWaypoint.getTranslation(), new Rotation2d(), stationWaypoint.getRotation());
   }
 
   public static final class LED {
