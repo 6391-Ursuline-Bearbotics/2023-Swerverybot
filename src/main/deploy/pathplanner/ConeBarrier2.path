@@ -52,16 +52,16 @@
     },
     {
       "anchorPoint": {
-        "x": 1.8,
-        "y": 4.42
+        "x": 1.9,
+        "y": 4.36
       },
       "prevControl": {
-        "x": 1.7869732278992705,
-        "y": 4.42
+        "x": 1.8869732278992704,
+        "y": 4.36
       },
       "nextControl": {
-        "x": 1.7869732278992705,
-        "y": 4.42
+        "x": 1.8869732278992704,
+        "y": 4.36
       },
       "holonomicAngle": 180.0,
       "isReversal": true,
@@ -86,40 +86,15 @@
         "x": 5.582341306862709,
         "y": 5.556291207369144
       },
-      "nextControl": {
-        "x": 5.582341306862709,
-        "y": 5.556291207369144
-      },
-      "holonomicAngle": 136.08092418666067,
-      "isReversal": true,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": true,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 1.82,
-        "y": 4.42
-      },
-      "prevControl": {
-        "x": 4.6522521304185025,
-        "y": 4.495784867375997
-      },
       "nextControl": null,
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 136.08092418666067,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "OuttakeCube"
+          "GroundStow"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -129,7 +104,7 @@
   ],
   "markers": [
     {
-      "position": 1.309090909090909,
+      "position": 1.7,
       "names": [
         "ArmHigh"
       ]
@@ -141,39 +116,27 @@
       ]
     },
     {
-      "position": 3.6606060606061903,
-      "names": [
-        "ArmMid"
-      ]
-    },
-    {
       "position": 0.01,
       "names": [
         "ArmStow"
       ]
     },
     {
-      "position": 0.7272727272727274,
+      "position": 0.35,
       "names": [
         "GroundDeploy"
       ]
     },
     {
-      "position": 1.1272727272727274,
+      "position": 1.01,
       "names": [
         "GroundStow"
       ]
     },
     {
-      "position": 2.799999999999996,
+      "position": 2.35,
       "names": [
         "GroundDeploy"
-      ]
-    },
-    {
-      "position": 3.1636363636363574,
-      "names": [
-        "GroundStow"
       ]
     }
   ]
