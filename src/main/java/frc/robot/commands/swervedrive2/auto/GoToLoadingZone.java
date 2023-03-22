@@ -12,11 +12,12 @@ import frc.robot.Constants.Auton;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.util.ArrayList;
 import java.util.List;
-import webblib.util.chargedup.LoadingArea;
+
+import webblib.util.RectanglePoseArea;
 
 public class GoToLoadingZone extends CommandBase {
   private final SwerveSubsystem drive;
-  private final LoadingArea loadingArea = Auton.loadingArea;
+  private final RectanglePoseArea loadingArea = Auton.loadingArea;
   private final LOADING_SIDE selectedLoadingSide;
   private Command currentCommand;
   private Alliance ally;
@@ -83,7 +84,7 @@ public class GoToLoadingZone extends CommandBase {
               currentPose.getX(), 8.02 - currentPose.getY(), currentPose.getRotation().times(-1));
     }
     // If we are within the loading area go direct
-    if (loadingArea.isPoseWithinLoadingArea(currentPose)) {
+    if (loadingArea.isPoseWithinArea(currentPose)) {
       // In loading area so just run the PathGroup that happens after this.
       GoToPathPoints goToPathPoints;
       List<PathPoint> points;

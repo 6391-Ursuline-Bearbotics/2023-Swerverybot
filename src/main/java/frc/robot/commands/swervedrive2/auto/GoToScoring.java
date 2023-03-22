@@ -49,7 +49,7 @@ public class GoToScoring {
           new Pose2d(
               currentPose.getX(), 8.02 - currentPose.getY(), currentPose.getRotation().times(-1));
     }
-    if (Auton.loadingArea.isPoseWithinLoadingArea(currentPose)) {
+    if (Auton.loadingArea.isPoseWithinArea(currentPose)) {
       // If within Loadin area navigate through selected corridor
       switch (selectedPosition) {
         case BARRIER:

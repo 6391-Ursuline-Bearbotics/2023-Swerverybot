@@ -6,7 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
 
-import com.pathplanner.lib.PathConstraints;
+
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -24,7 +25,6 @@ import frc.robot.Constants.Auton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.swervedrive2.auto.AutoMap;
 import frc.robot.commands.swervedrive2.auto.GoToLoadingZone;
-import frc.robot.commands.swervedrive2.auto.GoToPose;
 import frc.robot.commands.swervedrive2.auto.GoToScoring;
 import frc.robot.commands.swervedrive2.auto.GoToScoring.POSITION;
 import frc.robot.commands.swervedrive2.auto.GoToScoring.SCORING_SIDE;
@@ -297,7 +297,7 @@ public class RobotContainer {
                 () ->
                     new GoToScoring(drivebase, getCorridor(POSITION.LEFT), column, level, autoMap)
                         .getCommand())
-            .andThen(autoMap.getCommandInMap(level)));
+            .andThen(new ProxyCommand(autoMap.getCommandInMap(level))));
 
     drv.a()
         .whileTrue(
@@ -305,7 +305,7 @@ public class RobotContainer {
                 () ->
                     new GoToScoring(drivebase, getCorridor(POSITION.MIDDLE), column, level, autoMap)
                         .getCommand())
-            .andThen(autoMap.getCommandInMap(level)));
+            .andThen(new ProxyCommand(autoMap.getCommandInMap(level))));
 
     drv.b()
         .whileTrue(
@@ -313,7 +313,7 @@ public class RobotContainer {
                 () ->
                     new GoToScoring(drivebase, getCorridor(POSITION.RIGHT), column, level, autoMap)
                         .getCommand())
-            .andThen(autoMap.getCommandInMap(level)));
+            .andThen(new ProxyCommand(autoMap.getCommandInMap(level))));
 
     drv.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
         .whileTrue(
@@ -321,7 +321,7 @@ public class RobotContainer {
                 () ->
                     new GoToLoadingZone(true, drivebase, color, autoMap, gamePieceString())
                         .getCommand())
-            .andThen(autoMap.getCommandInMap("ArmHigh")));
+            .andThen(new ProxyCommand(autoMap.getCommandInMap("ArmHigh"))));
 
     drv.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5)
         .whileTrue(
@@ -329,7 +329,7 @@ public class RobotContainer {
                 () ->
                     new GoToLoadingZone(false, drivebase, color, autoMap, gamePieceString())
                         .getCommand())
-            .andThen(autoMap.getCommandInMap("ArmHigh")));
+            .andThen(new ProxyCommand(autoMap.getCommandInMap("ArmHigh"))));
 
     // Zero the Gyro, should only be used during practice
     drv.start().onTrue(runOnce(drivebase::zeroGyro));
@@ -362,14 +362,9 @@ public class RobotContainer {
                             SmartDashboard.putNumber(
                                 "Plane Angle", drivebase.getPlaneInclination().getDegrees()))));
 
-    // Apriltag Balance test
-    drv.povRight()
-        .whileTrue(
-            new ProxyCommand(
-                () ->
-                    new GoToPose(
-                            Auton.centerChargeStation, new PathConstraints(2.0, 1.0), drivebase)
-                        .getCommand()));
+    // Reflective fine alignment
+    drv.povRight().whileTrue(Commands.runOnce(() -> drivebase.drive(new Translation2d(0, vision.getFineAlign()), 0, false, false), drivebase));
+    drv.povRight().onFalse(Commands.runOnce(() -> vision.fineAlignment(false)));
 
     // Manual Arm High
     op.y().onTrue(autoMap.getCommandInMap("ArmHigh"));

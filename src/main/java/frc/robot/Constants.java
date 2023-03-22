@@ -15,9 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import swervelib.math.Matter;
 import swervelib.parser.PIDFConfig;
-import webblib.util.HolonomicPose2d;
 import webblib.util.RectanglePoseArea;
-import webblib.util.chargedup.LoadingArea;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -60,12 +58,10 @@ public final class Constants {
     public static final double balanceScalePow = 1.0;
     public static final double balanceLimitDeg = 2.0;
 
-    public static final LoadingArea loadingArea =
-        new LoadingArea(
-            new RectanglePoseArea(new Translation2d(9.91, 6.82), new Translation2d(16.24, 7.97)),
-            new RectanglePoseArea(new Translation2d(13.24, 5.66), new Translation2d(16.51, 7.97)),
-            new HolonomicPose2d(new Pose2d(15.75, 7.34, new Rotation2d()), new Rotation2d()),
-            new HolonomicPose2d(new Pose2d(15.75, 6.00, new Rotation2d()), new Rotation2d()));
+    public static final double fineAlignMPS = 0.2;
+
+    public static final RectanglePoseArea loadingArea =
+            new RectanglePoseArea(new Translation2d(13.24, 5.66), new Translation2d(16.51, 7.97));
 
     private static final double scoringX = 1.95;
     public static final List<Pose2d> scoringPoses =
@@ -424,7 +420,7 @@ public final class Constants {
             stationWaypoint.getTranslation(), new Rotation2d(), stationWaypoint.getRotation(), 3.0);
     public static final PathPoint stationWaypointOut =
         new PathPoint(
-            stationWaypoint.getTranslation(), new Rotation2d(), stationWaypoint.getRotation());
+            stationWaypoint.getTranslation(), new Rotation2d(Math.PI), new Rotation2d(Math.PI));
   }
 
   public static final class LED {

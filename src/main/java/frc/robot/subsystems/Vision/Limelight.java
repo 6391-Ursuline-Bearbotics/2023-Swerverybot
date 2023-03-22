@@ -72,4 +72,26 @@ public class Limelight extends SubsystemBase {
   public void trustLL(boolean trust) {
     this.trust = trust;
   }
+
+  public void fineAlignment(Boolean fine) {
+    if (fine) {
+      LimelightHelpers.setPipelineIndex("limelight", 1);
+      LimelightHelpers.setLEDMode_ForceOn("limelight");
+      enable = false;
+    } else {
+      LimelightHelpers.setPipelineIndex("limelight", 0);
+      LimelightHelpers.setLEDMode_ForceOff("limelight");
+      enable = true;
+    }
+  }
+
+  public double getFineAlign() {
+    fineAlignment(true);
+    var tx = LimelightHelpers.getTX("limelight");
+    if (Math.abs(tx) > 0.1) {
+      return Math.copySign(Auton.fineAlignMPS, tx);
+    } else {
+      return 0.0;
+    }
+  }
 }
