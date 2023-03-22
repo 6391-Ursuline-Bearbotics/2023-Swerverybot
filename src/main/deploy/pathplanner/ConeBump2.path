@@ -96,7 +96,9 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "GroundStow"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -147,33 +149,21 @@
       ]
     },
     {
-      "position": 3.527272727272719,
-      "names": [
-        "ArmMid"
-      ]
-    },
-    {
-      "position": 0.7272727272727274,
+      "position": 0.35,
       "names": [
         "GroundDeploy"
       ]
     },
     {
-      "position": 1.1272727272727272,
+      "position": 1.01,
       "names": [
         "GroundStow"
       ]
     },
     {
-      "position": 2.7636363636363646,
+      "position": 2.35,
       "names": [
         "GroundDeploy"
-      ]
-    },
-    {
-      "position": 3.1999999999999935,
-      "names": [
-        "GroundStow"
       ]
     }
   ]

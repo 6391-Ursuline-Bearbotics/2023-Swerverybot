@@ -61,7 +61,7 @@ public final class Constants {
     public static final double fineAlignMPS = 0.2;
 
     public static final RectanglePoseArea loadingArea =
-            new RectanglePoseArea(new Translation2d(13.24, 5.66), new Translation2d(16.51, 7.97));
+        new RectanglePoseArea(new Translation2d(13.24, 5.66), new Translation2d(16.51, 7.97));
 
     private static final double scoringX = 1.95;
     public static final List<Pose2d> scoringPoses =

@@ -12,7 +12,6 @@ import frc.robot.Constants.Auton;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.util.ArrayList;
 import java.util.List;
-
 import webblib.util.RectanglePoseArea;
 
 public class GoToLoadingZone extends CommandBase {
