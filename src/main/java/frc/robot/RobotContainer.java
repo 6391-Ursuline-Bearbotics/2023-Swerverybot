@@ -290,7 +290,7 @@ public class RobotContainer {
                         new GoToScoring(
                                 drivebase, getCorridor(POSITION.LEFT), column, level, autoMap)
                             .getCommand())
-                .andThen(new ProxyCommand(autoMap.getCommandInMap(level))));
+                .andThen(new ProxyCommand(() -> autoMap.getCommandInMap(level))));
 
     drv.a()
         .whileTrue(
@@ -299,7 +299,7 @@ public class RobotContainer {
                         new GoToScoring(
                                 drivebase, getCorridor(POSITION.MIDDLE), column, level, autoMap)
                             .getCommand())
-                .andThen(new ProxyCommand(autoMap.getCommandInMap(level))));
+                .andThen(new ProxyCommand(() -> autoMap.getCommandInMap(level))));
 
     drv.b()
         .whileTrue(
@@ -308,7 +308,7 @@ public class RobotContainer {
                         new GoToScoring(
                                 drivebase, getCorridor(POSITION.RIGHT), column, level, autoMap)
                             .getCommand())
-                .andThen(new ProxyCommand(autoMap.getCommandInMap(level))));
+                .andThen(new ProxyCommand(() -> autoMap.getCommandInMap(level))));
 
     drv.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5)
         .whileTrue(

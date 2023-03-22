@@ -82,7 +82,7 @@ public class AutoMap {
         "RetractIntake",
         () ->
             run(() -> ground.stowArm(), ground)
-                .withTimeout(0.9)
+                .withTimeout(0.6)
                 .andThen(runOnce(() -> ground.stopArm(), ground)));
 
     eventMapGetter.put(

@@ -19,10 +19,15 @@
         <frc-field-robot
             source-key="/SmartDashboard/Field/Robot"
             source-provider="NetworkTables"
-            style="width: 24.5744px; height: 36.8615px; transform: translate(17.6219px, 333.195px) rotate(89.9561deg);"
+            style="width: 24.5744px; height: 36.8615px; transform: translate(618.637px, 87.1435px) rotate(89.2585deg);"
             opacity="100"
             pose="[0,0,0]"
         ></frc-field-robot>
+        <frc-field-trajectory
+            source-key="/SmartDashboard/Field/Trajectory"
+            source-provider="NetworkTables"
+            style="width: 40.9573px; height: 40.9573px; transform: translate(9.43041px, 331.147px) rotate(90deg);"
+        ></frc-field-trajectory>
     </frc-field>
     <frc-gauge
         source-provider="NetworkTables"
@@ -68,6 +73,18 @@
         style="transform: translate(401.333px, 0px);"
         options="[]"
     ></frc-sendable-chooser>
+    <frc-gauge
+        source-provider="NetworkTables"
+        style="transform: translate(963px, 0px); width: 174px; height: 200px;"
+        source-key="/SmartDashboard/Limelight Error"
+        max="100000"
+    ></frc-gauge>
+    <frc-gauge
+        source-provider="NetworkTables"
+        style="transform: translate(1118px, 0px); width: 162px; height: 200px;"
+        source-key="/SmartDashboard/Field Error"
+        max="100000"
+    ></frc-gauge>
 </dashboard-tab>
 <dashboard-tab
     slot="tab"

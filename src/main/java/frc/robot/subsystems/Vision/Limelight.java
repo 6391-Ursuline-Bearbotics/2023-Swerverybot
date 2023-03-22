@@ -40,7 +40,7 @@ public class Limelight extends SubsystemBase {
           botpose = LimelightHelpers.toPose2D(result.botpose_wpired);
         }
         if (Auton.field.isPoseWithinArea(botpose)) {
-          if (drivebase.getPose().getTranslation().getDistance(botpose.getTranslation()) < 3.0
+          if (drivebase.getPose().getTranslation().getDistance(botpose.getTranslation()) < 0.33
               || trust) {
             drivebase.addVisionMeasurement(
                 botpose,
