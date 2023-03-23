@@ -48,7 +48,7 @@ public class PathBuilder {
           filename,
           autoBuilder.fullAuto(
               PathPlanner.loadPathGroup(
-                  filename, new PathConstraints(Auton.maxSpeedMPS, Auton.maxAccelerationMPS))));
+                  filename, new PathConstraints(Auton.autoMaxSpeedMPS, Auton.autoMaxAccelerationMPS))));
     }
   }
 }

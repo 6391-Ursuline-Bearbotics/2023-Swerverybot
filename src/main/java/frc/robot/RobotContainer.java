@@ -317,6 +317,7 @@ public class RobotContainer {
                         new GoToLoadingZone(true, drivebase, color, autoMap, gamePieceString())
                             .getCommand())
                 .andThen(new ProxyCommand(autoMap.getCommandInMap("ArmHigh"))));
+    drv.rightTrigger().onFalse(new ProxyCommand(runOnce(() -> intake.holdCone(), intake)));
 
     drv.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5)
         .whileTrue(
@@ -325,6 +326,7 @@ public class RobotContainer {
                         new GoToLoadingZone(false, drivebase, color, autoMap, gamePieceString())
                             .getCommand())
                 .andThen(new ProxyCommand(autoMap.getCommandInMap("ArmHigh"))));
+    drv.leftTrigger().onFalse(new ProxyCommand(runOnce(() -> intake.holdCone(), intake)));
 
     // Zero the Gyro, should only be used during practice
     drv.start().onTrue(runOnce(drivebase::zeroGyro));

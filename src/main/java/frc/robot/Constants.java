@@ -51,6 +51,8 @@ public final class Constants {
 
     public static final double maxSpeedMPS = 3; // 4?
     public static final double maxAccelerationMPS = 1.5;
+    public static final double autoMaxSpeedMPS = 3; // 4?
+    public static final double autoMaxAccelerationMPS = 1.5;
     public static final double midSpeedMPS = 2;
     public static final double lowSpeedMPS = 1;
 
@@ -424,6 +426,6 @@ public final class Constants {
   }
 
   public static final class LED {
-    public static final int PWMPORT = 0, LENGTH = 20;
+    public static final int PWMPORT = 1, LENGTH = 20;
   }
 }
