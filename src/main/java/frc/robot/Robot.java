@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -25,6 +26,7 @@ public class Robot extends TimedRobot {
   public static Robot instance;
   private Alliance ally = Alliance.Invalid;
   private double lastpos = 0;
+  private Timer time = new Timer();
 
   public Robot() {
     instance = this;
@@ -131,6 +133,9 @@ public class Robot extends TimedRobot {
     robotContainer.drivebase.setMotorIdleMode(false);
     robotContainer.vision.useLimelight(true);
     robotContainer.intake.stop();
+    robotContainer.ground.stopIntake();
+    time.reset();
+    time.start();
   }
 
   /** This function is called periodically during operator control. */
@@ -143,6 +148,11 @@ public class Robot extends TimedRobot {
       robotContainer.setSpeedLimit(0.0);
     }
     lastpos = pos;
+
+    // This is forcing garbage collection to avoid the std::bad_alloc problem
+    if (time.advanceIfElapsed(5)) {
+      System.gc();
+    }
   }
 
   @Override
