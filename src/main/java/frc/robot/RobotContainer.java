@@ -275,7 +275,7 @@ public class RobotContainer {
     ground.setDefaultCommand(Commands.run(() -> ground.setArmPower(-op.getLeftY()), ground));
 
     // Left Bumper slows the drive way down for fine positioning
-    drv.leftBumper().whileTrue(runOnce(() -> setSpeedLimit(0.15)));
+    drv.leftBumper().whileTrue(runOnce(() -> setSpeedLimit(0.10)));
     drv.leftBumper().onFalse(runOnce(() -> setSpeedLimit(0.0)));
 
     // Right Bumper trusts the Limelight regardless of robot pose
