@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -275,8 +276,7 @@ public class RobotContainer {
     ground.setDefaultCommand(Commands.run(() -> ground.setArmPower(-op.getLeftY()), ground));
 
     // Left Bumper slows the drive way down for fine positioning
-    drv.leftBumper().whileTrue(runOnce(() -> setSpeedLimit(0.10)));
-    drv.leftBumper().onFalse(runOnce(() -> setSpeedLimit(0.0)));
+    drv.leftBumper().onTrue(new ConditionalCommand(runOnce(() -> setSpeedLimit(0.10)), runOnce(() -> setSpeedLimit(0.0)), () -> limit > 0.4));
 
     // Right Bumper trusts the Limelight regardless of robot pose
     drv.rightBumper().onTrue(runOnce(() -> vision.trustLL(true)));
