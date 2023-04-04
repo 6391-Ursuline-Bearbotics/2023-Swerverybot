@@ -167,6 +167,7 @@ public class SparkMaxSwerve extends SwerveMotor {
   public void configurePIDF(PIDFConfig config) {
     int pidSlot =
         isDriveMotor ? SparkMAX_slotIdx.Velocity.ordinal() : SparkMAX_slotIdx.Position.ordinal();
+    pidSlot = 0;
     pid.setP(config.p, pidSlot);
     pid.setI(config.i, pidSlot);
     pid.setD(config.d, pidSlot);
@@ -252,13 +253,28 @@ public class SparkMaxSwerve extends SwerveMotor {
    */
   @Override
   public void setReference(double setpoint, double feedforward) {
+    boolean possibleBurnOutIssue = true;
     int pidSlot =
         isDriveMotor ? SparkMAX_slotIdx.Velocity.ordinal() : SparkMAX_slotIdx.Position.ordinal();
-    pid.setReference(
-        setpoint,
-        isDriveMotor ? ControlType.kVelocity : ControlType.kPosition,
-        pidSlot,
-        feedforward);
+    pidSlot = 0;
+
+    if (isDriveMotor) {
+      pid.setReference(setpoint, ControlType.kVelocity, pidSlot, feedforward);
+    } else {
+      pid.setReference(setpoint, ControlType.kPosition, pidSlot);
+    }
+  }
+
+  /**
+   * Set the closed loop PID controller reference point.
+   *
+   * @param setpoint Setpoint in meters per second or angle in degrees.
+   * @param feedforward Feedforward in volt-meter-per-second or kV.
+   * @param position Only used on the angle motor, the position of the motor in degrees.
+   */
+  @Override
+  public void setReference(double setpoint, double feedforward, double position) {
+    setReference(setpoint, feedforward);
   }
 
   /**

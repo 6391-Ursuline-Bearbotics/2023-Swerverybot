@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
 
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -101,7 +102,9 @@ public class RobotContainer {
         autoMap
             .getCommandInMap("IntakeHigh")
             .andThen(autoMap.getCommandInMap("OuttakeStow"))
-            .andThen(Commands.runOnce(() -> drivebase.swerveDrive.setGyro(180.0))));
+            .andThen(
+                Commands.runOnce(
+                    () -> drivebase.swerveDrive.setGyro(new Rotation3d(0.0, 0.0, 180.0)))));
     chooser.addOption(
         "6 - Cone Engage",
         builder
@@ -153,7 +156,9 @@ public class RobotContainer {
                         () ->
                             Math.abs(drivebase.getPlaneInclination().getDegrees())
                                 < Auton.balanceLimitDeg)));
-    chooser.addOption("Do Nothing", Commands.runOnce(() -> drivebase.swerveDrive.setGyro(180.0)));
+    chooser.addOption(
+        "Do Nothing",
+        Commands.runOnce(() -> drivebase.swerveDrive.setGyro(new Rotation3d(0.0, 0.0, 180.0))));
     SmartDashboard.putData("Auto choices", chooser);
 
     spdLimit.addOption("100%", 1.0);
@@ -276,7 +281,12 @@ public class RobotContainer {
     ground.setDefaultCommand(Commands.run(() -> ground.setArmPower(-op.getLeftY()), ground));
 
     // Left Bumper slows the drive way down for fine positioning
-    drv.leftBumper().onTrue(new ConditionalCommand(runOnce(() -> setSpeedLimit(0.10)), runOnce(() -> setSpeedLimit(0.0)), () -> limit > 0.4));
+    drv.leftBumper()
+        .onTrue(
+            new ConditionalCommand(
+                runOnce(() -> setSpeedLimit(0.10)),
+                runOnce(() -> setSpeedLimit(0.0)),
+                () -> limit > 0.4));
 
     // Right Bumper trusts the Limelight regardless of robot pose
     drv.rightBumper().onTrue(runOnce(() -> vision.trustLL(true)));

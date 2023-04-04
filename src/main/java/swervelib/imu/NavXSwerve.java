@@ -1,17 +1,21 @@
 package swervelib.imu;
 
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.math.geometry.Quaternion;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.Optional;
 
 /** Communicates with the NavX as the IMU. */
 public class NavXSwerve extends SwerveIMU {
 
   /** NavX IMU. */
   private AHRS gyro;
-  /** Offset for the NavX yaw reading. */
-  private double yawOffset = 0;
+  /** Offset for the NavX. */
+  private Rotation3d offset = new Rotation3d();
 
   /**
    * Constructor for the NavX swerve.
@@ -24,6 +28,7 @@ public class NavXSwerve extends SwerveIMU {
       /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
       /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
       gyro = new AHRS(port);
+      factoryDefault();
       SmartDashboard.putData(gyro);
     } catch (RuntimeException ex) {
       DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
@@ -34,7 +39,13 @@ public class NavXSwerve extends SwerveIMU {
   @Override
   public void factoryDefault() {
     // gyro.reset(); // Reported to be slow
-    yawOffset = gyro.getYaw() % 360;
+    offset =
+        new Rotation3d(
+            new Quaternion(
+                gyro.getQuaternionW(),
+                gyro.getQuaternionX(),
+                gyro.getQuaternionY(),
+                gyro.getQuaternionZ()));
   }
 
   /** Clear sticky faults on IMU. */
@@ -42,27 +53,52 @@ public class NavXSwerve extends SwerveIMU {
   public void clearStickyFaults() {}
 
   /**
-   * Set the yaw in degrees.
+   * Set the gyro offset.
    *
-   * @param yaw Yaw angle in degrees.
+   * @param offset gyro offset as a {@link Rotation3d}.
    */
-  @Override
-  public void setYaw(double yaw) {
-    // gyro.reset(); // Reported to be slow using the offset.
-    yawOffset = (yaw % 360) + (gyro.getYaw() % 360);
+  public void setOffset(Rotation3d offset) {
+    this.offset = offset;
   }
 
   /**
-   * Fetch the yaw/pitch/roll from the IMU.
+   * Fetch the {@link Rotation3d} from the IMU without any zeroing. Robot relative.
    *
-   * @param yprArray Array which will be filled with {yaw, pitch, roll} in degrees.
+   * @return {@link Rotation3d} from the IMU.
+   */
+  public Rotation3d getRawRotation3d() {
+    return new Rotation3d(
+        new Quaternion(
+            gyro.getQuaternionW(),
+            gyro.getQuaternionX(),
+            gyro.getQuaternionY(),
+            gyro.getQuaternionZ()));
+  }
+
+  /**
+   * Fetch the {@link Rotation3d} from the IMU. Robot relative.
+   *
+   * @return {@link Rotation3d} from the IMU.
    */
   @Override
-  public void getYawPitchRoll(double[] yprArray) {
+  public Rotation3d getRotation3d() {
+    return getRawRotation3d().minus(offset);
+  }
 
-    yprArray[0] = (gyro.getYaw() % 360) - yawOffset;
-    yprArray[1] = (gyro.getPitch() % 360);
-    yprArray[2] = (gyro.getRoll() % 360);
+  /**
+   * Fetch the acceleration [x, y, z] from the IMU in meters per second squared. If acceleration
+   * isn't supported returns empty.
+   *
+   * @return {@link Translation3d} of the acceleration as an {@link Optional}.
+   */
+  @Override
+  public Optional<Translation3d> getAccel() {
+    return Optional.of(
+        new Translation3d(
+                gyro.getWorldLinearAccelX(),
+                gyro.getWorldLinearAccelY(),
+                gyro.getWorldLinearAccelZ())
+            .times(9.81));
   }
 
   /**

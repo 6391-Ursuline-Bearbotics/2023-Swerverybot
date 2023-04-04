@@ -41,7 +41,8 @@ public class Limelight extends SubsystemBase {
         }
         if (Auton.field.isPoseWithinArea(botpose)) {
           if (drivebase.getPose().getTranslation().getDistance(botpose.getTranslation()) < 0.33
-              || trust || result.targets_Fiducials.length > 1) {
+              || trust
+              || result.targets_Fiducials.length > 1) {
             drivebase.addVisionMeasurement(
                 botpose,
                 Timer.getFPGATimestamp()
