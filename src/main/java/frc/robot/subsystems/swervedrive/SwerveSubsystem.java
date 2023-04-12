@@ -247,6 +247,13 @@ public class SwerveSubsystem extends SubsystemBase {
 
   /** Forwards a vision measurement to the Swerve Library */
   public void addVisionMeasurement(Pose2d robotPose, double timestamp, boolean soft, double trust) {
+    //System.out.println(robotPose.getRotation().getDegrees());
     swerveDrive.addVisionMeasurement(robotPose, timestamp, soft, trust);
+  }
+
+  public void addVisionNoAngle(Pose2d robotPose, double timestamp, boolean soft, double trust) {
+    System.out.println(robotPose.getRotation().getDegrees());
+    var noAnglePose = new Pose2d(robotPose.getX(), robotPose.getY(), getHeading());
+    swerveDrive.addVisionMeasurement(noAnglePose, timestamp, soft, trust);
   }
 }
